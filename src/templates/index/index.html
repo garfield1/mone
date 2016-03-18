@@ -1,0 +1,78 @@
+{% extends "headfoot.html" %}
+{% block styles %}
+    <!--jqgrid-->
+    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.ace.css">
+{% endblock %}
+{% block scripts %}
+    <script>
+    </script>
+{% endblock %}
+{% block content %}
+{% import "header.html" as header %}
+{{ header.render() }}
+<div id="main-content">
+    <div id="breadcrumb">
+        <ul class="breadcrumb">
+            <li>
+                <a href="/"><i class="icon icon-home"></i> 主页</a>
+            </li>
+            <li>
+                <a id="parent-bread" href="#">组别及权限</a>
+            </li>
+            <li id="children-bread" class="active">配置</li>
+        </ul>
+    </div>
+    <div id="page-content">
+        <div class="page-header">
+            <h1>
+                权限管理
+            </h1>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>姓名</th>
+                        <th>类型</th>
+                        <th>组别</th>
+                        <th>上级</th>
+                        <th>保存</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            皇甫泽鹏
+                        </td>
+                        <th>
+                            <select class="form-control">
+                              <option value="ops" >运维</option>
+                              <option value="dev">开发</option>
+                            </select>
+                        </th>
+                        <th>
+                            <select class="form-control">
+                              <option value="ops" >运维</option>
+                              <option value="dev">开发</option>
+                            </select>
+                        </th>
+                        <th>
+                            <select class="form-control">
+                              <option value="ops" >刘文彬</option>
+                              <option value="dev">刘许鹏</option>
+                            </select>
+                        </th>
+                        <td>
+                            <button class="btn " type="button">保存</button>
+                        </td>
+                    </tr>
+                  </tbody>
+            </table>
+            <div id="pager"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

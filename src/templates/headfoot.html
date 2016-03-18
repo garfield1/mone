@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>自动化运维平台</title>
+    <!-- zui -->
+    <link href="/static/zui/css/zui.min.css" rel="stylesheet">
+    <link href="/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+    <link href="/static/css/base.css" rel="stylesheet">
+    {% block styles %}
+    {% endblock %}
+</head>
+<body>
+{% block content %}
+{% endblock %}
+<script src="/static/js/jquery.js"></script>
+<!-- ZUI Javascript组件 -->
+<script src="/static/zui/js/zui.min.js"></script>
+<script src="/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<script src="/static/lib/layer/layer.js"></script>
+<script>
+    $(function () {
+        $('#left-bar').add('#main-content').height($(window).height() - $('header').height());
+        $('.header-tooltip').tooltip();
+        $('#left-menu ul.nav-primary ul.nav li.active').parents('li').addClass('active show');
+    });
+</script>
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,23 @@
+/*
+-- Query: SELECT * FROM mone1.mone_worksheettype
+LIMIT 0, 1000
+
+-- Date: 2016-03-16 09:58
+*/
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (1,'申请ECS服务器','申请ECS服务器','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (2,'申请RDS服务器','申请RDS服务器','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (3,'申请SLB负载均衡','申请SLB负载均衡','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (4,'ECS配置变更','ECS配置变更','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (5,'RDS配置变更','RDS配置变更','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (6,'SLB配置变更','SLB配置变更','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (7,'反向代理配置','反向代理配置','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (8,'SQL执行','SQL执行','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (9,'白名单添加','白名单添加','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (10,'表库迁移','表库迁移','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (11,'数据库创建','数据库创建','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (12,'域名申请','域名申请','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (13,'域名变更','域名变更','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (14,'CDN加速','CDN加速','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (15,'新增应用','新增应用','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (16,'应用下线','应用下线','2016-03-15 06:52:56','2016-03-15 06:52:56');
+INSERT INTO `mone_worksheettype` (`id`,`name`,`desc`,`created_at`,`updated_at`) VALUES (17,'其他','其他','2016-03-15 06:52:56','2016-03-15 06:52:56');

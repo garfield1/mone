@@ -1,0 +1,98 @@
+{% macro render() %}
+<header>
+    <nav class="navbar navbar-inverse " role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">自动化运维平台</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-collapse-example">
+            <ul class="nav navbar-nav navbar-avatar navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ session['user_data']['username'] }}
+
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/logout"><i class="icon icon-off"></i> 注销</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+</header>
+<!-- / header -->
+<div id="left-bar" style="width: 200px">
+    <nav class="menu" id="left-menu" data-toggle="menu">
+        <ul class="nav nav-primary">
+            <li class="show"><a href="#"><i class="icon icon-list-alt"></i>工单系统</a>
+                <ul class="nav">
+                    <li id="taskpad">
+                        <a href="{{url_for('worksheet.taskpad')}}"><i class="icon icon-list"></i>任务看板</a>
+                    </li>
+                    <li class="nav-li">
+                        <a href="{{url_for('worksheet.add_worksheet')}}"><i class="icon icon-list"></i>新建工单</a>
+                    </li>
+                    <li class="nav-li">
+                        <a href="{{url_for('worksheet.worksheet_list')}}"><i class="icon icon-list"></i>工单列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="show"><a href="#"><i class="icon icon-list-alt"></i>发布系统</a>
+                <ul class="nav">
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>上线日历</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>新建发布申请</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>发布列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="show"><a href="#"><i class="icon icon-list-alt"></i>CMDB</a>
+                <ul class="nav">
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>主机</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>数据库</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>网络</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>新建发布申请</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>发布列表</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>新建发布申请</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="icon icon-list"></i>发布列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="show"><a href="#"><i class="icon icon-list-alt"></i>组别及权限</a>
+                <ul class="nav">
+                    <li>
+                        <a href="/access_control/"><i class="icon icon-list"></i>配置</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endmacro %}
