@@ -1,17 +1,6 @@
 #!/usr/bin/env python
 #encoding=utf-8
-RA_USER_ACTION_RA_CREATED = "上线申请单创建"
-RA_USER_ACTION_TEAM_LEADER_CONFIRMED = "主管确认"
-RA_USER_ACTION_MANAGER_CONFIRMED = "经理确认"
-RA_USER_ACTION_BUILD_CONFIRMED = "构建确认"
-RA_USER_ACTION_TEST_SUCCESS_CONFIRMED = "测试通过确认"
-RA_USER_ACTION_RELEASE_SUCCESS_CONFIRMED = "发布成功确认"
-
-RA_STATE_TEAM_LEADER_WAITTING_CONFIRMED = "主管待确认"
-RA_STATE_MANAGER_WAITTING_CONFIRMED = "经理待确认"
-RA_STATE_BUILD_WAITTING_CONFIRMED = "构建待确认"
-RA_STATE_TEST_WAITTING_CONFIRMED = "测试待确认"
-RA_STATE_RELEASE_WAITTING_CONFIRMED = "发布待确认"
+from _django_orm import *
 
 def find_manager(team_leader):
 	manager_role = Role.objects.filter(name="研发经理")[0]
@@ -31,81 +20,137 @@ def send_email(email,ra,state):
 	eq.save()
 	
 
-def state_transfer(user,action,ra):
+def state_transfer(user,action,ra,reject_reason = None):
 	"""
 	根据用户定位角色
 	根据role + action 定位当前状态及要流转的状态,并异步发出通知
 	开发or研发主管发起上线申请，经主管和经理审批再进行构建提测到发布
 	"""
-	sys = User.objects.get(username="sys")
-	manager = Role.objects.filter(name="研发经理")[0].user.all()[0]
-	operator = Role.objects.filter(name="运维工程师")[0].user.all()[0]
-	user_roles = user.role_set.all()
-	rsa = ReleaseApplyState(creator = user, release_apply = ra, state = action)
-	rsa.save()
-	if action == RA_USER_ACTION_RA_CREATED:
-		team_leader_role = Role.objects.get(name="研发主管")
-		developer_role = Role.objects.get(name="研发工程师")
-		if team_leader_role in user_roles:
-			#主管提交上线申请走经理审批流程
-			rsa = ReleaseApplyState(creator = sys, waitting_confirmer = manager ,release_apply = ra, state = RA_STATE_MANAGER_WAITTING_CONFIRMED)
-			rsa.save()
-			send_email(manager.email,ra,"需要您审批")
-			return user.id
-		elif developer_role in user_roles:
-			#开发提交上线申请走主管审批流程
-			rsa = ReleaseApplyState(creator = sys, waitting_confirmer = user.organization.leader ,release_apply = ra, state = RA_STATE_TEAM_LEADER_WAITTING_CONFIRMED)
-			rsa.save()
-			send_email(user.organization.leader.email,ra,"需要您审批")
-			return user.id
-		else:
-			print "非合适角色，只有开发和主管可以提交上线申请"
-
-	if action == RA_USER_ACTION_TEAM_LEADER_CONFIRMED:
-		rsa = ReleaseApplyState(creator = sys, waitting_confirmer = manager ,release_apply = ra, state = RA_STATE_MANAGER_WAITTING_CONFIRMED)
+	#sys = User.objects.get(username="sys")
+	#manager = Role.objects.filter(name="研发经理")[0].user.all()[0]
+	#operator = Role.objects.filter(name="运维工程师")[0].user.all()[0]
+	if action == RA_USER_ACTION_TEAM_LEADER_CREATED or action == RA_USER_ACTION_TEAM_LEADER_RESUBMIT or action == RA_USER_ACTION_TEAM_LEADER_CONFIRMED:
+		rsa = ReleaseApplyState(creator = user, waitting_confirmer = user.organization.parent.leader ,release_apply = ra, state = RA_STATE_WAITTING_MANAGER_CONFIRMED , action = action)
 		rsa.save()
 		send_email(manager.email,ra,"需要您审批")
 		return user.id
 
-	if action == RA_USER_ACTION_MANAGER_CONFIRMED:
-		rsa = ReleaseApplyState(creator = sys, waitting_confirmer = ra.applier ,release_apply = ra, state = RA_STATE_BUILD_WAITTING_CONFIRMED)
+	if action == RA_USER_ACTION_DEVELOPER_CREATED or action == RA_USER_ACTION_DEVELOPER_RESUBMIT:
+		rsa = ReleaseApplyState(creator = user, waitting_confirmer = user.organization.leader ,release_apply = ra, state = RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED , action = action)
 		rsa.save()
-		send_email(user.email,ra,"可以构建了")
+		send_email(user.organization.leader.email,ra,"需要您审批")
+		return user.id
+
+	if action == RA_USER_ACTION_MANAGER_CONFIRMED:
+		_state = RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED
+		if ra.applier.organization.leader == ra.applier:
+			state = RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED
+		rsa = ReleaseApplyState(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
+		rsa.save()
+		send_email(ra.applier.email,ra,"可以构建了")
 		return user.id
 	
-	if action == RA_USER_ACTION_BUILD_CONFIRMED:
-		rsa = ReleaseApplyState(creator = sys, waitting_confirmer = ra.tester ,release_apply = ra, state = RA_STATE_TEST_WAITTING_CONFIRMED)
+	if action == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
+		rsa = ReleaseApplyState(creator = user, waitting_confirmer = ra.tester ,release_apply = ra, state = RA_STATE_WAITTING_TESTER_CONFIRMED , action = action)
 		rsa.save()
 		#发测试全组
 		for tester in ra.tester.organization.user_set.all():
 			send_email(tester.email,ra,"需要测试组测试")
 		return user.id
 
-	if action == RA_USER_ACTION_TEST_SUCCESS_CONFIRMED:
-		rsa = ReleaseApplyState(creator = sys, waitting_confirmer = operator ,release_apply = ra, state = RA_STATE_RELEASE_WAITTING_CONFIRMED)
+	if action == RA_USER_ACTION_TESTER_CONFIRMED:
+		rsa = ReleaseApplyState(creator = user ,release_apply = ra, state = RA_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		rsa.save()
 		#发运维全组
-		for operator in operator.organization.user_set.all():
+		for operator in Organization.objects.filter(name="基础运维组").first().user_set.all():
 			send_email(operator.email,ra,"需要运维组发布")
 		return user.id
 
-	if action == RA_USER_ACTION_RELEASE_SUCCESS_CONFIRMED:
+	if action == RA_USER_ACTION_TESTER_REJECT or \
+	   action == RA_USER_ACTION_TEAM_LEADER_REJECTED or \
+	   action == RA_USER_ACTION_OPERATOR_REJECTED or \
+	   action == RA_USER_ACTION_MANAGER_REJECTED:
+		_state = RA_STATE_WAITTING_DEVELOPER_MODIFIED
+		if ra.applier.organization.leader == ra.applier:
+			state = RA_STATE_WAITTING_TEAM_LEADER_MODIFIED
+		rsa = ReleaseApplyState(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state, reject_reason = reject_reason, action = action)
+		rsa.save()
+		send_email(ra.applier.email,ra,user.username+"拨回了您的上线申请")
+		return user.id
+
+	if action == RA_USER_ACTION_OPERATOR_CLAIMED:
+		rsa = ReleaseApplyState(creator = user, waitting_confirmer = user ,release_apply = ra, state = RA_STATE_WAITTING_OPERATOR_EXECUTED , action = action)
+		rsa.save()
+		ra.operator = user
+		ra.save()
+		send_email(ra.applier.email,ra,user.username+"认领了该上线申请")
+		#发运维全组
+		for operator in user.organization.user_set.all():
+			send_email(operator.email,ra,user.username+"认领了"+ra.title+"上线申请")
+		send_email(ra.applier.email,ra,user.username+"认领了您的"+ra.title+"上线申请")
+		return user.id
+
+	if action == RA_USER_ACTION_OPERATOR_EXECUTED:
+		_state = RA_STATE_WAITTING_DEVELOPER_CLOSED
+		if ra.applier.organization.leader == ra.applier:
+			_state = RA_STATE_WAITTING_TEAM_LEADER_CLOSED
+		rsa = ReleaseApplyState(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
+		rsa.save()
 		send_email("ecomdev@meizu.com",ra,"发布成功")
+		send_email(ra.applier.email,ra,ra.title+"发布完成，请关闭上线申请单")
+		return user.id
+
+	if action == RA_USER_ACTION_DEVELOPER_CLOSED or action == RA_USER_ACTION_TEAM_LEADER_CLOSED:
+		rsa = ReleaseApplyState(creator = user, release_apply = ra, state = RA_STATE_CLOSED , action = action)
+		rsa.save()
+		send_email(ra.applier.email,ra,ra.title+"上线申请单关闭")
+		send_email(ra.operator.email,ra,"您执行的"+ra.title+"上线申请单已关闭")
 		return user.id
 
 	return user.id
-	
 
 if __name__ == "__main__":
 	from _django_orm import *
 	import datetime
 	from release_apply_test_data import *
-	print "developer id",state_transfer(developer,RA_USER_ACTION_RA_CREATED,ra)
 	team_leader = developer.organization.leader
+	#主管action6个，开发action4个,经理action2个，测试action2个，运维action3个
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_CREATED,ra)
+	print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_REJECTED,ra)
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_RESUBMIT,ra)
 	print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_CONFIRMED,ra)
-	#print team_leader.organization.name,"tl org"
-	#获取直线经理
 	print "manager id",state_transfer(manager,RA_USER_ACTION_MANAGER_CONFIRMED,ra)
-	print "developer id",state_transfer(developer,RA_USER_ACTION_BUILD_CONFIRMED,ra)
-	print "tester id",state_transfer(tester,RA_USER_ACTION_TEST_SUCCESS_CONFIRMED,ra)
-	print "operator id",state_transfer(operator,RA_USER_ACTION_RELEASE_SUCCESS_CONFIRMED,ra)
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED,ra)
+	print "tester id",state_transfer(tester,RA_USER_ACTION_TESTER_REJECT,ra)
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_RESUBMIT,ra)
+	print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_CONFIRMED,ra)
+	print "manager id",state_transfer(manager,RA_USER_ACTION_MANAGER_CONFIRMED,ra)
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED,ra)
+	print "tester id",state_transfer(tester,RA_USER_ACTION_TESTER_CONFIRMED,ra)
+	print "operator id",state_transfer(operator,RA_USER_ACTION_OPERATOR_REJECTED,ra)
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_RESUBMIT,ra)
+	print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_CONFIRMED,ra)
+	print "manager id",state_transfer(manager,RA_USER_ACTION_MANAGER_CONFIRMED,ra)
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED,ra)
+	print "tester id",state_transfer(tester,RA_USER_ACTION_TESTER_CONFIRMED,ra)
+	print "operator id",state_transfer(operator,RA_USER_ACTION_OPERATOR_CLAIMED,ra)
+	print "operator id",state_transfer(operator,RA_USER_ACTION_OPERATOR_EXECUTED,ra)
+	print "developer id",state_transfer(developer,RA_USER_ACTION_DEVELOPER_CLOSED,ra)
+
+
+
+	print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_CREATED,ra)
+	print "manager id",state_transfer(manager,RA_USER_ACTION_MANAGER_REJECTED,ra)
+	print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_RESUBMIT,ra)
+	#print "manager id",state_transfer(manager,RA_USER_ACTION_MANAGER_CONFIRMED,ra)
+	#print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED,ra)
+	#print "tester id",state_transfer(tester,RA_USER_ACTION_TESTER_CONFIRMED,ra)
+	#print "operator id",state_transfer(operator,RA_USER_ACTION_OPERATOR_CLAIMED,ra)
+	#print "operator id",state_transfer(operator,RA_USER_ACTION_OPERATOR_EXECUTED,ra)
+	#print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_CLOSED,ra)
+	
+	print "applier id",applier.created_release_applys_by_pagination(1)
+	print "applier id",applier.waitting_confirmed_release_applys_by_pagination(1)
+	done,cnt = manager.operated_release_applys_by_pagination(1)
+	print "manager id",done,cnt,done[0].state,done[0].action
+	

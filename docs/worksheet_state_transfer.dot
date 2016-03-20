@@ -1,0 +1,37 @@
+digraph graphname { 
+	rankdir=TB;
+	desc[shape=record,label="Worksheet状态流转图"]
+	developer[shape=record,label="开发状态编码1打头"]	
+	team_leader[shape=box,label="主管状态编码2打头"]	
+	manager[shape=record,label="经理状态编码3打头"]	
+	tester[shape=record,label="测试状态编码4打头"]	
+	operator[shape=record,label="运维状态编码5打头"]	
+	close[shape=record,label="关闭状态硬编码9000000000000"]	
+	desc -> developer -> team_leader -> manager -> tester -> operator -> close
+	node [fontname = "Microsoft YaHei", fontsize = 12, shape = "Mrecord", color="skyblue", style="filled"]; 
+	edge [fontname = "Microsoft YaHei", fontsize = 12, color="darkgreen" ];
+	start[label="", shape="circle", width=0.5, fixedsize=true, color="black"];
+	s1[label="主管待确认 state_value=200"];
+	s5[label="运维待认领 state_value=5000000"]
+	s6[label="运维待执行 state_value=50000000"]
+	s7[label="开发待关闭 state_value=100000000"]
+	s11[label="主管待关闭 state_value=200000000"]
+	s8[label="开发待修改 state_value=10"]
+	s9[label="主管待修改 state_value=200"]
+	s10[label="关闭 state_value=9000000000000"]
+
+	start -> s1 [label="开发创建CREATED"];
+	start -> s5 [label="主管创建CREATED", color = "red" , fontcolor=red,style="dashed"]; 
+	s1 -> s5[label="主管确认CONFIRMED"];
+	s5 -> s6[label="运维认领CLAIMED"];
+	s6 -> s7[label="运维执行EXECUTED"];
+	s6 -> s11[label="运维执行EXECUTED",color = "red" , fontcolor=red,style="dashed"];
+	s7 -> s10[label="开发关闭CLOSED"];
+	s11 -> s10[label="主管关闭CLOSED",color = "red" , fontcolor=red,style="dashed"];
+
+	s1 -> s8[label="主管拨回REJECT"];
+	s5 -> s8[label="运维拨回REJECT"];
+	s8 -> s1[label="开发重提交RESUBMIT"];
+	s5 -> s9[label="运维拨回REJECT",color = "red" , fontcolor=red,style="dashed"];
+	s9 -> s5[label="主管重提交RESUBMIT", color = "red" , fontcolor=red,style="dashed"];
+}; 

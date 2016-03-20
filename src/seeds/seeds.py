@@ -89,18 +89,30 @@ rast3.save()
 ret = ReleaseApplyStateType.objects.filter(name="主管待审核")
 if len(ret) == 1:
 	print "OK"
+RA_STATE_CLOSED = u"已关闭上线申请单"
+RA_STATE_WAITTING_MANAGER_CONFIRMED = u"待经理确认"
+RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED = u"待开发构建确认"
+RA_STATE_WAITTING_DEVELOPER_MODIFIED= u"待开发修改"
+RA_STATE_WAITTING_DEVELOPER_CLOSED = u"待开发关闭"
+RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED = "待主管确认"
+RA_STATE_WAITTING_TEAM_LEADER_MODIFIED = u"待主管修改"
+RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED = "待主管构建确认"
+RA_STATE_WAITTING_TEAM_LEADER_CLOSED = u"待主管关闭"
+RA_STATE_WAITTING_TESTER_CONFIRMED = "待测试确认"
+RA_STATE_WAITTING_OPERATOR_CLAIMED = u"待运维认领"
+RA_STATE_WAITTING_OPERATOR_EXECUTED = u"待运维执行"
 
 import datetime
 ra = ReleaseApply(title="mop上线",applier = u ,tester = u,release_type=u"常规发布",producter = u,application = app,planned_at=datetime.datetime.now())
 ra.save()
 
-ras = ReleaseApplyState(creator = u,release_apply = ra,state = "s1")
+ras = ReleaseApplyState(creator = u,release_apply = ra,state = RA_STATE_WAITTING_OPERATOR_EXECUTED)
 ras.save()
 
-ras = ReleaseApplyState(creator = u,release_apply = ra,state = "s2")
+ras = ReleaseApplyState(creator = u,release_apply = ra,state = RA_STATE_WAITTING_TESTER_CONFIRMED)
 ras.save()
 
-ras = ReleaseApplyState(creator = u,release_apply = ra,state = "s3")
+ras = ReleaseApplyState(creator = u,release_apply = ra,state = RA_STATE_WAITTING_OPERATOR_CLAIMED)
 ras.save()
 #help(ra)
 

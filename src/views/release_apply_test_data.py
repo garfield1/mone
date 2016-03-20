@@ -35,7 +35,7 @@ operator.role_set.add(operator_role)
 ra = ReleaseApply(title="shopping cart",tester = tester ,applier = applier ,producter = producter, application = Application.objects.first(),planned_at=datetime.datetime.now())      
 ra.save()
 wt = WorksheetType.objects.create(name="1111")   
-w = Worksheet.objects.create(title="ws",applier= developer,planned_at = datetime.datetime.now(),worksheet_type = wt)
+w = Worksheet.objects.create(title="ws",operator = operator, applier= developer,planned_at = datetime.datetime.now(),worksheet_type = wt)
 
 dev_leader1 = User.objects.create(username="lw",desc="研发主管",email="xufengtian@meizu.com")
 dev_leader2 = User.objects.create(username="xp",desc="研发主管",email="xufengtian@meizu.com")
@@ -51,7 +51,7 @@ operator_leader =User.objects.create(username="wb",desc="运维主管",email="we
 
 org0 = Organization.objects.create(name = "系统开发组",leader = manager)
 org1 = Organization.objects.create(name = "平台架构&基础运维",leader = dev_leader4)
-operator_org =Organization.objects.create(name = "基础运维",leader = operator_leader)
+operator_org =Organization.objects.create(name = "基础运维组",leader = operator_leader)
 operator_org.user_set.add(operator)
 operator_org.user_set.add(operator_leader)
 org3 = Organization.objects.create(name = "平台架构",leader = dev_leader4)
