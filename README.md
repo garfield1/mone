@@ -4,7 +4,7 @@
 pip install gittle
 yum groupinstall "Development Tools"
 
-pip install flask flask-login requests Django==1.6.11 eralchemy
+pip install flask flask-login requests Django==1.6.11 eralchemy python-ldap
 pip install gitpython
 使用bitnami reviewboard简化安装环境
 https://bitnami.com/stack/reviewboard/installer

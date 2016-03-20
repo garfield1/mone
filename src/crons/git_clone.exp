@@ -1,0 +1,6 @@
+#!/usr/bin/expect -f
+spawn git clone http://maolingzhi@git.hz.meizu.com/scm/store_meizu_hz/store_marketing.git
+expect {
+"Password:" { send "your password\r" }
+}
+interact
