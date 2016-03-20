@@ -131,7 +131,6 @@ class User(models.Model):
 		p = Paginator(ret , pagesize)
 		return (p.page(current_page).object_list, len(ret))
 
-
 	def waitting_confirmed_release_applys_by_pagination(self, current_page , pagesize = 1):
 		"""
 		我的待操作上线申请
