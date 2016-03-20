@@ -131,9 +131,10 @@ class User(models.Model):
 		p = Paginator(ret , pagesize)
 		return (p.page(current_page).object_list, len(ret))
 
+	#TODO
 	def waitting_confirmed_release_applys_by_pagination(self, current_page , pagesize = 1):
 		"""
-		我的待操作上线申请
+		我的待操作上线申请,有问题
 		"""
 		ret = ReleaseApply.objects.filter(waitting_confirmer_id = self.id).all()
 		p = Paginator(ret , pagesize)
@@ -154,10 +155,11 @@ class User(models.Model):
 		ret = self.worksheet_set.all()
 		p = Paginator(ret , pagesize)
 		return (p.page(current_page).object_list, len(ret))
-
+	
+	#TODO
 	def waitting_confirmed_worksheets_by_pagination(self , current_page , pagesize = 1):
 		"""
-		我的待操作工单
+		我的待操作工单,有问题
 		"""
 		ret = Worksheet.objects.filter(waitting_confirmer_id = self.id).all()
 		p = Paginator(ret , pagesize)
