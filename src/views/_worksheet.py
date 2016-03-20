@@ -38,7 +38,7 @@ def state_transfer(user,action,w,reject_reason=None):
 
 	if action == WS_USER_ACTION_TEAM_LEADER_REJECTED or action == WS_USER_ACTION_OPERATOR_REJECTED:
 		state = WS_STATE_WAITTING_DEVELOPER_MODIFIED
-		if w.applier.is_team_leader:
+		if w.applier.is_team_leader():
 			state = WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
 		WorksheetState.objects.create(creator = user, waitting_confirmer = user ,worksheet = w, state = state , reject_reason = reject_reason, action = action)
 		_send_email(w.applier.email,w,user.username+"拨回了你的"+w.title+"工单")
@@ -54,7 +54,7 @@ def state_transfer(user,action,w,reject_reason=None):
 
 	if action == WS_USER_ACTION_OPERATOR_EXECUTED:
 		state = WS_STATE_WAITTING_DEVELOPER_CLOSED
-		if w.applier.is_team_leader:
+		if w.applier.is_team_leader():
 			state = WS_STATE_TEAM_LEADER_CLOSED
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier, worksheet = w, state = state , action = action)
 		_send_email(w.applier,w,"您的"+w.title+"工单需要您关闭")

@@ -28,7 +28,7 @@ def state_transfer(user,action,ra,reject_reason = None):
 
 	if action == RA_USER_ACTION_MANAGER_CONFIRMED:
 		_state = RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED
-		if ra.applier.is_team_leader:
+		if ra.applier.is_team_leader():
 			state = RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
 		_send_email(ra.applier.email,ra,"可以构建了")
@@ -67,7 +67,7 @@ def state_transfer(user,action,ra,reject_reason = None):
 
 	if action == RA_USER_ACTION_OPERATOR_EXECUTED:
 		_state = RA_STATE_WAITTING_DEVELOPER_CLOSED
-		if ra.applier.is_team_leader:
+		if ra.applier.is_team_leader():
 			_state = RA_STATE_WAITTING_TEAM_LEADER_CLOSED
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
 		_send_email("ecomdev@meizu.com",ra,"发布成功")
