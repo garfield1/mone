@@ -24,17 +24,20 @@ def state_transfer(user,action,w,reject_reason=None):
 		#发运维全组
 		for operator in w.operator.organization.user_set.all():
 			_send_email(operator.email,w,w.title+"需要运维组认领")
+		return user.id
 
 	if action == WS_USER_ACTION_DEVELOPER_CREATED or action == WS_USER_ACTION_DEVELOPER_RESUBMIT:
 		#开发,pd等基础岗位提交上线申请走主管审批流程
-		ws = WorksheetState.objects.create(creator = user, waitting_confirmer = user.organization.leader ,worksheet = w, state = WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED , action = action)
+		WorksheetState.objects.create(creator = user, waitting_confirmer = user.organization.leader ,worksheet = w, state = WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED , action = action)
 		_send_email(user.organization.leader.email,w,w.title+"需要您审批")
+		return user.id
 
 	if action == WS_USER_ACTION_TEAM_LEADER_CONFIRMED:
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		#发运维全组
 		for operator in w.operator.organization.user_set.all():
 			_send_email(operator.email,w,"需要运维组认领")
+		return user.id
 
 	if action == WS_USER_ACTION_TEAM_LEADER_REJECTED or action == WS_USER_ACTION_OPERATOR_REJECTED:
 		state = WS_STATE_WAITTING_DEVELOPER_MODIFIED
@@ -43,6 +46,7 @@ def state_transfer(user,action,w,reject_reason=None):
 		WorksheetState.objects.create(creator = user, waitting_confirmer = user ,worksheet = w, state = state , reject_reason = reject_reason, action = action)
 		_send_email(w.applier.email,w,user.username+"拨回了你的"+w.title+"工单")
 		_send_email(user.email,w,"您拨回了"+w.applier.username+"的"+w.title+"工单")
+		return user.id
 			
 	if action == WS_USER_ACTION_OPERATOR_CLAIMED:
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_EXECUTED , action = action)
@@ -51,6 +55,7 @@ def state_transfer(user,action,w,reject_reason=None):
 			_send_email(w.operator.email,w,"被运维组"+user.username+"认领")
 		#发工单发起人
 		_send_email(w.applier.email,w,"被运维组"+user.username+"认领")
+		return user.id
 
 	if action == WS_USER_ACTION_OPERATOR_EXECUTED:
 		state = WS_STATE_WAITTING_DEVELOPER_CLOSED
@@ -59,11 +64,13 @@ def state_transfer(user,action,w,reject_reason=None):
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier, worksheet = w, state = state , action = action)
 		_send_email(w.applier,w,"您的"+w.title+"工单需要您关闭")
 		_send_email("ecomdev@meizu.com",w,"发布成功")
+		return user.id
 
 	if action == WS_USER_ACTION_TEAM_LEADER_CLOSED or action == WS_USER_ACTION_DEVELOPER_CLOSED:
 		WorksheetState.objects.create(creator = user, worksheet = w, state = WS_STATE_CLOSED , action = action)
 		_send_email(user.email,w,"工单: {0}, 已关闭成功".format(w.title))
 		_send_email(w.operator.email,w,"工单: {0}, 已关闭成功".format(w.title))
+		return user.id
 
 	return user.id
 
@@ -75,6 +82,7 @@ if __name__ == "__main__":
 	print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_REJECTED,w)
 	print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_RESUBMIT,w)
 	print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_CONFIRMED,w)
+	exit(1)
 	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_CLAIMED,w)
 	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_EXECUTED,w)
 	#print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_CLOSED,w)

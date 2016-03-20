@@ -20,11 +20,13 @@ def state_transfer(user,action,ra,reject_reason = None):
 		manager = user.organization.parent.leader
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = manager ,release_apply = ra, state = RA_STATE_WAITTING_MANAGER_CONFIRMED , action = action)
 		_send_email(manager.email,ra,"需要您审批")
+		return user.id
 
 	if action == RA_USER_ACTION_DEVELOPER_CREATED or action == RA_USER_ACTION_DEVELOPER_RESUBMIT:
 		team_leader = user.organization.leader
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = team_leader ,release_apply = ra, state = RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED , action = action)
 		_send_email(team_leader.email,ra,"需要您审批")
+		return user.id
 
 	if action == RA_USER_ACTION_MANAGER_CONFIRMED:
 		_state = RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED
@@ -32,18 +34,21 @@ def state_transfer(user,action,ra,reject_reason = None):
 			state = RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
 		_send_email(ra.applier.email,ra,"可以构建了")
+		return user.id
 	
 	if action == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.tester ,release_apply = ra, state = RA_STATE_WAITTING_TESTER_CONFIRMED , action = action)
 		#发测试全组
 		for tester in ra.tester.organization.user_set.all():
 			_send_email(tester.email,ra,"需要测试组测试")
+		return user.id
 
 	if action == RA_USER_ACTION_TESTER_CONFIRMED:
 		ReleaseApplyState.objects.create(creator = user ,release_apply = ra, state = RA_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		#发运维全组
 		for operator in Organization.objects.filter(name="基础运维组").first().user_set.all():
 			_send_email(operator.email,ra,"需要运维组发布")
+		return user.id
 
 	if action == RA_USER_ACTION_TESTER_REJECT or \
 	   action == RA_USER_ACTION_TEAM_LEADER_REJECTED or \
@@ -54,6 +59,7 @@ def state_transfer(user,action,ra,reject_reason = None):
 			state = RA_STATE_WAITTING_TEAM_LEADER_MODIFIED
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state, reject_reason = reject_reason, action = action)
 		_send_email(ra.applier.email,ra,user.username+"拨回了您的上线申请")
+		return user.id
 
 	if action == RA_USER_ACTION_OPERATOR_CLAIMED:
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = user ,release_apply = ra, state = RA_STATE_WAITTING_OPERATOR_EXECUTED , action = action)
@@ -64,6 +70,7 @@ def state_transfer(user,action,ra,reject_reason = None):
 		for operator in user.organization.user_set.all():
 			_send_email(operator.email,ra,user.username+"认领了"+ra.title+"上线申请")
 		_send_email(ra.applier.email,ra,user.username+"认领了您的"+ra.title+"上线申请")
+		return user.id
 
 	if action == RA_USER_ACTION_OPERATOR_EXECUTED:
 		_state = RA_STATE_WAITTING_DEVELOPER_CLOSED
@@ -72,11 +79,13 @@ def state_transfer(user,action,ra,reject_reason = None):
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
 		_send_email("ecomdev@meizu.com",ra,"发布成功")
 		_send_email(ra.applier.email,ra,ra.title+"发布完成，请关闭上线申请单")
+		return user.id
 
 	if action == RA_USER_ACTION_DEVELOPER_CLOSED or action == RA_USER_ACTION_TEAM_LEADER_CLOSED:
 		ReleaseApplyState.objects.create(creator = user, release_apply = ra, state = RA_STATE_CLOSED , action = action)
 		_send_email(ra.applier.email,ra,ra.title+"上线申请单关闭")
 		_send_email(ra.operator.email,ra,"您执行的"+ra.title+"上线申请单已关闭")
+		return user.id
 
 	return user.id
 
