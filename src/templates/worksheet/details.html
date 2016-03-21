@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div class="ant-steps-item ant-steps-status-wait" >
-                    <div class="detail-font"> 工单已申请，待审核 </div>
+                    <div class="detail-font"> {% if worksheet_data.state_id == 2  %} 工单已申请，待审核 {% elif worksheet_data.state_id == 3 %} 主管以确认，待认领 {% elif worksheet_data.state_id == 4 %} 运维已认领， 待执行  {% elif worksheet_data.state_id >= 5 %}完成 {% else %} 未知 {% endif %}</div>
                     <div class="btn-group" >
                         {% if is_revise %}
                             <a href="/worksheet/add/?worksheet_id={{ worksheet_data.worksheet_id}}">
