@@ -70,11 +70,11 @@ RA_STATE_WAITTING_MANAGER_CONFIRMED = u"待经理确认"
 RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED = u"待开发构建确认"
 RA_STATE_WAITTING_DEVELOPER_MODIFIED= u"待开发修改"
 RA_STATE_WAITTING_DEVELOPER_CLOSED = u"待开发关闭"
-RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED = "待主管确认"
+RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED = u"待主管确认"
 RA_STATE_WAITTING_TEAM_LEADER_MODIFIED = u"待主管修改" 
-RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED = "待主管构建确认"
+RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED = u"待主管构建确认"
 RA_STATE_WAITTING_TEAM_LEADER_CLOSED = u"待主管关闭"
-RA_STATE_WAITTING_TESTER_CONFIRMED = "待测试确认"
+RA_STATE_WAITTING_TESTER_CONFIRMED = u"待测试确认"
 RA_STATE_WAITTING_OPERATOR_CLAIMED = u"待运维认领" 
 RA_STATE_WAITTING_OPERATOR_EXECUTED = u"待运维执行"
 
@@ -206,7 +206,7 @@ class Worksheet(models.Model):
 	#operator = models.ForeignKey('User', null = True, blank = True, related_name = "operator")#运维人员
 	operator = models.ForeignKey(User,null=True,blank=True,related_name = "w_operator")
 	content = models.TextField()
-	waitting_confirmer_id = models.IntegerField(null = True , blank = True)
+	waitting_confirmer = models.ForeignKey(User,related_name='ws_waitting_confirmer',null = True,blank=True)
 	state = models.CharField(max_length = 400,null = True,blank = True)
 	state_value = models.BigIntegerField(null = True,blank = True)
 	worksheet_type = models.ForeignKey(WorksheetType)
@@ -216,7 +216,7 @@ class Worksheet(models.Model):
 
 class WorksheetState(models.Model):
 	creator = models.ForeignKey(User,related_name='ws_creator') #sys or specific user
-	waitting_confirmer = models.ForeignKey(User,related_name='ws_waitting_confirmer',null = True,blank=True)#creator must be sys
+	waitting_confirmer = models.ForeignKey(User,related_name='wss_waitting_confirmer',null = True,blank=True)#creator must be sys
 	worksheet = models.ForeignKey(Worksheet)
 	state = models.CharField(max_length = 400,null = True,blank = True)
 	action = models.CharField(max_length = 400,null = True,blank = True)

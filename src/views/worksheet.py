@@ -2,10 +2,10 @@
 import json
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
-from models.mone.models import Worksheet, WorksheetType, WorksheetState, User
-from views._worksheet import get_worksheets_by_state, WS_STATE_TEAM_LEADER_WAITTING_CONFIRMED, state_transfer, \
-	WS_USER_ACTION_WS_CREATED, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, WS_STATE_OPERATOR_WAITTING_CLAIMED, \
-	WS_STATE_OPERATOR_WAITTING_EXECUTED, WS_STATE_DEVELOPER_WAITTING_MODIFIED, WS_STATE_TEAM_LEADER_WAITTING_MODIFIED
+from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
+	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
+	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED
+from views._worksheet import state_transfer
 
 page_size = 20
 
@@ -67,13 +67,16 @@ def search_worksheet():
 	status = status_dict.get(status_id)
 	page_num = int(request.form.get('page_num') or 1)
 	myworksheet_status_id = request.form.get('myworksheet_status')
-	myworksheet_status = myworksheet_status_dict.get(myworksheet_status_id)
+	# myworksheet_status = myworksheet_status_dict.get(myworksheet_status_id)
 	user_id = session['user_data'].get('user_id')
 	kwargs = {}
 	if page_num < 1:
 		page_num = 1
-	if myworksheet_status:
-		worksheets, total = get_worksheets_by_state(user_id, myworksheet_status, page_num, pagesize=page_size)
+	if myworksheet_status_id:
+		# if myworksheet_status_id == "1":
+		worksheets, total = User().created_worksheets_by_pagination(current_page=page_num, pagesize=page_size)
+		# elif myworksheet_status_id == "2":
+		# 	worksheets, total = User().
 		page_count = total/page_size + 1
 		worksheet_list = []
 		for data in worksheets:
@@ -181,12 +184,12 @@ def worksheet_details(worksheet_id):
 		worksheetstate_list.append({"name": name, "created_at": data.created_at, "state": data.state, "content": data.reject_reason or ''})
 	worksheet_data['approver'] = approver
 	is_leader = False
-	if worksheet.state == WS_STATE_TEAM_LEADER_WAITTING_CONFIRMED:
+	if worksheet.state == WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED:
 		leader_id = worksheetstates[0].waitting_confirmer_id
 		if leader_id == user_id:
 			is_leader = True
 	is_operator = False
-	if worksheet.state == WS_STATE_OPERATOR_WAITTING_CLAIMED:
+	if worksheet.state == WS_STATE_WAITTING_OPERATOR_CLAIMED:
 		user_data = User.objects.filter(id = user_id)[0]
 		own_roles = set()
 		all_role = user_data.role_set.all()
@@ -196,12 +199,12 @@ def worksheet_details(worksheet_id):
 		if own_roles & operator_set:
 			is_operator = True
 	is_operator_execute = False
-	if worksheet.state == WS_STATE_OPERATOR_WAITTING_EXECUTED:
+	if worksheet.state == WS_STATE_WAITTING_OPERATOR_EXECUTED:
 		operator_id = worksheet.operator_id
 		if operator_id == user_id:
 			is_operator_execute = True
 	is_revise = False
-	if worksheet.state == WS_STATE_DEVELOPER_WAITTING_MODIFIED or worksheet.state == WS_STATE_TEAM_LEADER_WAITTING_MODIFIED:
+	if worksheet.state == WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED or worksheet.state == WS_STATE_WAITTING_DEVELOPER_MODIFIED:
 		applier_id = worksheet.applier_id
 		if user_id == applier_id:
 			is_revise = True
@@ -266,7 +269,7 @@ def add_post():
 	try:
 		worksheet_data = Worksheet(title=title, applier_id=user_id, content=content, worksheet_type_id=worksheet_type_id, planned_at=finish_at)
 		worksheet_data.save()
-		state_transfer(apply_user,WS_USER_ACTION_WS_CREATED,worksheet_data)
+		state_transfer(apply_user, WS_USER_ACTION_DEVELOPER_CREATED, worksheet_data)
 		if worksheet_data:
 			result = {'status': 200, 'message': '保存成功'}
 		else:

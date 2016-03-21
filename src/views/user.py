@@ -197,7 +197,6 @@ def change_information():
         user_data.role_set.clear()
         for role_id in role_list:
             role_data = Role.objects.filter(id=role_id)[0]
-            print role_data.name
             user_data.role_set.add(role_data)
         return json.dumps({'status': 200, 'message': 'success'})
     else:
