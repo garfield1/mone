@@ -2,7 +2,13 @@
 #encoding=utf-8
 
 #全局变量在models.py中
-from models.mone.models import EmailQueue
+from models.mone.models import EmailQueue, WS_USER_ACTION_TEAM_LEADER_CREATED, WS_USER_ACTION_TEAM_LEADER_RESUBMIT, \
+	WorksheetState, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_USER_ACTION_DEVELOPER_CREATED, \
+	WS_USER_ACTION_DEVELOPER_RESUBMIT, WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
+	WS_USER_ACTION_TEAM_LEADER_REJECTED, WS_USER_ACTION_OPERATOR_REJECTED, WS_STATE_WAITTING_DEVELOPER_MODIFIED, \
+	WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, WS_USER_ACTION_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
+	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_WAITTING_DEVELOPER_CLOSED, WS_STATE_WAITTING_TEAM_LEADER_CLOSED, \
+	WS_USER_ACTION_TEAM_LEADER_CLOSED, WS_USER_ACTION_DEVELOPER_CLOSED, WS_STATE_CLOSED, Organization, User
 
 
 def _send_email(email,w,state):
@@ -23,7 +29,9 @@ def state_transfer(user,action,w,reject_reason=None):
 		#主管提交上线申请直拉到运维待认领 or 运维打回
 		ws = WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		#发运维全组
-		for operator in w.operator.organization.user_set.all():
+		organization_data = Organization.objects.filter(name="基础运维")[0]
+		operators = User.objects.filter(organization = organization_data)
+		for operator in operators:
 			_send_email(operator.email,w,w.title+"需要运维组认领")
 		return user.id
 
@@ -35,9 +43,14 @@ def state_transfer(user,action,w,reject_reason=None):
 
 	if action == WS_USER_ACTION_TEAM_LEADER_CONFIRMED:
 		WorksheetState.objects.create(creator = user , worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
-		#发运维全组
-		for operator in w.operator.organization.user_set.all():
+		organization_data = Organization.objects.filter(name="基础运维")[0]
+		operators = User.objects.filter(organization = organization_data)
+		for operator in operators:
 			_send_email(operator.email,w,"需要运维组认领")
+		#发运维全组
+		# for operator in w.operator.organization.user_set.all():
+		# 	_send_email(operator.email,w,"需要运维组认领")
+
 		return user.id
 
 	if action == WS_USER_ACTION_TEAM_LEADER_REJECTED or action == WS_USER_ACTION_OPERATOR_REJECTED:
@@ -52,8 +65,12 @@ def state_transfer(user,action,w,reject_reason=None):
 	if action == WS_USER_ACTION_OPERATOR_CLAIMED:
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_EXECUTED , action = action)
 		#发运维全组
-		for operator in w.operator.organization.user_set.all():
-			_send_email(w.operator.email,w,"被运维组"+user.username+"认领")
+		organization_data = Organization.objects.filter(name="基础运维")[0]
+		operators = User.objects.filter(organization = organization_data)
+		for operator in operators:
+			_send_email(operator.email,w,"被运维组"+user.username+"认领")
+		# for operator in w.operator.organization.user_set.all():
+		# 	_send_email(operator.email,w,"被运维组"+user.username+"认领")
 		#发工单发起人
 		_send_email(w.applier.email,w,"被运维组"+user.username+"认领")
 		return user.id
@@ -75,7 +92,6 @@ def state_transfer(user,action,w,reject_reason=None):
 
 	return user.id
 
-	
 if __name__ == "__main__":
 	from release_apply_test_data import *
 	#开发action3个 主管action5个 运维action3个
