@@ -7,3 +7,4 @@ workspace.xml
 example.py
 *.xml
 .idea/workspace.xml
+venv
