@@ -5,7 +5,7 @@ from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
-	WS_USER_ACTION_TEAM_LEADER_CREATED
+	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
 from views._worksheet import state_transfer
 
 page_size = 20
@@ -204,7 +204,7 @@ def worksheet_details(worksheet_id):
 		if operator_id == user_id:
 			is_operator_execute = True
 	is_revise = False
-	if worksheet.state == WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED or worksheet.state == WS_STATE_WAITTING_DEVELOPER_MODIFIED:
+	if worksheet.state == WS_STATE_WAITTING_TEAM_LEADER_MODIFIED or worksheet.state == WS_STATE_WAITTING_DEVELOPER_MODIFIED:
 		applier_id = worksheet.applier_id
 		if user_id == applier_id:
 			is_revise = True
