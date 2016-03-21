@@ -29,7 +29,9 @@ def state_transfer(user,action,w,reject_reason=None):
 		#主管提交上线申请直拉到运维待认领 or 运维打回
 		ws = WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		#发运维全组
-		for operator in w.operator.organization.user_set.all():
+		organization_data = Organization.objects.filter(name="基础运维")[0]
+		operators = User.objects.filter(organization = organization_data)
+		for operator in operators:
 			_send_email(operator.email,w,w.title+"需要运维组认领")
 		return user.id
 

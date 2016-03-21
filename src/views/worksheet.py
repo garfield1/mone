@@ -4,7 +4,8 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
-	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT
+	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
+	WS_USER_ACTION_TEAM_LEADER_CREATED
 from views._worksheet import state_transfer
 
 page_size = 20
@@ -149,8 +150,8 @@ def add_worksheet():
 
 
 statusid_dict ={u"关闭": 0,
-	            u"开发待修改": 1,
-				u"主管待修改": 1,
+	            u"待开发修改": 1,
+				u"待主管修改": 1,
 				u"待主管确认": 2,
 				u"待运维认领": 3,
 				u"待运维执行": 4,
@@ -269,7 +270,10 @@ def add_post():
 	try:
 		worksheet_data = Worksheet(title=title, applier_id=user_id, content=content, worksheet_type_id=worksheet_type_id, planned_at=finish_at)
 		worksheet_data.save()
-		state_transfer(apply_user, WS_USER_ACTION_DEVELOPER_CREATED, worksheet_data)
+		if apply_user.organization.leader_id == user_id:
+			state_transfer(apply_user, WS_USER_ACTION_TEAM_LEADER_CREATED, worksheet_data)
+		else:
+			state_transfer(apply_user, WS_USER_ACTION_DEVELOPER_CREATED, worksheet_data)
 		if worksheet_data:
 			result = {'status': 200, 'message': '保存成功'}
 		else:
