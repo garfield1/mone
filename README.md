@@ -50,3 +50,4 @@ export CLASS_PATH=$JAVA_HOME/lib
 export M2_HOME=/export/program/apache-maven-3.3.9
 export PATH=$JAVA_HOME/bin:$PATH:$M2_HOME/bin
 export LANG='en_US.UTF-8'
+
