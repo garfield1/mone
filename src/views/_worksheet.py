@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 #encoding=utf-8
-from _django_orm import *
 
 #全局变量在models.py中
+from models.mone.models import EmailQueue
+
 
 def _send_email(email,w,state):
 	eq = EmailQueue()
