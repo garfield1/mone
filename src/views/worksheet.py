@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
-	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED
+	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT
 from views._worksheet import state_transfer
 
 page_size = 20
@@ -124,13 +124,11 @@ def worksheet_list():
 @login_required
 def add_worksheet():
 	worksheet_id = request.args.get('worksheet_id')
-	print worksheet_id
 	if worksheet_id:
 		try:
 			worksheet_data = Worksheet.objects.filter(id=worksheet_id)[0]
 		except:
 			worksheet_data = None
-		print worksheet_data
 		user_id = session["user_data"]["user_id"]
 		if worksheet_data:
 			if worksheet_data.applier_id == user_id:
@@ -153,10 +151,11 @@ def add_worksheet():
 statusid_dict ={u"关闭": 0,
 	            u"开发待修改": 1,
 				u"主管待修改": 1,
-				u"主管待确认": 2,
-				u"运维待认领": 3,
-				u"运维待执行": 4,
-				u"运维执行完成关闭": 5,
+				u"待主管确认": 2,
+				u"待运维认领": 3,
+				u"待运维执行": 4,
+				u"待主管关闭工单": 5,
+				u"待开发关闭工单": 5,
 				}
 
 @worksheet.route('/details/<worksheet_id>')
@@ -179,7 +178,7 @@ def worksheet_details(worksheet_id):
 	approver = ''
 	for data in worksheetstates:
 		name = data.creator.username if data.creator else None
-		if data.state == WS_USER_ACTION_TEAM_LEADER_CONFIRMED and not approver:
+		if data.state == WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED and not approver:
 			approver = data.creator.username if data.creator else ''
 		worksheetstate_list.append({"name": name, "created_at": data.created_at, "state": data.state, "content": data.reject_reason or ''})
 	worksheet_data['approver'] = approver
@@ -227,7 +226,7 @@ def update_worksheetstate():
 		worksheet_data = None
 
 	if user_data and worksheet_data:
-		if action_type == u"运维执行":
+		if action_type == u"运维认领":
 			worksheet_data.operator_id = user_id
 			worksheet_data.save()
 		if state_transfer(user_data, action_type, worksheet_data, reject_reason):
@@ -252,11 +251,12 @@ def add_post():
 			result = {'status': 1001, 'message': '数据不存在'}
 			return json.dumps(result)
 		if worksheet_data.applier_id == user_id:
+			user_data = User.objects.filter(id=user_id)[0]
 			worksheet_data.title = title
 			worksheet_data.worksheet_type_id = worksheet_type_id
 			worksheet_data.finish_at = finish_at
 			worksheet_data.content = content
-			worksheet_data.save()
+			state_transfer(user_data, WS_USER_ACTION_DEVELOPER_RESUBMIT, worksheet_data)
 			result = {'status': 200, 'message': '保存成功'}
 		else:
 			result = {'status': 1001, 'message': '没有权限'}

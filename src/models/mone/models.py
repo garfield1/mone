@@ -113,6 +113,7 @@ class User(models.Model):
 	updated_at= models.DateTimeField(auto_now=True)
 
 	def is_team_leader(self):
+		print self.email
 		if self.organization.leader == self:
 			return True
 		return False
