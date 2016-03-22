@@ -52,6 +52,7 @@ def taskpad():
 	return render_template("worksheet/taskpad.html", worksheet_list=worksheet_list, previous_page=previous_page, next_page=next_page)
 
 @worksheet.route('/get/taskpad/', methods=['POST'])
+@login_required
 def get_taskpad():
 	taskpad_type = request.form.get('taskpad_type')
 	page_num = int(request.form.get('page_num') or 1)
@@ -91,6 +92,7 @@ myworksheet_status_dict = {"1": u"工单创建",
 
 
 @worksheet.route('/search_worksheet/', methods=['POST'])
+@login_required
 def search_worksheet():
 	title = request.form.get('title')
 	apply_name = request.form.get('apply_name')
@@ -156,6 +158,7 @@ def get_all_operator():
 	return list(set(all_user_list))
 
 @worksheet.route('/')
+@login_required
 def worksheet_list():
 	operator_list = []
 	operators = get_all_operator()
@@ -252,6 +255,7 @@ def worksheet_details(worksheet_id):
 	return render_template("worksheet/details.html", worksheet_data=worksheet_data, worksheetstate_list=worksheetstate_list, is_leader=is_leader, is_operator=is_operator, is_operator_execute=is_operator_execute, is_revise=is_revise)
 
 @worksheet.route('/update/worksheetstate/', methods=['GET', 'POST'])
+@login_required
 def update_worksheetstate():
 	user_id = session["user_data"]["user_id"]
 	action_type = request.form.get('action_type')

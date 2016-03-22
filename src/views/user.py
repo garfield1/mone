@@ -143,6 +143,7 @@ def index():
     return redirect(url_for('worksheet.taskpad'))
 
 @user.route('/access_control/')
+@login_required
 @check_access([{"role_id": 1, "role_name": "系统管理员"}])
 def access_control():
     user_datas = User.objects.all()
@@ -180,6 +181,7 @@ def access_control():
     return render_template("user/access_control.html", user_list=user_list, role_list=role_list, organization_list=organization_list)
 
 @user.route('/change_information/', methods=['POST'])
+@login_required
 def change_information():
     user_id = request.form.get('user_id')
     try:
