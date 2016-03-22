@@ -4,11 +4,9 @@
     .card {
         padding:10px;
     }
-
     a {
         color: #333;
     }
-
     a:hover {
         text-decoration: none;
         color: #333
@@ -20,7 +18,7 @@
 {% endblock %}
 {% block content %}
     {% import "header.html" as header %}
-    {{ header.render() }}
+    {{ header.render()}}
     <div id="main-content">
         <div id="breadcrumb">
             <ul class="breadcrumb">
@@ -39,34 +37,18 @@
                     任务看板
                 </h1>
             </div>
-            <div>
-                <button class="btn btn-default task" type="button" value="">全部任务</button>
-                <button class="btn btn-default task" type="button" value="own">我的任务</button>
-            </div>
             <article>
-                <div class="list">
-                    <section id="cards" class="cards">
-                        <!--{% for data in worksheet_list %}-->
-                            <!--<div class="col-md-3 col-sm-6 col-lg-2">-->
-                                <!--<a href="/worksheet/details/{{ data.worksheet_id }}" class="">-->
-                                    <!--<div class="card">-->
-                                        <!--<div class="taskpad_content">标题: {{ data.title }}</div>-->
-                                        <!--<div class="taskpad_content">类型： {{ data.worksheet_type }}</div>-->
-                                        <!--<div class="taskpad_content">申请人： {{ data.apply_name }}</div>-->
-                                        <!--<div class="taskpad_content">申请时间：{{ data.created_at }}</div>-->
-                                        <!--<div class="taskpad_content">期望完成时间：{{ data.planned_at }}</div>-->
-                                        <!--<div class="taskpad_content ws_state" style="color:green;font-weight:bold"> {{ data.status }}</div>-->
-                                    <!--</div>-->
-                                <!--</a>-->
-                            <!--</div>-->
-                        <!--{% endfor %}-->
-                    </section>
-                    <!--<footer>-->
-                        <!--<ul class="pager pager-justify pager-pills">-->
-                            <!--<li class="previous {% if not previous_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">« 上一页</a></li>-->
-                            <!--<li class="next {% if not next_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">下一页 »</a></li>-->
-                        <!--</ul>-->
-                    <!--</footer>-->
+                <div class="form-group">
+                    <div class="col-md-12 off">
+                        <button class="btn btn-default btn-primary task" type="button" value="own">我的任务</button>
+                        <button class="btn btn-default task" type="button" value="">全部任务</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="list">
+                        <section id="cards" class="cards">
+                        </section>
+                    </div>
                 </div>
                 <div class="btn-group" style="float: right">
                     <button id="first" class="btn btn-md btn-pager"><<</button>

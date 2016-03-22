@@ -114,7 +114,9 @@ function ajax_post(taskpad_type,page_num){
 }
 
 $(".task").click(function(){
+    $(".task").removeClass("btn-primary");
     var this_button = $(this);
+    this_button.addClass("btn-primary");
     taskpad_type = this_button.val();
     page_num = 1;
     ajax_post(taskpad_type,page_num);
