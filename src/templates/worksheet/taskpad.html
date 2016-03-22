@@ -1,35 +1,22 @@
 {% extends "headfoot.html" %}
 {% block styles %}
-    <style>
-        .taskpad_title {
-            margin-left: 20px;
-            font-size: 20px;
-        }
+<style>
+    .card {
+        padding:10px;
+    }
 
-        .taskpad_content {
-            font-size: 15px;
-            margin-left: 20px;
-        }
+    a {
+        color: #333;
+    }
 
-        .taskpad_status {
-            position: absolute;
-            margin-left: 300px;
-            margin-top: -30px;
-            font-size: 20px;
-            background-color: #3280fc;
-        }
-
-        a {
-            color: #333;
-        }
-
-        a:hover {
-            text-decoration: none;
-            color: #333
-        }
-    </style>
+    a:hover {
+        text-decoration: none;
+        color: #333
+    }
+</style>
 {% endblock %}
 {% block scripts %}
+<script charset="utf-8" src="/static/js/worksheet/taskpad.js"></script>
 {% endblock %}
 {% block content %}
     {% import "header.html" as header %}
@@ -52,38 +39,59 @@
                     任务看板
                 </h1>
             </div>
-            <section>
-
-                <article>
-
-                    <div class="list">
-                        <section class="cards">
-                            {% for data in worksheet_list %}
-
-                                <div class="col-md-4 col-sm-6 col-lg-3">
-                                    <a href="/worksheet/details/{{ data.worksheet_id }}" class="">
-                                        <div class="card">
-                                            <div class="taskpad_title">标题: {{ data.title }}</div>
-                                            <div class="taskpad_status"> {{ data.status }}</div>
-                                            <div class="taskpad_content">类型： {{ data.worksheet_type }}</div>
-                                            <div class="taskpad_content">申请人： {{ data.apply_name }}</div>
-                                            <div class="taskpad_content">申请时间：{{ data.created_at }}</div>
-                                            <div class="taskpad_content">期望完成时间：{{ data.planned_at }}</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            {% endfor %}
-
-                        </section>
-                        <footer>
-                            <ul class="pager pager-justify pager-pills">
-                                <li class="previous {% if not previous_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">« 上一页</a></li>
-                                <li class="next {% if not next_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">下一页 »</a></li>
-                            </ul>
-                        </footer>
+            <div>
+                <button class="btn btn-default task" type="button" value="">全部任务</button>
+                <button class="btn btn-default task" type="button" value="own">我的任务</button>
+            </div>
+            <article>
+                <div class="list">
+                    <section id="cards" class="cards">
+                        <!--{% for data in worksheet_list %}-->
+                            <!--<div class="col-md-3 col-sm-6 col-lg-2">-->
+                                <!--<a href="/worksheet/details/{{ data.worksheet_id }}" class="">-->
+                                    <!--<div class="card">-->
+                                        <!--<div class="taskpad_content">标题: {{ data.title }}</div>-->
+                                        <!--<div class="taskpad_content">类型： {{ data.worksheet_type }}</div>-->
+                                        <!--<div class="taskpad_content">申请人： {{ data.apply_name }}</div>-->
+                                        <!--<div class="taskpad_content">申请时间：{{ data.created_at }}</div>-->
+                                        <!--<div class="taskpad_content">期望完成时间：{{ data.planned_at }}</div>-->
+                                        <!--<div class="taskpad_content ws_state" style="color:green;font-weight:bold"> {{ data.status }}</div>-->
+                                    <!--</div>-->
+                                <!--</a>-->
+                            <!--</div>-->
+                        <!--{% endfor %}-->
+                    </section>
+                    <!--<footer>-->
+                        <!--<ul class="pager pager-justify pager-pills">-->
+                            <!--<li class="previous {% if not previous_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">« 上一页</a></li>-->
+                            <!--<li class="next {% if not next_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">下一页 »</a></li>-->
+                        <!--</ul>-->
+                    <!--</footer>-->
+                </div>
+                <div class="btn-group" style="float: right">
+                    <button id="first" class="btn btn-md btn-pager"><<</button>
+                    <button id="previous" class="btn btn-md btn-pager"><</button>
+                    <button id="ppage" class="btn btn-md btn-pager btn-primary">1</button>
+                    <button id="cpage" class="btn btn-md btn-pager">2</button>
+                    <button id="npage" class="btn btn-md btn-pager">3</button>
+                    <button id="next" class="btn btn-md btn-pager">></button>
+                    <button id="last" class="btn btn-md btn-pager">>></button>
+                </div>
+            </article>
+        </div>
+        <div class="hide">
+            <div class="template col-md-3 col-sm-6 col-lg-2">
+                <a href="/worksheet/details/" class="">
+                    <div class="card">
+                        <div class="taskpad_content title">标题: </div>
+                        <div class="taskpad_content type">类型： </div>
+                        <div class="taskpad_content applyname">申请人： </div>
+                        <div class="taskpad_content applytime">申请时间：</div>
+                        <div class="taskpad_content finishtime">期望完成时间：</div>
+                        <div class="taskpad_content state" style="color:green;font-weight:bold"> </div>
                     </div>
-                </article>
-            </section>
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}
