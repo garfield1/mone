@@ -177,7 +177,7 @@ class User(models.Model):
 		"""
 		我的已操作工单
 		"""
-		ret = WorksheetState.objects.filter(creator = self).order_by("-created_at").all()
+		ret = Worksheet.objects.filter(operator = self).order_by("-created_at").all()
 		p = Paginator(ret , pagesize)
 		return (p.page(current_page).object_list, len(ret))
 

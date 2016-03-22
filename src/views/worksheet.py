@@ -206,13 +206,7 @@ def worksheet_details(worksheet_id):
 	is_operator = False
 	if worksheet.state == WS_STATE_WAITTING_OPERATOR_CLAIMED:
 		user_data = User.objects.filter(id = user_id)[0]
-		own_roles = set()
-		all_role = user_data.role_set.all()
-		for role in all_role:
-			own_roles.add(role.name)
-		operator_set = set([u"运维工程师", u"运维主管"])
-		if own_roles & operator_set:
-			is_operator = True
+		is_operator = user_data.is_operator()
 	is_operator_execute = False
 	if worksheet.state == WS_STATE_WAITTING_OPERATOR_EXECUTED:
 		operator_id = worksheet.operator_id
