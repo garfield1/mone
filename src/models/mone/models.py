@@ -113,19 +113,18 @@ class User(models.Model):
 	updated_at= models.DateTimeField(auto_now=True)
 
 	def is_team_leader(self):
-		print self.email
 		if self.organization.leader == self:
 			return True
 		return False
 
 	def is_manager(self):
-		ret = self.role_set.all() & Role.objects.filter(name__cantains=u"经理").all()
+		ret = self.role_set.all() & Role.objects.filter(name__contains=u"经理").all()
 		if len(ret) > 0:
 			return True
 		return False
 
 	def is_operator(self):
-		ret = self.role_set.all() & Role.objects.filter(name__cantains=u"运维").all()
+		ret = self.role_set.all() & Role.objects.filter(name__contains=u"运维").all()
 		if len(ret) > 0:
 			return True
 		return False
