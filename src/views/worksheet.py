@@ -5,7 +5,7 @@ from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
-	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
+	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Organization
 from views._worksheet import state_transfer
 
 page_size = 20
@@ -44,12 +44,14 @@ def taskpad():
 	return render_template("worksheet/taskpad.html", worksheet_list=worksheet_list, previous_page=previous_page, next_page=next_page)
 
 
-status_dict = {"1": u"待审核",
-			   "2": u"待认领",
-			   "3": u"待执行",
-			   "4": u"已完成",
-			   "5": u"已打回",
-			   "6": u"已关闭"}
+status_dict = {"1": u"待主管确认",
+			   "2": u"待开发修改",
+			   "3": u"待主管修改",
+			   "4": u"待运维认领",
+			   "5": u"待运维执行",
+			   "6": u"待主管关闭工单",
+			   "7": u"待开发关闭工单",
+			   "8": u"已关闭上线工单"}
 
 myworksheet_status_dict = {"1": u"工单创建",
 						   "2": u"主管确认",
@@ -68,16 +70,18 @@ def search_worksheet():
 	status = status_dict.get(status_id)
 	page_num = int(request.form.get('page_num') or 1)
 	myworksheet_status_id = request.form.get('myworksheet_status')
-	# myworksheet_status = myworksheet_status_dict.get(myworksheet_status_id)
 	user_id = session['user_data'].get('user_id')
+	user_data = User.objects.filter(id=user_id)[0]
 	kwargs = {}
 	if page_num < 1:
 		page_num = 1
 	if myworksheet_status_id:
-		# if myworksheet_status_id == "1":
-		worksheets, total = User().created_worksheets_by_pagination(current_page=page_num, pagesize=page_size)
-		# elif myworksheet_status_id == "2":
-		# 	worksheets, total = User().
+		if myworksheet_status_id == "1":
+			worksheets, total = user_data.created_worksheets_by_pagination(current_page=page_num, pagesize=page_size)
+		elif myworksheet_status_id == "2":
+			worksheets, total = user_data.waitting_confirmed_worksheets_by_pagination(current_page=page_num, pagesize=page_size)
+		else:
+			worksheets, total = user_data.operated_worksheets_by_pagination(current_page=page_num, pagesize=page_size)
 		page_count = total/page_size + 1
 		worksheet_list = []
 		for data in worksheets:
@@ -114,11 +118,16 @@ def search_worksheet():
 
 @worksheet.route('/')
 def worksheet_list():
+	operator_list = []
+	organization_data = Organization.objects.filter(name="基础运维")[0]
+	operators = User.objects.filter(organization = organization_data)
+	for operator in operators:
+		operator_list.append({'id': operator.id, 'name': operator.name})
 	worksheettype_list = []
 	worksheettypes = WorksheetType.objects.all()
 	for worksheet in worksheettypes:
-		worksheettype_list.append({'id': worksheet.id, "name": worksheet.name})
-	return render_template("worksheet/list.html", worksheettype_list=worksheettype_list)
+		worksheettype_list.append({'id': worksheet.id, 'name': worksheet.name})
+	return render_template("worksheet/list.html", worksheettype_list=worksheettype_list, operator_list=operator_list)
 
 
 @worksheet.route('/add/', methods=['GET'])
