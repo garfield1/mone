@@ -51,7 +51,7 @@ def taskpad():
 
 	return render_template("worksheet/taskpad.html", worksheet_list=worksheet_list, previous_page=previous_page, next_page=next_page)
 
-@worksheet.route('/get/taskpad/', methods=['GET'])
+@worksheet.route('/get/taskpad/', methods=['POST'])
 def get_taskpad():
 	taskpad_type = request.args.get('taskpad_type')
 	page_num = int(request.args.get('page_num') or 1)
