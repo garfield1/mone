@@ -119,13 +119,13 @@ class User(models.Model):
 		return False
 
 	def is_manager(self):
-		ret = self.role_set.all() & Role.objects.filter(name_endswith=u"经理").all()
+		ret = self.role_set.all() & Role.objects.filter(name__cantains=u"经理").all()
 		if len(ret) > 0:
 			return True
 		return False
 
 	def is_operator(self):
-		ret = self.role_set.all() & Role.objects.filter(name_startswith=u"运维").all()
+		ret = self.role_set.all() & Role.objects.filter(name__cantains=u"运维").all()
 		if len(ret) > 0:
 			return True
 		return False
@@ -168,7 +168,7 @@ class User(models.Model):
 		我的待操作工单
 		"""
 		if self.is_operator():
-			ret = Worksheet.objects.filter(state =  u'待运维认领').all()
+			ret = Worksheet.objects.filter(state = u'待运维认领').all()
 		else:
 			ret = Worksheet.objects.filter(waitting_confirmer_id = self.id).all()
 		p = Paginator(ret , pagesize)
