@@ -5,7 +5,7 @@ from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
-	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Organization
+	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Organization, Role
 from views._worksheet import state_transfer
 
 page_size = 20
@@ -115,12 +115,18 @@ def search_worksheet():
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'worksheet_list': worksheet_list}}
 	return json.dumps(result)
 
+def get_all_operator():
+	all_user_list = []
+	roles = Role.objects.filter(name__contains="运维")
+	for role in roles:
+		user_list = role.user.all()
+		all_user_list.extend(user_list)
+	return list(set(all_user_list))
 
 @worksheet.route('/')
 def worksheet_list():
 	operator_list = []
-	organization_data = Organization.objects.filter(name="基础运维")[0]
-	operators = User.objects.filter(organization = organization_data)
+	operators = get_all_operator()
 	for operator in operators:
 		operator_list.append({'id': operator.id, 'name': operator.username})
 	worksheettype_list = []

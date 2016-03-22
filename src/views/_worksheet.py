@@ -18,6 +18,14 @@ def _send_email(email,w,state):
 	eq.content = "http://localhost/worksheet/"+str(w.id)
 	eq.save()
 
+def get_all_operator():
+	all_user_list = []
+	roles = Role.objects.filter(name__contains="运维")
+	for role in roles:
+		user_list = role.user.all()
+		all_user_list.extend(user_list)
+	return list(set(all_user_list))
+
 def state_transfer(user,action,w,reject_reason=None):
 	"""
 	根据用户定位角色
@@ -29,8 +37,7 @@ def state_transfer(user,action,w,reject_reason=None):
 		#主管提交上线申请直拉到运维待认领 or 运维打回
 		ws = WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		#发运维全组
-		organization_data = Organization.objects.filter(name="基础运维")[0]
-		operators = User.objects.filter(organization = organization_data)
+		operators = get_all_operator()
 		for operator in operators:
 			_send_email(operator.email,w,w.title+"需要运维组认领")
 		return user.id
@@ -43,8 +50,7 @@ def state_transfer(user,action,w,reject_reason=None):
 
 	if action == WS_USER_ACTION_TEAM_LEADER_CONFIRMED:
 		WorksheetState.objects.create(creator = user , worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
-		organization_data = Organization.objects.filter(name="基础运维")[0]
-		operators = User.objects.filter(organization = organization_data)
+		operators = get_all_operator()
 		for operator in operators:
 			_send_email(operator.email,w,"需要运维组认领")
 		#发运维全组
@@ -65,8 +71,7 @@ def state_transfer(user,action,w,reject_reason=None):
 	if action == WS_USER_ACTION_OPERATOR_CLAIMED:
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_EXECUTED , action = action)
 		#发运维全组
-		organization_data = Organization.objects.filter(name="基础运维")[0]
-		operators = User.objects.filter(organization = organization_data)
+		operators = get_all_operator()
 		for operator in operators:
 			_send_email(operator.email,w,"被运维组"+user.username+"认领")
 		# for operator in w.operator.organization.user_set.all():

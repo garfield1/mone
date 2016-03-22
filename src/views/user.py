@@ -140,7 +140,7 @@ def logout():
 @user.route('/')
 @login_required
 def index():
-    return render_template("index/index.html")
+    return redirect(url_for('worksheet.taskpad'))
 
 @user.route('/access_control/')
 @check_access([{"role_id": 1, "role_name": "系统管理员"}])
