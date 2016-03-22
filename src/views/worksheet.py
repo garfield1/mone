@@ -14,6 +14,7 @@ worksheet = Blueprint('worksheet', __name__)
 
 
 @worksheet.route('/access_control/')
+@login_required
 def access_control():
     return render_template("user/access_control.html")
 
@@ -30,6 +31,7 @@ def get_worksheets_count(**kwargs):
 
 
 @worksheet.route('/taskpad/', methods=['GET'])
+@login_required
 def taskpad():
 	taskpad_type = request.args.get('taskpad_type')
 	page_num = int(request.args.get('page_num') or 1)
@@ -210,6 +212,7 @@ statusid_dict ={u"关闭": 0,
 				}
 
 @worksheet.route('/details/<worksheet_id>')
+@login_required
 def worksheet_details(worksheet_id):
 	user_id = session["user_data"]["user_id"]
 	try:
