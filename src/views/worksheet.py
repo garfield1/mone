@@ -53,20 +53,20 @@ def taskpad():
 
 @worksheet.route('/get/taskpad/', methods=['POST'])
 def get_taskpad():
-	taskpad_type = request.args.get('taskpad_type')
-	page_num = int(request.args.get('page_num') or 1)
+	taskpad_type = request.form.get('taskpad_type')
+	page_num = int(request.form.get('page_num') or 1)
 	if page_num < 1:
 		page_num = 1
 	kwargs = {}
 	user_id = session.get("user_data").get("user_id")
-	if 	taskpad_type:
+	if taskpad_type == "own":
 		kwargs['waitting_confirmer_id'] = user_id
 	worksheet_list = []
 	worksheets = get_worksheets_by_page(page_num, **kwargs)
 	total = get_worksheets_count(**kwargs)
 	page_count = total/page_size + 1
 	for data in worksheets:
-		worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'content': data.content, 'worksheet_type': data.worksheet_type.name, 'created_at': data.created_at, 'planned_at': data.planned_at, 'apply_name': data.applier.username, 'status': data.state })
+		worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'content': data.content, 'worksheet_type': data.worksheet_type.name, 'created_at': str(data.created_at), 'planned_at': str(data.planned_at), 'apply_name': data.applier.username, 'status': data.state })
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'worksheet_list': worksheet_list}}
 	return json.dumps(result)
 
