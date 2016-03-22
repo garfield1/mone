@@ -31,17 +31,49 @@ def get_worksheets_count(**kwargs):
 
 @worksheet.route('/taskpad/', methods=['GET'])
 def taskpad():
+	taskpad_type = request.args.get('taskpad_type')
 	page_num = int(request.args.get('page_num') or 1)
 	if page_num < 1:
 		page_num = 1
-	worksheets = get_worksheets_by_page(page_num)
-	next_worksheets_num = get_worksheets_by_page(page_num+1).count()
+	if taskpad_type == "own":
+		user_id = session.get("user_data").get("user_id")
+		kwargs = {"waitting_confirmer_id": user_id}
+		worksheets = get_worksheets_by_page(page_num, **kwargs)
+		next_worksheets_num = get_worksheets_by_page(page_num+1, **kwargs).count()
+	else:
+		worksheets = get_worksheets_by_page(page_num)
+		next_worksheets_num = get_worksheets_by_page(page_num+1).count()
 	worksheet_list = []
 	previous_page = page_num -1 if page_num > 1 else 0
 	next_page = page_num + 1 if next_worksheets_num > 0 else 0
 	for data in worksheets:
 		worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'content': data.content, 'worksheet_type': data.worksheet_type.name, 'created_at': data.created_at, 'planned_at': data.planned_at, 'apply_name': data.applier.username, 'status': data.state })
+
 	return render_template("worksheet/taskpad.html", worksheet_list=worksheet_list, previous_page=previous_page, next_page=next_page)
+
+@worksheet.route('/get/taskpad/', methods=['GET'])
+def get_taskpad():
+	taskpad_type = request.args.get('taskpad_type')
+	page_num = int(request.args.get('page_num') or 1)
+	if page_num < 1:
+		page_num = 1
+	kwargs = {}
+	user_id = session.get("user_data").get("user_id")
+	if 	taskpad_type:
+		kwargs['waitting_confirmer_id'] = user_id
+	worksheet_list = []
+	worksheets = get_worksheets_by_page(page_num, **kwargs)
+	total = get_worksheets_count(**kwargs)
+	page_count = total/page_size + 1
+	for data in worksheets:
+		worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'content': data.content, 'worksheet_type': data.worksheet_type.name, 'created_at': data.created_at, 'planned_at': data.planned_at, 'apply_name': data.applier.username, 'status': data.state })
+	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'worksheet_list': worksheet_list}}
+	return json.dumps(result)
+
+
+
+
+
 
 
 status_dict = {"1": u"待主管确认",
