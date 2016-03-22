@@ -15,7 +15,7 @@
 //});
 
 var taskpad_type = '';
-var page_num = '';
+var page_num = '1';
 
 function adjust_pager(page_num,page_count){
     $(".btn-pager").show().removeClass("btn-primary disabled");
@@ -136,3 +136,5 @@ $(".btn-pager").click(function () {
     }
     ajax_post(taskpad_type,page_num);
 });
+
+ajax_post(taskpad_type,page_num);
