@@ -14,7 +14,7 @@
 //    });
 //});
 
-var taskpad_type = '';
+var taskpad_type = 'own';
 var page_num = '1';
 
 function adjust_pager(page_num,page_count){
@@ -99,12 +99,12 @@ function ajax_post(taskpad_type,page_num){
                     var temp = $(".template").clone();
                     worksheet_list_item =  result.data.worksheet_list[i];
                     temp.find("a").attr("href","/worksheet/details/"+worksheet_list_item.worksheet_id);
-                    temp.find(".title").text(worksheet_list_item.title);
-                    temp.find(".type").text(worksheet_list_item.worksheet_type);
-                    temp.find(".applytime").text(worksheet_list_item.apply_time);
-                    temp.find(".applyname").text(worksheet_list_item.apply_name);
-                    temp.find(".finishtime").text(worksheet_list_item.end_time);
-                    temp.find(".state").text(worksheet_list_item.status);
+                    temp.find(".title").text("标题："+worksheet_list_item.title);
+                    temp.find(".type").text("类型： "+worksheet_list_item.worksheet_type);
+                    temp.find(".applytime").text("申请时间："+worksheet_list_item.created_at);
+                    temp.find(".applyname").text("申请人："+worksheet_list_item.apply_name);
+                    temp.find(".finishtime").text("期望完成时间："+worksheet_list_item.planned_at);
+                    temp.find(".state").text(""+worksheet_list_item.status);
                     temp.appendTo($("#cards"));
                     $("#cards .template").removeClass("template");
                 }
