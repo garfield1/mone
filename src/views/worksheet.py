@@ -226,7 +226,7 @@ def worksheet_details(worksheet_id):
 	approver = ''
 	for data in worksheetstates:
 		name = data.creator.username if data.creator else None
-		if data.state == WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED and not approver:
+		if data.state == WS_STATE_WAITTING_OPERATOR_CLAIMED and not approver:
 			approver = data.creator.username if data.creator else ''
 		worksheetstate_list.append({"name": name, "created_at": data.created_at, "state": data.state, "content": data.reject_reason or ''})
 	worksheet_data['approver'] = approver
