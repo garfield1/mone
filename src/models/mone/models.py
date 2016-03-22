@@ -119,11 +119,17 @@ class User(models.Model):
 		return False
 
 	def is_manager(self):
-		ret = self.role_set.all() & Role.objects.filter(name_endswith=u"经理").all()
+		ret = self.role_set.all() & Role.objects.filter(name__cantains=u"经理").all()
 		if len(ret) > 0:
 			return True
 		return False
-	
+
+	def is_operator(self):
+		ret = self.role_set.all() & Role.objects.filter(name__cantains=u"运维").all()
+		if len(ret) > 0:
+			return True
+		return False
+
 	def created_release_applys_by_pagination(self , current_page , pagesize = 1):
 		"""
 		我的上线申请
@@ -156,13 +162,15 @@ class User(models.Model):
 		ret = self.worksheet_set.all()
 		p = Paginator(ret , pagesize)
 		return (p.page(current_page).object_list, len(ret))
-	
-	#TODO
+
 	def waitting_confirmed_worksheets_by_pagination(self , current_page , pagesize = 1):
 		"""
-		我的待操作工单,有问题
+		我的待操作工单
 		"""
-		ret = Worksheet.objects.filter(waitting_confirmer_id = self.id).all()
+		if self.is_operator():
+			ret = Worksheet.objects.filter(state = u'待运维认领').all()
+		else:
+			ret = Worksheet.objects.filter(waitting_confirmer_id = self.id).all()
 		p = Paginator(ret , pagesize)
 		return (p.page(current_page).object_list, len(ret))
 
