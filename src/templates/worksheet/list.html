@@ -46,11 +46,9 @@
                     <div class="col-md-2">
                         <select name='opsname' id='opsname' class='form-control'>
                             <option value=''>全部</option>
-                            <option value='0'>刘文彬</option>
-                            <option value='1'>徐丰甜</option>
-                            <option value='2'>贾晓辉</option>
-                            <option value='3'>时磊</option>
-                            <option value='4'>皇甫泽鹏</option>
+                            {% for data in operator_list %}
+                            <option value='{{data.id}}'>{{data.name}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <label class="col-md-1 control-label">类型</label>
@@ -68,14 +66,14 @@
                     <div class="col-md-2">
                         <select name='state' id='state' class='form-control'>
                             <option value=''>全部</option>
-                            <option value='0'>待主管确认</option>
-                            <option value='1'>待开发修改</option>
-                            <option value='2'>待主管修改</option>
-                            <option value='3'>待运维认领</option>
-                            <option value='4'>待运维执行</option>
-                            <option value='5'>待主管关闭工单</option>
-                            <option value='6'>待开发关闭工单</option>
-                            <option value='7'>已关闭上线工单</option>
+                            <option value='1'>待主管确认</option>
+                            <option value='2'>待开发修改</option>
+                            <option value='3'>待主管修改</option>
+                            <option value='4'>待运维认领</option>
+                            <option value='5'>待运维执行</option>
+                            <option value='6'>待主管关闭工单</option>
+                            <option value='7'>待开发关闭工单</option>
+                            <option value='8'>已关闭上线工单</option>
                         </select>
                     </div>
                     <label class="col-md-1 control-label">申请的时间范围</label>
