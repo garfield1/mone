@@ -1,6 +1,8 @@
 /**
  * Created by xufengtian on 16-3-18.
  */
+$("#worksheet_content").html($("#worksheet_content").attr("content"));
+
 var action_type = '';
 var worksheet_id = $('#worksheet_id').text();
 var reject_reason = '';
