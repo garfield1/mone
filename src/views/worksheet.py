@@ -122,7 +122,7 @@ def worksheet_list():
 	organization_data = Organization.objects.filter(name="基础运维")[0]
 	operators = User.objects.filter(organization = organization_data)
 	for operator in operators:
-		operator_list.append({'id': operator.id, 'name': operator.name})
+		operator_list.append({'id': operator.id, 'name': operator.username})
 	worksheettype_list = []
 	worksheettypes = WorksheetType.objects.all()
 	for worksheet in worksheettypes:
