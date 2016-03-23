@@ -18,7 +18,7 @@ var status = '';
 var start_time = '';
 var end_time = '';
 var page_num = '';
-var myworksheet_status = '';
+var myworksheet_status = $("#myapplication").val();
 
 function adjust_pager(page_num,page_count){
     $(".btn-pager").show().removeClass("btn-primary disabled");
@@ -166,6 +166,12 @@ $(".btn-pager").click(function () {
         page_num = this_text;
     }
     ajax_post(title,apply_name,operator_id,worksheet_type_id,status,start_time,end_time,page_num,myworksheet_status);
+});
+
+$(".query").click(function(){
+    $(".query").removeClass("btn-primary");
+    var this_button = $(this);
+    this_button.addClass("btn-primary");
 });
 
 ajax_post(title,apply_name,operator_id,worksheet_type_id,status,start_time,end_time,1,myworksheet_status);

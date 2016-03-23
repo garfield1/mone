@@ -105,9 +105,9 @@ $("input#submit").click(function(){
             success: function(result){
                 if (result.status == "200") {
                     $("#goodnews").addClass("alert alert-success with-icon").show();
-//                    setTimeout(function(){
-//                        location.href = "/worksheet/taskpad/"
-//                    },3000);
+                    setTimeout(function(){
+                        location.href = "/worksheet/"
+                    },3000);
                 }else{
                     $("#badnews2").addClass("alert alert-danger with-icon").show();
                     setTimeout(function(){
