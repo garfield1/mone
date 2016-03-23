@@ -204,7 +204,7 @@ class Log(models.Model):
 	
 class WorksheetType(models.Model):
 	name = models.CharField(max_length = 400,null = True,blank = True)
-	desc = models.CharField(max_length = 400,null = True,blank = True)
+	template = models.CharField(max_length = 5000,null = True,blank = True)
 	created_at= models.DateTimeField(auto_now_add=True)
 	updated_at= models.DateTimeField(auto_now=True)
 
@@ -213,7 +213,7 @@ class Worksheet(models.Model):
 	applier = models.ForeignKey(User,related_name="worksheet_set")
 	#operator = models.ForeignKey('User', null = True, blank = True, related_name = "operator")#运维人员
 	operator = models.ForeignKey(User,null=True,blank=True,related_name = "w_operator")
-	content = models.TextField()
+	content = models.CharField(max_length = 5000,null = True,blank = True)
 	waitting_confirmer = models.ForeignKey(User,related_name='ws_waitting_confirmer',null = True,blank=True)
 	state = models.CharField(max_length = 400,null = True,blank = True)
 	state_value = models.BigIntegerField(null = True,blank = True)
@@ -266,7 +266,7 @@ class Application(models.Model):
 class EmailQueue(models.Model):
 	email = models.CharField(max_length = 400,null = True,blank = True)
 	title = models.CharField(max_length = 400,null = True,blank = True)
-	content = models.TextField()
+	content = models.CharField(max_length = 5000,null = True,blank = True)
 	is_sended = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
@@ -328,7 +328,7 @@ class ApplicationBuild(models.Model):
 	builder = models.ForeignKey(User)
 	release_apply = models.ForeignKey(ReleaseApply)
 	application = models.ForeignKey(Application)
-	message = models.TextField()
+	message = models.CharField(max_length = 5000,null = True,blank = True)
 	state = models.CharField(max_length = 400,null = True,blank = True)
 	#application_build_state = models.ForeignKey(ApplicationBuildState)
 	package_url = models.CharField(max_length = 400,null = True,blank = True)
@@ -359,7 +359,7 @@ class AutoDeployTaskResourceState(models.Model):
 class AutoDeployTaskResource(models.Model):
 	task = models.ForeignKey(AutoDeployTask)
 	resource = models.ForeignKey(Resource)
-	message = models.TextField()
+	message = models.CharField(max_length = 5000,null = True,blank = True)
 	state = models.ForeignKey(AutoDeployTaskResourceState)
 	created_at= models.DateTimeField(auto_now_add=True)
 	updated_at= models.DateTimeField(auto_now=True)

@@ -6,6 +6,3 @@ import os
 os.environ['DJANGO_SETTING_MODULE']='models.zz.settings'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "models.zz.settings")
 from models.mone.models import *
-
-
-
