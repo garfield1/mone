@@ -7,6 +7,7 @@ from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, W
 	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
 	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Organization, Role
 from views._worksheet import state_transfer
+from _worksheet_template import ws_template_dict, ws_template_map
 
 page_size = 20
 
@@ -331,3 +332,12 @@ def add_post():
 		result = {'status': 1001, 'message': '数据库异常'}
 	return json.dumps(result)
 
+@worksheet.route('/add/get_template/', methods=['GET', 'POST'])
+@login_required
+def get_template():
+	worksheet_type_id = request.form.get('worksheet_type_id')
+	try:
+		result = {'status': 200, 'message': '数据不存在','worksheet_content': ws_template_dict.get(ws_template_map.get(worksheet_type_id))}
+	except:
+		result = {'status': 1001, 'message': '数据不存在'}
+	return json.dumps(result)

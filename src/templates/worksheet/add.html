@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">类别</label>
                         <div class="col-md-4 ">
-                            <select name='type' id='type' class='form-control'>
+                            <select name='type' id='worksheet_type' class='form-control'>
                                 {% if worksheet_data.worksheet_type_id %}
                                 <option value='{{ worksheet_data.worksheet_type_id }}'>{{ worksheet_data.worksheet_type.name }}</option>
                                 {% endif %}

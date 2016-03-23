@@ -1,6 +1,7 @@
 /**
  * Created by xufengtian on 16-3-17.
  */
+ //获取worksheet_id
 var aQuery = window.location.href.split("?");  //取得Get参数
 var aGET = new Array();
 if(aQuery.length > 1)
@@ -13,7 +14,7 @@ if(aQuery.length > 1)
     }
  }
 var worksheet_id = aGET['worksheet_id'];
-
+//富文本编辑器部分
 var options = {
     items: ['fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
         'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
@@ -30,6 +31,7 @@ function getEditorData() {
     //editor.sync();
     return editor.html();
 }
+//日期时间选择器
 $(".form-datetime").datetimepicker({
     weekStart: 1,
     todayBtn:  1,
@@ -48,14 +50,28 @@ function ajax_get(worksheet_id){
         var result = $.parseJSON(data);
         if (result.status == 200) {
             var worksheet_content = result.worksheet_content;
-            $("#content").text(worksheet_content);
+            editor.html(worksheet_content);
         }
     }, "json");
 }
-
+//工单类型变化之后，调整富文本框内的数据
+$("#worksheet_type").change(function(){
+    var type = $.trim($("#worksheet_type").val());
+    if (type){
+        $.post("/worksheet/add/get_template/", {
+            worksheet_type_id:type
+        }, function(result){
+            if (result.status == "200") {
+                var worksheet_content = result.worksheet_content;
+                editor.html(worksheet_content);
+            }
+        }, "json");
+    }
+})
+//提交
 $("input#submit").click(function(){
     var title = $.trim($("#title").val());
-    var type = $.trim($("#type").val());
+    var type = $.trim($("#worksheet_type").val());
     var finishtime = $.trim($("#finishtime").val());
     var content = $.trim(getEditorData());
 
