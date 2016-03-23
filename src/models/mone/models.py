@@ -215,6 +215,7 @@ class Worksheet(models.Model):
 	operator = models.ForeignKey(User,null=True,blank=True,related_name = "w_operator")
 	content = models.CharField(max_length = 5000,null = True,blank = True)
 	waitting_confirmer = models.ForeignKey(User,related_name='ws_waitting_confirmer',null = True,blank=True)
+	attached_file_path = models.CharField(max_length = 400,null = True,blank = True)
 	state = models.CharField(max_length = 400,null = True,blank = True)
 	state_value = models.BigIntegerField(null = True,blank = True)
 	worksheet_type = models.ForeignKey(WorksheetType)

@@ -5419,7 +5419,7 @@ function _create(expr, options) {
   options.pluginsPath = _undef(options.pluginsPath, options.basePath + 'plugins/');
   if (_undef(options.loadStyleMode, K.options.loadStyleMode)) {
     var themeType = _undef(options.themeType, K.options.themeType);
-    _loadStyle('kindeditor.min.css');
+    _loadStyle('/static/zui/lib/kindeditor/kindeditor.min.css');
     _loadStyle(options.themesPath + themeType + '/' + themeType + '.css');
   }
   function create(editor) {

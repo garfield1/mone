@@ -21,6 +21,7 @@ user6 = User.objects.create(username="zq",desc="研发主管",email="xufengtian@
 user7 = User.objects.create(username="qt",desc="研发主管",email="xufengtian@meizu.com")
 user8 = User.objects.create(username="jt",desc="研发主管",email="xufengtian@meizu.com")
 user9 = User.objects.create(username="ft",desc="研发主管",email="xufengtian@meizu.com")
+
 user9.role_set.add(team_leader_role)
 user10 = User.objects.create(username="maolingzhi",desc="研发经理",email="maolingzhi@meizu.com")
 user10.role_set.add(manager_role)

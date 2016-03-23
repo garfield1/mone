@@ -1,5 +1,7 @@
 # coding=utf-8
+from ConfigParser import ConfigParser
 import json
+import os
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
@@ -8,8 +10,13 @@ from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, W
 	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Organization, Role
 from views._worksheet import state_transfer
 from _worksheet_template import ws_template_dict, ws_template_map
+config = ConfigParser()
+with open('mone.conf', 'r') as cfgfile:
+	config.readfp(cfgfile)
+	page_size = int(config.get('page', 'page_size'))
+	upload_path = config.get('path', 'upload_path')
+cfgfile.close()
 
-page_size = 20
 
 worksheet = Blueprint('worksheet', __name__)
 
@@ -291,7 +298,16 @@ def add_post():
 	finish_at = request.form.get('finish_at')
 	content = request.form.get('content')
 	user_id = session['user_data'].get('user_id')
+	# email = session['user_data'].get('email')
+
 	worksheet_id = request.form.get('worksheet_id')
+	# file = request.files['file']
+	# file_location = None
+	# if file:
+	# 	filename = file.filename
+	# 	UPLOAD_FOLDER = upload_path + '/' + email.split('@')[0] + '/'
+	# 	file.save(os.path.join(UPLOAD_FOLDER, filename))
+	# 	file_location = 'tmp/%s' % filename
 	if worksheet_id:
 		try:
 			worksheet_data = Worksheet.objects.filter(id=worksheet_id)[0]
@@ -306,6 +322,7 @@ def add_post():
 			worksheet_data.worksheet_type_id = worksheet_type_id
 			worksheet_data.finish_at = finish_at
 			worksheet_data.content = content
+			# worksheet_data.attached_file_path = file_location
 			state_transfer(user_data, WS_USER_ACTION_DEVELOPER_RESUBMIT, worksheet_data)
 			result = {'status': 200, 'message': '保存成功'}
 		else:
