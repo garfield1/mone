@@ -7,7 +7,7 @@ from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
-	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Organization, Role
+	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Role
 from views._worksheet import state_transfer
 from _worksheet_template import ws_template_dict, ws_template_map
 config = ConfigParser()
