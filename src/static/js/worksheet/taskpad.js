@@ -1,19 +1,3 @@
-//$("#myapplication").click(function(){
-//    $(".ws_state").each(function(){
-//
-//        var this_elt = $(this);
-//        var this_elt_text = this_elt.text();
-//        if( this_elt_text == "待开发修改" || this_elt_text == "待主管修改"){
-////            alert(this_elt_text)
-//            this_elt.css("color","red");
-//        }else {,
-////            alert(this_elt_text)
-////            this_elt.css("color","blue");
-//            this_elt.css("color","red");
-//        }
-//    });
-//});
-
 var taskpad_type = 'own';
 var page_num = '1';
 
@@ -104,7 +88,20 @@ function ajax_post(taskpad_type,page_num){
                     temp.find(".applytime").text("申请时间："+worksheet_list_item.created_at);
                     temp.find(".applyname").text("申请人："+worksheet_list_item.apply_name);
                     temp.find(".finishtime").text("期望完成时间："+worksheet_list_item.planned_at);
-                    temp.find(".state").text(""+worksheet_list_item.status);
+                    var ws_state_elt = temp.find(".state");
+                    ws_state_elt.text(worksheet_list_item.status);
+                    var ws_state = worksheet_list_item.status
+                    if (ws_state=="待开发修改" || ws_state=="待主管修改" ){
+                        ws_state_elt.addClass("label-danger");
+                    }else if(ws_state=="待主管确认"){
+                        ws_state_elt.addClass("label-warning");
+                    }else if(ws_state=="待运维认领"){
+                        ws_state_elt.addClass("label-info");
+                    }else if(ws_state=="待运维执行"){
+                        ws_state_elt.addClass("label-success");
+                    }else if(ws_state=="待主管关闭工单" || ws_state=="待开发关闭工单" ){
+                        ws_state_elt.addClass("label-primary");
+                    }
                     temp.appendTo($("#cards"));
                     $("#cards .template").removeClass("template");
                 }

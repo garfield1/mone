@@ -11,6 +11,9 @@
         text-decoration: none;
         color: #333
     }
+    .state {
+        font-weight:bold
+    }
 </style>
 {% endblock %}
 {% block scripts %}
@@ -38,17 +41,13 @@
                 </h1>
             </div>
             <article>
-                <div class="form-group">
-                    <div class="col-md-12 off">
-                        <button class="btn btn-default btn-primary task" type="button" value="own">我的任务</button>
-                        <button class="btn btn-default task" type="button" value="">全部任务</button>
-                    </div>
+                <div style="margin-left:15px">
+                    <button class="btn btn-default btn-primary task" type="button" value="own">我的任务</button>
+                    <button class="btn btn-default task" type="button" value="">全部任务</button>
                 </div>
-                <div class="form-group">
-                    <div class="list">
-                        <section id="cards" class="cards">
-                        </section>
-                    </div>
+                <div class="list">
+                    <section id="cards" class="cards">
+                    </section>
                 </div>
                 <div class="btn-group" style="float: right">
                     <button id="first" class="btn btn-md btn-pager"><<</button>
@@ -65,12 +64,12 @@
             <div class="template col-md-3 col-sm-6 col-lg-2">
                 <a href="/worksheet/details/" class="">
                     <div class="card">
-                        <div class="taskpad_content title">标题: </div>
-                        <div class="taskpad_content type">类型： </div>
-                        <div class="taskpad_content applyname">申请人： </div>
-                        <div class="taskpad_content applytime">申请时间：</div>
-                        <div class="taskpad_content finishtime">期望完成时间：</div>
-                        <div class="taskpad_content state" style="color:green;font-weight:bold"> </div>
+                        <div class="taskpad_content"><span class="title"></span></div>
+                        <div class="taskpad_content"><span class="type"></span></div>
+                        <div class="taskpad_content"><span class="applyname"></span></div>
+                        <div class="taskpad_content"><span class="applytime"></span></div>
+                        <div class="taskpad_content"><span class="finishtime"></span></div>
+                        <div class="taskpad_content"><span class="label state"></span></div>
                     </div>
                 </a>
             </div>
