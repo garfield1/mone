@@ -8,7 +8,7 @@ from models.mone.models import EmailQueue, WS_USER_ACTION_TEAM_LEADER_CREATED, W
 	WS_USER_ACTION_TEAM_LEADER_REJECTED, WS_USER_ACTION_OPERATOR_REJECTED, WS_STATE_WAITTING_DEVELOPER_MODIFIED, \
 	WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, WS_USER_ACTION_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_WAITTING_DEVELOPER_CLOSED, WS_STATE_WAITTING_TEAM_LEADER_CLOSED, \
-	WS_USER_ACTION_TEAM_LEADER_CLOSED, WS_USER_ACTION_DEVELOPER_CLOSED, WS_STATE_CLOSED, Organization, User
+	WS_USER_ACTION_TEAM_LEADER_CLOSED, WS_USER_ACTION_DEVELOPER_CLOSED, WS_STATE_CLOSED, Role
 
 
 def _send_email(email,w,state):
@@ -37,6 +37,7 @@ def state_transfer(user,action,w,reject_reason=None):
 		#主管提交上线申请直拉到运维待认领 or 运维打回
 		ws = WorksheetState.objects.create(creator = user, waitting_confirmer = w.operator ,worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		#发运维全组
+		print 2222
 		operators = get_all_operator()
 		for operator in operators:
 			_send_email(operator.email,w,w.title+"需要运维组认领")
