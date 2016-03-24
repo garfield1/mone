@@ -201,6 +201,13 @@ def change_information():
         for role_id in role_list:
             role_data = Role.objects.filter(id=role_id)[0]
             user_data.role_set.add(role_data)
+        own_user_id = session.get('user_data').get('user_id')
+        own_user_data = check_user(user_id=own_user_id)
+        own_roles_data = own_user_data.role_set.all()
+        own_roles_list = []
+        for role_data in own_roles_data:
+            own_roles_list.append(role_data.id)
+        session['own_roles_list'] = own_roles_list
         return json.dumps({'status': 200, 'message': 'success'})
     else:
         return json.dumps({'status': 1001, 'message': 'failure'})
