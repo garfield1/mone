@@ -166,6 +166,12 @@
                                 <td >描述：</td>
                                 <td id="worksheet_content" content="{{ worksheet_data.content }}"></td>
                             </tr>
+                            {% if worksheet_data.attached_file_path %}
+                            <tr>
+                                <td >附件下载：</td>
+                                <td><a href="/download/{{ worksheet_data.attached_file_path }}" class="btn btn-md">查看附件 <i class="icon icon-download-alt"></i></a></td>
+                            </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
