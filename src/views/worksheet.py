@@ -26,15 +26,20 @@ def access_control():
     return render_template("user/access_control.html")
 
 
-def get_worksheets_by_page(page_num, **kwargs):
+def get_worksheets_by_page(page_num, filter_type='taskpad', **kwargs):
 	start_page = page_size*(page_num-1)
 	end_page = page_size*page_num
-	worksheets = Worksheet.objects.filter(**kwargs).order_by('-id')[start_page: end_page]
+	if filter_type == 'taskpad':
+		worksheets = Worksheet.objects.filter(**kwargs).exclude(state='已完成').order_by('-id')[start_page: end_page]
+	else:
+		worksheets = Worksheet.objects.filter(**kwargs).order_by('-id')[start_page: end_page]
 	return worksheets
 
-def get_worksheets_count(**kwargs):
-	return Worksheet.objects.filter(**kwargs).count()
-
+def get_worksheets_count(filter_type='taskpad', **kwargs):
+	if filter_type=='taskpad':
+		return Worksheet.objects.filter(**kwargs).exclude(state='已完成').count()
+	else:
+		return Worksheet.objects.filter(**kwargs).count()
 
 
 @worksheet.route('/taskpad/', methods=['GET'])
@@ -47,8 +52,8 @@ def taskpad():
 	if taskpad_type == "own":
 		user_id = session.get("user_data").get("user_id")
 		kwargs = {"waitting_confirmer_id": user_id}
-		worksheets = get_worksheets_by_page(page_num, **kwargs)
-		next_worksheets_num = get_worksheets_by_page(page_num+1, **kwargs).count()
+		worksheets = get_worksheets_by_page(page_num, filter_type='taskpad', **kwargs)
+		next_worksheets_num = get_worksheets_by_page(page_num+1, filter_type='taskpad', **kwargs).count()
 	else:
 		worksheets = get_worksheets_by_page(page_num)
 		next_worksheets_num = get_worksheets_by_page(page_num+1).count()
@@ -72,8 +77,8 @@ def get_taskpad():
 	if taskpad_type == "own":
 		kwargs['waitting_confirmer_id'] = user_id
 	worksheet_list = []
-	worksheets = get_worksheets_by_page(page_num, **kwargs)
-	total = get_worksheets_count(**kwargs)
+	worksheets = get_worksheets_by_page(page_num, filter_type='taskpad', **kwargs)
+	total = get_worksheets_count(filter_type='taskpad', **kwargs)
 	page_count = total/page_size + 1
 	for data in worksheets:
 		worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'content': data.content, 'worksheet_type': data.worksheet_type.name, 'created_at': str(data.created_at), 'planned_at': str(data.planned_at), 'apply_name': data.applier.username, 'status': data.state })
@@ -147,8 +152,8 @@ def search_worksheet():
 		if status:
 			kwargs['state'] = status
 		worksheet_list = []
-		worksheets = get_worksheets_by_page(page_num, **kwargs)
-		total = get_worksheets_count(**kwargs)
+		worksheets = get_worksheets_by_page(page_num, filter_type='search', **kwargs)
+		total = get_worksheets_count(filter_type='search', **kwargs)
 		page_count = total/page_size + 1
 		for data in worksheets:
 			operator_name = data.operator.username if data.operator else ''
