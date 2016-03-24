@@ -7,10 +7,11 @@ from models.mone.models import EmailQueue, WS_USER_ACTION_TEAM_LEADER_CREATED, W
 	WS_USER_ACTION_DEVELOPER_RESUBMIT, WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_USER_ACTION_TEAM_LEADER_REJECTED, WS_USER_ACTION_OPERATOR_REJECTED, WS_STATE_WAITTING_DEVELOPER_MODIFIED, \
 	WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, WS_USER_ACTION_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
-	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_WAITTING_DEVELOPER_CLOSED, WS_STATE_WAITTING_TEAM_LEADER_CLOSED, \
-	WS_USER_ACTION_TEAM_LEADER_CLOSED, WS_USER_ACTION_DEVELOPER_CLOSED, WS_STATE_CLOSED, Role
-
-
+	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_CLOSED, Role
+# WS_STATE_WAITTING_DEVELOPER_CLOSED
+# WS_STATE_WAITTING_TEAM_LEADER_CLOSED
+# WS_USER_ACTION_TEAM_LEADER_CLOSED
+# WS_USER_ACTION_DEVELOPER_CLOSED
 def _send_email(email,w,state):
 	eq = EmailQueue()
 	eq.email = email
@@ -89,11 +90,11 @@ def state_transfer(user,action,w,reject_reason=None):
 		_send_email("ecomdev@meizu.com",w,"发布成功")
 		return user.id
 
-	if action == WS_USER_ACTION_TEAM_LEADER_CLOSED or action == WS_USER_ACTION_DEVELOPER_CLOSED:
-		WorksheetState.objects.create(creator = user, worksheet = w, state = WS_STATE_CLOSED , action = action)
-		_send_email(user.email,w,"工单: {0}, 已关闭成功".format(w.title))
-		_send_email(w.operator.email,w,"工单: {0}, 已关闭成功".format(w.title))
-		return user.id
+	# if action == WS_USER_ACTION_TEAM_LEADER_CLOSED or action == WS_USER_ACTION_DEVELOPER_CLOSED:
+	# 	WorksheetState.objects.create(creator = user, worksheet = w, state = WS_STATE_CLOSED , action = action)
+	# 	_send_email(user.email,w,"工单: {0}, 已关闭成功".format(w.title))
+	# 	_send_email(w.operator.email,w,"工单: {0}, 已关闭成功".format(w.title))
+	# 	return user.id
 
 	return user.id
 

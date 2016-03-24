@@ -219,12 +219,18 @@ def organization_control():
     organization_list = []
     organizations = Organization.objects.all()
     for organization in organizations:
-        organization_list.append({'id': organization.id, 'name': organization.name})
+        leader_id = ''
+        leader_name = ''
+        leader = organization.leader
+        if leader:
+            leader_id = leader.id
+            leader_name = leader.username
+        organization_list.append({'id': organization.id, 'name': organization.name, 'leader_id': leader_id, 'leader_name': leader_name})
     user_list = []
     users = User.objects.all()
     for user in users:
         user_list.append({'id': user.id, 'name': user.username})
-    return render_template("user/org_control.html", user_list=user_list, organization_list=organization_list)
+    return render_template("user/organization_control.html", user_list=user_list, organization_list=organization_list)
 
 @user.route('/update/org_leader/', methods=['POST'])
 @login_required
