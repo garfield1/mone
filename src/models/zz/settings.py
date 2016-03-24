@@ -60,7 +60,7 @@ WSGI_APPLICATION = 'zz.wsgi.application'
 #
 
 DATABASES = {
-    'default1': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'mone1',  # Or path to database file if using sqlite3.
         'USER': 'growthdb',  # Not used with sqlite3.
@@ -68,7 +68,7 @@ DATABASES = {
         'HOST': '10.2.81.201',  # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
     },
-      'default': {
+      'default1': {
           'ENGINE': 'django.db.backends.sqlite3',
           'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
       }
