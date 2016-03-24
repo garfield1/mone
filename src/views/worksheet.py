@@ -2,6 +2,7 @@
 from ConfigParser import ConfigParser
 import json
 import os
+from django.db.models import Q
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
@@ -65,6 +66,15 @@ def taskpad():
 
 	return render_template("worksheet/taskpad.html", worksheet_list=worksheet_list, previous_page=previous_page, next_page=next_page)
 
+def get_own_taskpad(user_id, page_num):
+	start_page = page_size*(page_num-1)
+	end_page = page_size*page_num
+	worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).order_by('-id')[start_page: end_page]
+	return worksheets
+
+def get_own_worksheets_count(user_id):
+	return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).count()
+
 @worksheet.route('/get/taskpad/', methods=['POST'])
 @login_required
 def get_taskpad():
@@ -75,13 +85,17 @@ def get_taskpad():
 	kwargs = {}
 	user_id = session.get("user_data").get("user_id")
 	if taskpad_type == "own":
-		kwargs['waitting_confirmer_id'] = user_id
+		worksheets = get_own_taskpad(user_id, page_num)
+		total = get_own_worksheets_count(user_id)
+	else:
+		worksheets = get_worksheets_by_page(page_num, filter_type='taskpad', **kwargs)
+		total = get_worksheets_count(filter_type='taskpad', **kwargs)
 	worksheet_list = []
-	worksheets = get_worksheets_by_page(page_num, filter_type='taskpad', **kwargs)
-	total = get_worksheets_count(filter_type='taskpad', **kwargs)
+
 	page_count = total/page_size + 1
 	for data in worksheets:
 		worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'content': data.content, 'worksheet_type': data.worksheet_type.name, 'created_at': str(data.created_at), 'planned_at': str(data.planned_at), 'apply_name': data.applier.username, 'status': data.state })
+
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'worksheet_list': worksheet_list}}
 	return json.dumps(result)
 
