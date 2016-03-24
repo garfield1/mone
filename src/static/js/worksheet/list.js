@@ -18,7 +18,7 @@ var status = '';
 var start_time = '';
 var end_time = '';
 var page_num = '';
-var myworksheet_status = $("#myapplication").val();
+var myworksheet_status = '';
 
 function adjust_pager(page_num,page_count){
     $(".btn-pager").show().removeClass("btn-primary disabled");
