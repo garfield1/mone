@@ -158,7 +158,7 @@ class User(models.Model):
 		"""
 		我创建的工单
 		"""
-		ret = self.worksheet_set.all()
+		ret = self.worksheet_set.order_by('-id').all()
 		p = Paginator(ret , pagesize)
 		return (p.page(current_page).object_list, len(ret))
 

@@ -106,7 +106,7 @@ $("input#submit").click(function(){
                 if (result.status == "200") {
                     $("#goodnews").addClass("alert alert-success with-icon").show();
                     setTimeout(function(){
-                        location.href = "/worksheet/"
+                        location.href = "/worksheet/details/" + result.data.worksheet_id
                     },3000);
                 }else{
                     $("#badnews2").addClass("alert alert-danger with-icon").show();

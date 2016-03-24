@@ -327,7 +327,7 @@ def add_post():
 			worksheet_data.content = content
 			# worksheet_data.attached_file_path = file_location
 			state_transfer(user_data, WS_USER_ACTION_DEVELOPER_RESUBMIT, worksheet_data)
-			result = {'status': 200, 'message': '保存成功'}
+			result = {'status': 200, 'message': '保存成功' , 'data': {'worksheet_id': worksheet_data.id}}
 		else:
 			result = {'status': 1001, 'message': '没有权限'}
 		return json.dumps(result)
@@ -347,7 +347,7 @@ def add_post():
 		else:
 			state_transfer(apply_user, WS_USER_ACTION_DEVELOPER_CREATED, worksheet_data)
 		if worksheet_data:
-			result = {'status': 200, 'message': '保存成功'}
+			result = {'status': 200, 'message': '保存成功', 'data': {'worksheet_id': worksheet_data.id}}
 		else:
 			result = {'status': 1001, 'message': '保存失败'}
 	except Exception,e:
