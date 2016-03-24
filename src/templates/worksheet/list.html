@@ -66,16 +66,15 @@
                     <div class="col-md-2">
                         <select name='state' id='state' class='form-control'>
                             <option value=''>全部</option>
-                            <option value='1'>待主管确认</option>
-                            <option value='2'>待开发修改</option>
-                            <option value='3'>待主管修改</option>
-                            <option value='4'>待运维认领</option>
-                            <option value='5'>待运维执行</option>
-                            <option value='6'>已完成</option>
-                            <option value='7'>已关闭上线工单</option>
+                            <option value='1'>待审核</option>
+                            <option value='2'>待认领</option>
+                            <option value='3'>待执行</option>
+                            <option value='4'>已完成</option>
+                            <option value='5'>已打回</option>
+                            <option value='6'>已关闭</option>
                         </select>
                     </div>
-                    <label class="col-md-1 control-label">申请的时间范围</label>
+                    <label class="col-md-1 control-label">申请时间</label>
                     <div class="col-md-2">
                         <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
                             <input class="form-control" size="16" type="text" name="starttime" id="starttime" value="" readonly="">
@@ -94,13 +93,13 @@
 
                     <div class="col-md-1"></div>
                     <div class="col-md-2">
-                        <input type='button' id='submit' class='btn query' value='查询' data-loading-text="正在加载..." />
+                        <input type='button' id='submit' class='btn btn-primary query' value='查询' data-loading-text="正在加载..." />
                     </div>
                 </div>
             </form>
 
             <div style="float:right">
-                <button class="btn btn-default aboutme query btn-primary" type="button" id="myapplication" value="1">我的申请</button>
+                <button class="btn btn-default aboutme query" type="button" id="myapplication" value="1">我的申请</button>
                 <button class="btn btn-default aboutme query" type="button" id="myapproval" value="2">我的审批</button>
                 <button class="btn btn-default aboutme query" type="button" id="myexecution" value="3">我的执行</button>
             </div>
