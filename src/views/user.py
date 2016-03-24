@@ -213,6 +213,8 @@ def change_information():
         return json.dumps({'status': 1001, 'message': 'failure'})
 
 @user.route('/organization_control/')
+@login_required
+@check_access([{"role_id": 1, "role_name": "系统管理员"}])
 def organization_control():
     organization_list = []
     organizations = Organization.objects.all()
@@ -222,8 +224,23 @@ def organization_control():
     users = User.objects.all()
     for user in users:
         user_list.append({'id': user.id, 'name': user.username})
-    return render_template("user/organization_control.html", user_list=user_list, organization_list=organization_list)
+    return render_template("user/org_control.html", user_list=user_list, organization_list=organization_list)
 
+@user.route('/update/org_leader/', methods=['POST'])
+@login_required
+@check_access([{"role_id": 1, "role_name": "系统管理员"}])
+def update_org_leader():
+    user_id = request.form.get('user_id')
+    org_id = request.form.get('org_id')
+    try:
+        org_data = Organization.filter.objects(id=org_id).update(leader=user_id)
+    except:
+        org_data = None
+    if org_data:
+        result = {'status': 200, 'message': '请求成功'}
+    else:
+        result = {'status': 200, 'message': '请求失败'}
+    return json.dumps(result)
 
 @user.route('/download/<path:path>')
 def download_file(path):
