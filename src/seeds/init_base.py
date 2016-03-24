@@ -22,7 +22,7 @@ user_list = [("叶新强","011212","yexinqiang@meizu.com"), ("孟庆宇","010941
              ("陈耕","010776","chengeng@meizu.com"), ("周朋","010707","zhoupeng1@meizu.com"), ("胡威","007161","huwei@meizu.com"),
              ("瞿涛","007339","qutao@meizu.com"), ("王明","011170","wangming@meizu.com"), ("童飞","502104","tongfei@meizu.com")]
 user_model_list = [User.objects.create(username=username,meizu_id=meizu_id,email=email) for username,meizu_id,email in user_list]
-# 组织
+# # 组织
 org_list = ["系统研发组", "平台架构和基础运维", "基础运维", "平台架构", "交易前台", "交易后台", "前端", "测试", "数据分析"]
 org_leader_list = ["毛凌志", "李威", "刘文彬", "李威", "郭志强", "胡子翅", "江涛", "瞿涛", "刘许鹏"]
 org_model_list = [Organization(name=org) for org in org_list]

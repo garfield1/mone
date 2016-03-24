@@ -99,7 +99,7 @@ RA_STATE_SCORES = {
 class Organization(models.Model):
 	name = models.CharField(max_length = 400,null = True,blank = True)
 	desc = models.CharField(max_length = 400,null = True,blank = True)
-	parent = models.ForeignKey('self', default = -1, null = True, blank = True, related_name = 'children')
+	parent = models.ForeignKey('self', null = True, blank = True, related_name = 'children')
 	leader = models.ForeignKey('User', null = True, blank = True, related_name = "leader")#机构负责人
 	created_at= models.DateTimeField(auto_now_add=True)
 	updated_at= models.DateTimeField(auto_now=True)
