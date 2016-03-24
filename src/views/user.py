@@ -239,13 +239,13 @@ def update_org_leader():
     user_id = request.form.get('user_id')
     org_id = request.form.get('org_id')
     try:
-        org_data = Organization.filter.objects(id=org_id).update(leader=user_id)
+        org_data = Organization.objects.filter(id=org_id).update(leader=user_id)
     except:
         org_data = None
     if org_data:
         result = {'status': 200, 'message': '请求成功'}
     else:
-        result = {'status': 200, 'message': '请求失败'}
+        result = {'status': 1001, 'message': '请求失败'}
     return json.dumps(result)
 
 @user.route('/download/<path:path>')
