@@ -3,6 +3,6 @@
 rm ../models/db.sqlite3
 python ../clear_pyc.py .
 python ../models/manage.py syncdb
-python base_init.py
-python worksheet_init.py
+python init_base.py
+python init_worksheet.py
 #python -i ./seeds.py
