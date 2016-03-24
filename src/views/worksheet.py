@@ -298,16 +298,17 @@ def add_post():
 	finish_at = request.form.get('finish_at')
 	content = request.form.get('content')
 	user_id = session['user_data'].get('user_id')
-	# email = session['user_data'].get('email')
-
+	email = session['user_data'].get('email')
 	worksheet_id = request.form.get('worksheet_id')
-	# file = request.files['file']
-	# file_location = None
-	# if file:
-	# 	filename = file.filename
-	# 	UPLOAD_FOLDER = upload_path + '/' + email.split('@')[0] + '/'
-	# 	file.save(os.path.join(UPLOAD_FOLDER, filename))
-	# 	file_location = 'tmp/%s' % filename
+	file = request.files.get('file')
+	file_location = None
+	if file:
+		filename = file.filename
+		UPLOAD_FOLDER = upload_path + email.split('@')[0] + '/'
+		if not os.path.exists(UPLOAD_FOLDER):
+			os.mkdir(UPLOAD_FOLDER)
+		file_location = os.path.join(UPLOAD_FOLDER, filename)
+		file.save(file_location)
 	if worksheet_id:
 		try:
 			worksheet_data = Worksheet.objects.filter(id=worksheet_id)[0]
@@ -321,6 +322,8 @@ def add_post():
 			worksheet_data.title = title
 			worksheet_data.worksheet_type_id = worksheet_type_id
 			worksheet_data.finish_at = finish_at
+			if file_location:
+				worksheet_data.attached_file_path = file_location
 			worksheet_data.content = content
 			# worksheet_data.attached_file_path = file_location
 			state_transfer(user_data, WS_USER_ACTION_DEVELOPER_RESUBMIT, worksheet_data)
@@ -334,7 +337,10 @@ def add_post():
 	except:
 		apply_user = None
 	try:
-		worksheet_data = Worksheet(title=title, applier_id=user_id, content=content, worksheet_type_id=worksheet_type_id, planned_at=finish_at)
+		if file_location:
+			worksheet_data = Worksheet(title=title, applier_id=user_id, content=content, worksheet_type_id=worksheet_type_id, attached_file_path=file_location, planned_at=finish_at)
+		else:
+			worksheet_data = Worksheet(title=title, applier_id=user_id, content=content, worksheet_type_id=worksheet_type_id, planned_at=finish_at)
 		worksheet_data.save()
 		if apply_user.organization.leader_id == user_id:
 			state_transfer(apply_user, WS_USER_ACTION_TEAM_LEADER_CREATED, worksheet_data)
