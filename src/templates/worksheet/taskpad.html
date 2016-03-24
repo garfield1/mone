@@ -2,7 +2,7 @@
 {% block styles %}
 <style>
     .card {
-        padding:10px;
+        padding:20px;
     }
     a {
         color: #333;
@@ -13,6 +13,13 @@
     }
     .state {
         font-weight:bold
+    }
+    .title {
+        display:block;/*内联对象需加*/
+        word-break:keep-all;/* 不换行 */
+        white-space:nowrap;/* 不换行 */
+        overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+        text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...),需与overflow:hidden;一起使用。*/
     }
 </style>
 {% endblock %}
@@ -61,10 +68,10 @@
             </article>
         </div>
         <div class="hide">
-            <div class="template col-md-3 col-sm-6 col-lg-2">
+            <div class="template col-md-4 col-sm-6 col-lg-3">
                 <a href="/worksheet/details/" class="">
                     <div class="card">
-                        <div class="taskpad_content"><span class="title"></span></div>
+                        <div class="taskpad_content"><span class="title "></span></div>
                         <div class="taskpad_content"><span class="type"></span></div>
                         <div class="taskpad_content"><span class="applyname"></span></div>
                         <div class="taskpad_content"><span class="applytime"></span></div>
