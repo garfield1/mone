@@ -212,6 +212,19 @@ def change_information():
     else:
         return json.dumps({'status': 1001, 'message': 'failure'})
 
+@user.route('/organization_control/')
+def organization_control():
+    organization_list = []
+    organizations = Organization.objects.all()
+    for organization in organizations:
+        organization_list.append({'id': organization.id, 'name': organization.name})
+    user_list = []
+    users = User.objects.all()
+    for user in users:
+        user_list.append({'id': user.id, 'name': user.username})
+    return render_template("user/organization_control.html", user_list=user_list, organization_list=organization_list)
+
+
 @user.route('/download/<path:path>')
 def download_file(path):
     try:

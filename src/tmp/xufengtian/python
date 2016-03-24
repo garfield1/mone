@@ -1,0 +1,71 @@
+*****
+yum groupinstall "Development tools"
+yum install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
+
+安装python2.7
+./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
+make && make altinstall
+*****
+
+0:centos6.5安装python2.7和虚拟环境
+http://toomuchdata.com/2014/02/16/how-to-install-python-on-centos/
+
+1:install easy_install
+安装：
+$ wget -q http://peak.telecommunity.com/dist/ez_setup.py
+$ python ./ez_setup.py
+使用：
+$ easy_install PackageName     #安装套件
+$ easy_install -U PackageName  #更新套件
+$ easy_install -m PackageName  #卸载套件
+$ easy_install --showhelp      #显示说明
+
+2:install pip
+安装：
+$ easy_install -U setuptools    #更新setuptools版本（重要），pip依赖于setuptools
+$ easy_install pip
+使用：
+$ pip install PackageName     #安装套件
+$ pip install -U PackageName  #更新套件
+$ pip uninstall PackageName   #卸载套件
+$ pip search PackageName      #搜索套件
+$ pip help                    #显示说明
+
+3:install virtualenv
+http://www.nowamagic.net/academy/detail/1330228
+安装：
+easy_install virtualenv
+pip install virtualenv
+使用：
+1:mkdir venv
+2:virtualenv --distribute venv // virtualenv --no-site-packages venv
+3:source ./venv/bin/activate
+4:deactivate 
+
+4:base
+    pip install requests
+    yum install gcc python-devel
+    pip install DBUtils
+    pip install gunicorn
+    pip install xlrd
+    pip install xlwt
+    pip install flask-httpauth
+
+5:flask
+    pip install Flask
+    pip install Flask-Login
+
+6:django:
+    pip install django-db-signals
+
+7:No module named MySQLdb
+    1、先安装mysql-devel.x86_64
+       yum install mysql-devel.x86_64
+    2、在次执行安装mysql-ptyhon
+       pip install mysql-python
+
+8:pip install python-ldap报错
+    1、先安装openldap-devel
+       yum install openldap-devel
+    2、在次执行安装python-ldap
+       pip install python-ldap
