@@ -9,7 +9,6 @@ from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, W
 	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
 	WS_USER_ACTION_TEAM_LEADER_CREATED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, Role
 from views._worksheet import state_transfer
-from _worksheet_template import ws_template_dict, ws_template_map
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
 	config.readfp(cfgfile)
@@ -358,7 +357,10 @@ def add_post():
 def get_template():
 	worksheet_type_id = request.form.get('worksheet_type_id')
 	try:
-		result = {'status': 200, 'message': '数据不存在','worksheet_content': ws_template_dict.get(ws_template_map.get(worksheet_type_id))}
+		template = WorksheetType.objects.get(id=worksheet_type_id).template
+		print(template)
+		# result = {'status': 200, 'message': '数据不存在','worksheet_content': ws_template_dict.get(ws_template_map.get(worksheet_type_id))}
+		result = {'status': 200, 'message': '数据不存在','worksheet_content': template}
 	except:
 		result = {'status': 1001, 'message': '数据不存在'}
 	return json.dumps(result)

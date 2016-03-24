@@ -24,22 +24,22 @@ user_list = [("叶新强","011212","yexinqiang@meizu.com"), ("孟庆宇","010941
 user_model_list = [User.objects.create(username=username,meizu_id=meizu_id,email=email) for username,meizu_id,email in user_list]
 # 组织
 org_list = ["系统研发组", "平台架构和基础运维", "基础运维", "平台架构", "交易前台", "交易后台", "前端", "测试", "数据分析"]
-org_model_list = [Organization.objects.create(name=org) for org in org_list]
-for x in org_model_list[1:]:
-    org_model_list[0].children.add(x)
-org_model_list[org_list.index("平台架构和基础运维")].children.add(org_model_list[org_list.index("基础运维")])
-org_model_list[org_list.index("平台架构和基础运维")].children.add(org_model_list[org_list.index("平台架构")])
-org_model_list[org_list.index("系统研发组")].leader = User.objects.get(username="毛凌志")
-org_model_list[org_list.index("平台架构和基础运维")].leader = User.objects.get(username="李威")
-org_model_list[org_list.index("基础运维")].leader = User.objects.get(username="刘文彬")
-org_model_list[org_list.index("平台架构")].leader = User.objects.get(username="李威")
-org_model_list[org_list.index("交易前台")].leader = User.objects.get(username="郭志强")
-org_model_list[org_list.index("交易后台")].leader = User.objects.get(username="胡子翅")
-org_model_list[org_list.index("前端")].leader = User.objects.get(username="江涛")
-org_model_list[org_list.index("测试")].leader = User.objects.get(username="瞿涛")
-org_model_list[org_list.index("数据分析")].leader = User.objects.get(username="刘许鹏")
-for x in org_model_list:
-    x.save()
+org_leader_list = ["毛凌志", "李威", "刘文彬", "李威", "郭志强", "胡子翅", "江涛", "瞿涛", "刘许鹏"]
+org_model_list = [Organization(name=org) for org in org_list]
+Organization.objects.bulk_create(org_model_list)
+Organization.objects.filter(name__in=org_list[1:]).update(parent=Organization.objects.get(name="系统研发组"))
+Organization.objects.filter(name__in=["基础运维", "平台架构"]).update(parent=Organization.objects.get(name="平台架构和基础运维"))
+for index in range(len(org_list)):
+    org = Organization.objects.get(name=org_list[index])
+    org.leader = User.objects.get(username=org_leader_list[index])
+    org.save()
 # 角色
-role_list = ["系统管理员", "研发主管", "测试主管", "测试工程师", "研发工程师", "研发经理", "运维主管", "运维工程师", "产品经理"]
-role_model_list = [Role.objects.create(name=role) for role in role_list]
+# role_list = ["系统管理员", "研发主管", "测试主管", "测试工程师", "研发工程师", "研发经理", "运维主管", "运维工程师", "产品经理"]
+role_list = ["系统管理员", "测试工程师", "研发工程师", "运维工程师", "产品经理"]
+role_model_list = [Role(name=role) for role in role_list]
+Role.objects.bulk_create(role_model_list)
+# 增加系统管理员用户
+role_sys = Role.objects.get(name="系统管理员")
+user_sys_list = ["皇甫泽鹏", "徐丰甜", "毛凌志"]
+for user_sys in user_sys_list:
+    role_sys.user.add(User.objects.get(username=user_sys))
