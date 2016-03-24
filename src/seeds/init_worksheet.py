@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #encoding=utf-8
 from _django_orm import *
-
+#工单类型
 worksheet_type_list = [("申请ECS服务器", "<p>项目名称：</p><p>服务器使用目的：</p><p>负责人：</p><p>CPU/核：</p><p>内存/G：</p><p>硬盘/G(服务器自带40G系统盘，默认不创建数据盘)：</p>"
                              "<p>网络带宽(不需要则填无；需要请填写原因)：</p><p>数量/台：</p><p>购买时长/月：</p>"),
                  ("申请RDS服务器", "<p>项目名称：</p><p>服务器使用目的：</p><p>负责人：</p><p>数据库名：</p><p>账户名：</p><p>内存/M：</p><table border='1'>"
@@ -32,5 +32,3 @@ worksheet_type_list = [("申请ECS服务器", "<p>项目名称：</p><p>服务�
                  ("应用下线", "<p>下线应用名称：</p><p>负责人：</p><p>下线ECS的ip：</p><p>下线RDS的id：</p><p>下线数据库名称：</p><p>下线SLB的ip：</p><p>下线域名(包括静态资源域名)：</p><p>下线原因：</p>"),
                  ("其他", "")]
 worksheet_type_model_list = [WorksheetType.objects.create(name=name,template=template) for name,template in worksheet_type_list]
-# Worksheet
-# WorksheetState =

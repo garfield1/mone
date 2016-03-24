@@ -29,8 +29,17 @@ for x in org_model_list[1:]:
     org_model_list[0].children.add(x)
 org_model_list[org_list.index("平台架构和基础运维")].children.add(org_model_list[org_list.index("基础运维")])
 org_model_list[org_list.index("平台架构和基础运维")].children.add(org_model_list[org_list.index("平台架构")])
-# org_model_list[org_list.index("系统研发组")].leader=User.objects.filter(username="毛凌志")
-# org_model_list[org_list.index("平台架构和基础运维")].leader=User.objects.filter(username="李威")
+org_model_list[org_list.index("系统研发组")].leader = User.objects.get(username="毛凌志")
+org_model_list[org_list.index("平台架构和基础运维")].leader = User.objects.get(username="李威")
+org_model_list[org_list.index("基础运维")].leader = User.objects.get(username="刘文彬")
+org_model_list[org_list.index("平台架构")].leader = User.objects.get(username="李威")
+org_model_list[org_list.index("交易前台")].leader = User.objects.get(username="郭志强")
+org_model_list[org_list.index("交易后台")].leader = User.objects.get(username="胡子翅")
+org_model_list[org_list.index("前端")].leader = User.objects.get(username="江涛")
+org_model_list[org_list.index("测试")].leader = User.objects.get(username="瞿涛")
+org_model_list[org_list.index("数据分析")].leader = User.objects.get(username="刘许鹏")
+for x in org_model_list:
+    x.save()
 # 角色
 role_list = ["系统管理员", "研发主管", "测试主管", "测试工程师", "研发工程师", "研发经理", "运维主管", "运维工程师", "产品经理"]
 role_model_list = [Role.objects.create(name=role) for role in role_list]
