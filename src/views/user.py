@@ -3,7 +3,8 @@
 from ConfigParser import ConfigParser
 import hashlib
 import json
-from flask import Blueprint, render_template, get_flashed_messages, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, get_flashed_messages, request, flash, redirect, url_for, session, \
+    send_file
 from flask.ext.login import UserMixin, LoginManager, logout_user, login_required, login_user
 import ldap
 from models.mone.models import User, Role, Organization
@@ -203,3 +204,11 @@ def change_information():
         return json.dumps({'status': 200, 'message': 'success'})
     else:
         return json.dumps({'status': 1001, 'message': 'failure'})
+
+@user.route('/download/<path:path>')
+def download_file(path):
+    try:
+        file = send_file(path)
+    except:
+        file = json.dumps({'status': 1001, 'message': '文件不存在'})
+    return file
