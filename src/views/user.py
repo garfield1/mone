@@ -17,6 +17,7 @@ sys.setdefaultencoding('utf8')
 user = Blueprint('user', __name__)
 login_manager = LoginManager()
 login_manager.login_view = "user.login"
+login_manager.login_message = u"你好，请先登录。"
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
     config.readfp(cfgfile)
@@ -249,6 +250,7 @@ def update_org_leader():
     return json.dumps(result)
 
 @user.route('/download/<path:path>')
+@login_required
 def download_file(path):
     try:
         file = send_file(path)
