@@ -18,7 +18,7 @@ def _send_email(email,w,state):
 	eq = EmailQueue()
 	eq.email = email
 	eq.title = w.title + state
-	eq.content = "http://localhost/worksheet/"+str(w.id)
+	eq.content = "http://mone.hz.meizu.com/worksheet/"+str(w.id)
 	eq.save()
 
 def get_all_operator():
