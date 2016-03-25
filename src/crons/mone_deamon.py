@@ -9,7 +9,6 @@ def send_email():
 		email_data = {"email": email_queue.email, "title": email_queue.title, "content": email_queue.content}
 		try:
 			result = requests.post(url, data=email_data)
-			sleep(2)
 		except Exception,e:
 			result = None
 		if result:
