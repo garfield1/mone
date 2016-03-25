@@ -2,6 +2,7 @@
  * Created by xufengtian on 16-3-17.
  */
  //获取worksheet_id
+
 var aQuery = window.location.href.split("?");  //取得Get参数
 var aGET = new Array();
 if(aQuery.length > 1)
@@ -69,14 +70,26 @@ $("#worksheet_type").change(function(){
     }
 })
 //提交
+
 $("input#submit").click(function(){
     var title = $.trim($("#title").val());
     var type = $.trim($("#worksheet_type").val());
     var finishtime = $.trim($("#finishtime").val());
     var content = $.trim(getEditorData());
     var file = $("#file");
-
-    if (title!="" && type!="" && finishtime!="" && content!=""){
+    if (title=="" || type=="" || finishtime=="" || content==""){
+        $("#badnews .content").text('抱歉！工单填写不完整！请重新填写！');
+        $("#badnews").addClass("alert alert-warning with-icon").show();
+        setTimeout(function(){
+            $("#badnews").removeClass("alert alert-warning with-icon").hide();
+        },3000);
+    }else if (title.length>20){
+        $("#badnews .content").text('抱歉！标题过长，长度应小于20个');
+        $("#badnews").addClass("alert alert-warning with-icon").show();
+        setTimeout(function(){
+            $("#badnews").removeClass("alert alert-warning with-icon").hide();
+        },3000);
+    }else {
         var this_elt = $(this);
         this_elt.addClass("disabled");
         var worksheet_data;
@@ -109,9 +122,10 @@ $("input#submit").click(function(){
                         location.href = "/worksheet/details/" + result.data.worksheet_id
                     },3000);
                 }else{
-                    $("#badnews2").addClass("alert alert-danger with-icon").show();
+                    $("#badnews .content").text('抱歉！服务器正忙！请尝试重新提交，或者联系运维！');
+                    $("#badnews").addClass("alert alert-danger with-icon").show();
                     setTimeout(function(){
-                        $("#badnews2").removeClass("alert alert-danger with-icon").hide();
+                        $("#badnews").removeClass("alert alert-danger with-icon").hide();
                         this_elt.removeClass("disabled");
                     },3000);
                 }
@@ -119,10 +133,5 @@ $("input#submit").click(function(){
             error: function(result){
             }
         });
-    }else{
-        $("#badnews").addClass("alert alert-warning with-icon").show();
-        setTimeout(function(){
-            $("#badnews").removeClass("alert alert-warning with-icon").hide();
-        },3000);
     }
 });
