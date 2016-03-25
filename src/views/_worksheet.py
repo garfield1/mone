@@ -88,7 +88,7 @@ def state_transfer(user,action,w,reject_reason=None):
 		if w.applier.is_team_leader():
 			_state = WS_STATE_WAITTING_OPERATOER_COMPLETE
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier, worksheet = w, state = _state , action = action)
-		_send_email(w.applier,w,"您的"+w.title+"工单需要您关闭")
+		# _send_email(w.applier,w,"您的"+w.title+"工单需要您关闭")
 		_send_email("ecomdev@meizu.com",w,"发布成功")
 		return user.id
 

@@ -76,6 +76,7 @@ $("input#submit").click(function(){
     var type = $.trim($("#worksheet_type").val());
     var finishtime = $.trim($("#finishtime").val());
     var content = $.trim(getEditorData());
+//    alert(content);
     var file = $("#file");
     if (title=="" || type=="" || finishtime=="" || content==""){
         $("#badnews .content").text('抱歉！工单填写不完整！请重新填写！');
@@ -84,7 +85,7 @@ $("input#submit").click(function(){
             $("#badnews").removeClass("alert alert-warning with-icon").hide();
         },3000);
     }else if (title.length>20){
-        $("#badnews .content").text('抱歉！标题过长，长度应小于20个');
+        $("#badnews .content").text('抱歉！标题过长，长度应小于20个！');
         $("#badnews").addClass("alert alert-warning with-icon").show();
         setTimeout(function(){
             $("#badnews").removeClass("alert alert-warning with-icon").hide();

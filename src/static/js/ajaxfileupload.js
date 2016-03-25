@@ -30,7 +30,9 @@ jQuery.extend({
 		{
 			for(var i in data)
 			{
-				jQuery('<input type="hidden" name="' + i + '" value="' + data[i] + '" />').appendTo(form);
+			    var input_temp = jQuery('<input type="hidden" />');
+			    input_temp.attr('name',i).val(data[i]).appendTo(form);
+//				jQuery('<input type="hidden" name="' + i + '" value="' + data[i] + '" />').appendTo(form);
 			}			
 		}
 		var oldElement;
