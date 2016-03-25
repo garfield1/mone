@@ -47,10 +47,8 @@ $("#toSave").click(function(){
         reject_reason: reject_reason
     }, function(result){
         if (result.status == "200") {
-
+            location.reload();
         }else{
-
         }
     }, "json");
-    location.reload();
 });
