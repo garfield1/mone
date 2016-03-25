@@ -1,0 +1,90 @@
+{% extends "headfoot.html" %}
+{% block styles %}
+    <style>
+        .taskpad_title {
+            margin-left: 20px;
+            font-size: 20px;
+        }
+
+        .taskpad_content {
+            font-size: 15px;
+            margin-left: 20px;
+        }
+
+        .taskpad_status {
+            position: absolute;
+            margin-left: 300px;
+            margin-top: -30px;
+            font-size: 20px;
+            background-color: #3280fc;
+        }
+
+        a {
+            color: #333;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: #333
+        }
+    </style>
+{% endblock %}
+{% block scripts %}
+    <script charset="utf-8" src="/static/js/worksheet/taskpad_test.js"></script>
+{% endblock %}
+{% block content %}
+    {% import "header.html" as header %}
+    {{ header.render() }}
+    <div id="main-content">
+        <div id="breadcrumb">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/"><i class="icon icon-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a id="parent-bread" href="#">工单系统</a>
+                </li>
+                <li id="children-bread">任务看板</li>
+            </ul>
+        </div>
+        <div id="page-content">
+            <div class="page-header">
+                <h1>
+                    任务看板
+                </h1>
+            </div>
+            <section>
+
+                <article>
+
+                    <div class="list">
+                        <section class="cards">
+                            {% for data in worksheet_list %}
+
+                                <div class="col-md-4 col-sm-6 col-lg-3">
+                                    <a href="/worksheet/details/{{ data.worksheet_id }}" class="">
+                                        <div class="card">
+                                            <div class="taskpad_title">标题: {{ data.title }}</div>
+                                            <div class="taskpad_status"> {{ data.status }}</div>
+                                            <div class="taskpad_content">类型： {{ data.worksheet_type }}</div>
+                                            <div class="taskpad_content">申请人： {{ data.apply_name }}</div>
+                                            <div class="taskpad_content">申请时间：{{ data.created_at }}</div>
+                                            <div class="taskpad_content">期望完成时间：{{ data.planned_at }}</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+
+                        </section>
+                        <footer>
+                            <ul class="pager pager-justify pager-pills">
+                                <li class="previous {% if not previous_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">« 上一页</a></li>
+                                <li class="next {% if not next_page %} disabled {% endif %}"><a href="{% if not previous_page %}#{% else %}/worksheet/taskpad/?page_num={{ previous_page }}{% endif %}">下一页 »</a></li>
+                            </ul>
+                        </footer>
+                    </div>
+                </article>
+            </section>
+        </div>
+    </div>
+{% endblock %}
