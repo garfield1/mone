@@ -66,14 +66,21 @@ def taskpad():
 
 	return render_template("worksheet/taskpad.html", worksheet_list=worksheet_list, previous_page=previous_page, next_page=next_page)
 
-def get_own_taskpad(user_id, page_num):
+def get_own_taskpad(user_id, page_num, is_operator):
 	start_page = page_size*(page_num-1)
 	end_page = page_size*page_num
-	worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).order_by('-id')[start_page: end_page]
+	if is_operator:
+		worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)|Q(state=u'待运维认领')).order_by('-id')[start_page: end_page]
+	else:
+		worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).order_by('-id')[start_page: end_page]
 	return worksheets
 
-def get_own_worksheets_count(user_id):
-	return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).count()
+def get_own_worksheets_count(user_id, is_operator):
+	if is_operator:
+		return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)|Q(state=u'待运维认领')).count()
+	else:
+		return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).count()
+
 
 @worksheet.route('/get/taskpad/', methods=['POST'])
 @login_required
@@ -85,8 +92,9 @@ def get_taskpad():
 	kwargs = {}
 	user_id = session.get("user_data").get("user_id")
 	if taskpad_type == "own":
-		worksheets = get_own_taskpad(user_id, page_num)
-		total = get_own_worksheets_count(user_id)
+		is_operator = User.objects.filter(id=user_id)[0].is_operator()
+		worksheets = get_own_taskpad(user_id, page_num, is_operator)
+		total = get_own_worksheets_count(user_id, is_operator)
 	else:
 		worksheets = get_worksheets_by_page(page_num, filter_type='taskpad', **kwargs)
 		total = get_worksheets_count(filter_type='taskpad', **kwargs)
