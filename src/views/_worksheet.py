@@ -5,9 +5,9 @@
 from models.mone.models import EmailQueue, WS_USER_ACTION_TEAM_LEADER_CREATED, WS_USER_ACTION_TEAM_LEADER_RESUBMIT, \
 	WorksheetState, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_USER_ACTION_DEVELOPER_CREATED, \
 	WS_USER_ACTION_DEVELOPER_RESUBMIT, WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
-	WS_USER_ACTION_TEAM_LEADER_REJECTED, WS_USER_ACTION_OPERATOR_REJECTED, WS_STATE_WAITTING_DEVELOPER_MODIFIED, \
-	WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, WS_USER_ACTION_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
-	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_CLOSED, Role, WS_STATE_WAITTING_OPERATOER_COMPLETE
+	WS_USER_ACTION_TEAM_LEADER_REJECTED, WS_USER_ACTION_OPERATOR_REJECTED, WS_USER_ACTION_OPERATOR_CLAIMED, \
+	WS_STATE_WAITTING_OPERATOR_EXECUTED, \
+	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_CLOSED, Role, WS_STATE_WAITTING_OPERATOER_COMPLETE, WS_STATE_HAVE_BACK
 
 
 # WS_STATE_WAITTING_DEVELOPER_CLOSED
@@ -63,9 +63,9 @@ def state_transfer(user,action,w,reject_reason=None):
 		return user.id
 
 	if action == WS_USER_ACTION_TEAM_LEADER_REJECTED or action == WS_USER_ACTION_OPERATOR_REJECTED:
-		state = WS_STATE_WAITTING_DEVELOPER_MODIFIED
+		state = WS_STATE_HAVE_BACK
 		if w.applier.is_team_leader():
-			state = WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
+			state = WS_STATE_HAVE_BACK
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier ,worksheet = w, state = state , reject_reason = reject_reason, action = action)
 		_send_email(w.applier.email,w,user.username+"拨回了你的"+w.title+"工单")
 		_send_email(user.email,w,"您拨回了"+w.applier.username+"的"+w.title+"工单")
@@ -100,30 +100,30 @@ def state_transfer(user,action,w,reject_reason=None):
 
 	return user.id
 
-if __name__ == "__main__":
-	from release_apply_test_data import *
-	#开发action3个 主管action5个 运维action3个
-	print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_CREATED,w)
-	print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_REJECTED,w)
-	print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_RESUBMIT,w)
-	print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_CONFIRMED,w)
-	print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_CLAIMED,w)
-	print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_EXECUTED,w)
-	print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_CLOSED,w)
-	exit(0)
-	#print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_CREATED,w)
-	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_REJECTED,w,reject_reason = "reason")
-	#print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_RESUBMIT,w,reject_reason = "reason")
-	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_CLAIMED,w)
-	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_EXECUTED,w)
-	#print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_CLOSED,w)
-
-	print "applier id",applier.created_worksheets_by_pagination(1)
-	todo,cnt  = team_leader.waitting_confirmed_worksheets_by_pagination(1)
-	print "team_leader",todo,cnt
-	if cnt > 0:
-		print todo[0].state
-	done,cnt = team_leader.operated_worksheets_by_pagination(1)
-	print "team_leader",done,cnt
-	if cnt > 0:
-		print done[0].state,done[0].action
+# if __name__ == "__main__":
+# 	from release_apply_test_data import *
+# 	#开发action3个 主管action5个 运维action3个
+# 	print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_CREATED,w)
+# 	print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_REJECTED,w)
+# 	print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_RESUBMIT,w)
+# 	print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_CONFIRMED,w)
+# 	print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_CLAIMED,w)
+# 	print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_EXECUTED,w)
+# 	print "developer id",state_transfer(developer,WS_USER_ACTION_DEVELOPER_CLOSED,w)
+# 	exit(0)
+# 	#print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_CREATED,w)
+# 	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_REJECTED,w,reject_reason = "reason")
+# 	#print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_RESUBMIT,w,reject_reason = "reason")
+# 	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_CLAIMED,w)
+# 	#print "operator id",state_transfer(operator,WS_USER_ACTION_OPERATOR_EXECUTED,w)
+# 	#print "team_leader id",state_transfer(team_leader,WS_USER_ACTION_TEAM_LEADER_CLOSED,w)
+#
+# 	print "applier id",applier.created_worksheets_by_pagination(1)
+# 	todo,cnt  = team_leader.waitting_confirmed_worksheets_by_pagination(1)
+# 	print "team_leader",todo,cnt
+# 	if cnt > 0:
+# 		print todo[0].state
+# 	done,cnt = team_leader.operated_worksheets_by_pagination(1)
+# 	print "team_leader",done,cnt
+# 	if cnt > 0:
+# 		print done[0].state,done[0].action
