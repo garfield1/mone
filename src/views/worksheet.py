@@ -8,7 +8,7 @@ from flask.ext.login import login_required
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
-	WS_USER_ACTION_TEAM_LEADER_CREATED, Role
+	WS_USER_ACTION_TEAM_LEADER_CREATED, Role, WS_STATE_HAVE_BACK
 from views._worksheet import state_transfer
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
