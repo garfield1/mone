@@ -38,7 +38,52 @@
                 </dl>
             </header>
             <div class="ant-steps article-top">
+                {% if worksheet_data.is_manager %}
                 <div class="ant-steps-item {% if worksheet_data.state_id > 1 %} ant-steps-status-finish {% elif worksheet_data.state_id == 1 %}ant-steps-status-process {% elif worksheet_data.state_id < 1 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">1</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">申请</div>
+                        <div class="ant-steps-description">{% if worksheet_data.state_id > 1 %}{{ worksheet_data.apply_name }} {% endif %}</div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if worksheet_data.state_id > 3 %} ant-steps-status-finish {% elif worksheet_data.state_id == 3 %}ant-steps-status-process {% elif worksheet_data.state_id < 3 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">2</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">认领</div>
+                        <div class="ant-steps-description">{% if worksheet_data.state_id > 2  %}{{ worksheet_data.operator_name }}{% endif %}</div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if worksheet_data.state_id > 4 %} ant-steps-status-finish {% elif worksheet_data.state_id == 4 %}ant-steps-status-process {% elif worksheet_data.state_id < 4 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">3</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">执行</div>
+                        <div class="ant-steps-description">{% if worksheet_data.state_id > 3  %}{{ worksheet_data.operator_name }}{% endif %}</div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if worksheet_data.state_id >= 5 %} ant-steps-status-finish{% elif worksheet_data.state_id < 5 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">4</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">完成</div>
+                        <div class="ant-steps-description"></div>
+                    </div>
+                </div>
+                {% else %}
+             <div class="ant-steps-item {% if worksheet_data.state_id > 1 %} ant-steps-status-finish {% elif worksheet_data.state_id == 1 %}ant-steps-status-process {% elif worksheet_data.state_id < 1 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
                     <div class="ant-steps-tail"><i></i></div>
                     <div class="ant-steps-head">
                         <div class="ant-steps-head-inner">
@@ -56,7 +101,7 @@
                             <span class="ant-steps-icon">2</span></div>
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">审批</div>
+                        <div class="ant-steps-title">{% if worksheet_data.state_id < 2 %}待审批{% else %}审批{% endif %}</div>
                         <div class="ant-steps-description">{% if worksheet_data.state_id > 2  %}{{ worksheet_data.approver }} {% endif %}</div>
                     </div>
                 </div>
@@ -67,20 +112,32 @@
                             <span class="ant-steps-icon">3</span></div>
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">执行</div>
+                        <div class="ant-steps-title">{% if worksheet_data.state_id < 3 %}待认领{% else %}认领{% endif %}</div>
                         <div class="ant-steps-description">{% if worksheet_data.state_id > 2  %}{{ worksheet_data.operator_name }}{% endif %}</div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if worksheet_data.state_id > 4 %} ant-steps-status-finish {% elif worksheet_data.state_id == 4 %}ant-steps-status-process {% elif worksheet_data.state_id < 4 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
                     <div class="ant-steps-head">
                         <div class="ant-steps-head-inner">
                             <span class="ant-steps-icon">4</span></div>
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">完成</div>
+                        <div class="ant-steps-title">{% if worksheet_data.state_id < 4 %}待执行{% else %}执行{% endif %}</div>
+                        <div class="ant-steps-description">{% if worksheet_data.state_id > 3  %}{{ worksheet_data.operator_name }}{% endif %}</div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if worksheet_data.state_id >= 5 %} ant-steps-status-finish {% elif worksheet_data.state_id < 5 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">5</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">{% if worksheet_data.state_id < 5 %}待完成{% else %}完成{% endif %}</div>
                         <div class="ant-steps-description"></div>
                     </div>
                 </div>
+             {% endif %}
                 <button id="worksheet_id" class="hide">{{ worksheet_data.worksheet_id}}</button>
                 <div class="ant-steps-item ant-steps-status-wait" >
                     <div class="detail-font"> {% if worksheet_data.state_id == 1  %} 待重新申请 {% elif worksheet_data.state_id == 2  %} 工单已申请，待审核 {% elif worksheet_data.state_id == 3 %} 主管已确认，待认领 {% elif worksheet_data.state_id == 4 %} 运维已认领， 待执行  {% elif worksheet_data.state_id >= 5 %}完成 {% else %} 未知 {% endif %}</div>

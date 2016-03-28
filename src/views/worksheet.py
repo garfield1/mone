@@ -256,7 +256,8 @@ def worksheet_details(worksheet_id):
 		return redirect(url_for('user.index'))
 	apply_name = worksheet.applier.username if worksheet.applier else ''
 	operator_name = worksheet.operator.username if worksheet.operator else ''
-	worksheet_data = {"worksheet_id": worksheet.id, "title": worksheet.title, "type_name": worksheet.worksheet_type.name, "planned_at": str(worksheet.planned_at)[:19], "state": worksheet.state, "state_id": statusid_dict.get(worksheet.state) or 0, "apply_name": apply_name, "operator_name": operator_name, "created_at": worksheet.created_at, "content": worksheet.content, "attached_file_path": worksheet.attached_file_path}
+	worksheet_data = {"worksheet_id": worksheet.id, "title": worksheet.title, "type_name": worksheet.worksheet_type.name, "planned_at": str(worksheet.planned_at)[:19], "state": worksheet.state, "state_id": statusid_dict.get(worksheet.state) or 0, "apply_name": apply_name, "operator_name": operator_name, "created_at": worksheet.created_at, "content": worksheet.content, "attached_file_path": worksheet.attached_file_path, "is_manager": worksheet.applier.is_manager()}
+	print worksheet_data.get('is_manager')
 	try:
 		worksheetstates = WorksheetState.objects.filter(worksheet_id=worksheet_id).order_by('-id')
 	except:

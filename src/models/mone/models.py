@@ -123,7 +123,7 @@ class User(models.Model):
 		return False
 
 	def is_manager(self):
-		ret = self.role_set.all() & Role.objects.filter(name__contains=u"经理").all()
+		ret = self.role_set.all() & Role.objects.filter(name__contains=u"主管").all()
 		if len(ret) > 0:
 			return True
 		return False
