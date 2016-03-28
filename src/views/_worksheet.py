@@ -52,7 +52,7 @@ def state_transfer(user,action,w,reject_reason=None):
 		return user.id
 
 	if action == WS_USER_ACTION_TEAM_LEADER_CONFIRMED:
-		WorksheetState.objects.create(creator = user , worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
+		WorksheetState.objects.create(creator = user , worksheet = w, state = WS_STATE_WAITTING_OPERATOR_CLAIMED ,reject_reason = reject_reason, action = action)
 		operators = get_all_operator()
 		for operator in operators:
 			_send_email(operator.email,w,"需要运维组认领")
@@ -87,7 +87,7 @@ def state_transfer(user,action,w,reject_reason=None):
 		_state = WS_STATE_WAITTING_OPERATOER_COMPLETE
 		if w.applier.is_team_leader():
 			_state = WS_STATE_WAITTING_OPERATOER_COMPLETE
-		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier, worksheet = w, state = _state , action = action)
+		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier, worksheet = w, state = _state ,  reject_reason = reject_reason, action = action)
 		# _send_email(w.applier,w,"您的"+w.title+"工单需要您关闭")
 		_send_email("ecomdev@meizu.com",w,"发布成功")
 		return user.id
