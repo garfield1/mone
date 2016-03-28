@@ -108,7 +108,7 @@ function ajax_post(title,apply_name,operator_id,worksheet_type_id,status,start_t
                 for(i=0; i<result.data.worksheet_list.length; i++){
                     var temp = $("table.hide .template").clone();
                     worksheet_list_item =  result.data.worksheet_list[i];
-                    temp.find(".title").text(worksheet_list_item.title);
+                    temp.find(".title a").text(worksheet_list_item.title);
                     temp.find(".type").text(worksheet_list_item.worksheet_type);
                     temp.find(".state").text(worksheet_list_item.status);
                     temp.find(".applytime").text(worksheet_list_item.apply_time);
