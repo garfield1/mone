@@ -9,3 +9,4 @@ example.py
 .idea/workspace.xml
 venv
 settings.py
+src/models/zz/settings.py
