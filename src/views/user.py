@@ -110,7 +110,9 @@ def login_check():
     :return:
     '''
     email = request.form.get('email')
+    email = email + '@meizu.com'
     password = request.form.get('password')
+    _remember_me = request.form.get('_remember_me')
     if login_type == 'ldap':
         if not ldap_check_user(email, password):
             flash('用户名或密码错误')
@@ -120,7 +122,10 @@ def login_check():
             password = get_pwd(password)
             update_user(email=email, password=password)
         user = set_user.get(email)
-        login_user(user)
+        if _remember_me == 'on':
+            login_user(user, remember=True)
+        else:
+            login_user(user)
         session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
         roles_data = user_data.role_set.all()
         own_roles_list = []

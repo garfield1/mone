@@ -5,6 +5,7 @@ import os
 from django.db.models import Q
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
+import time
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
@@ -155,7 +156,8 @@ def search_worksheet():
 		for data in worksheets:
 			operator_name = data.operator.username if data.operator else ''
 			apply_name = data.applier.username if data.applier else ''
-			worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'worksheet_type': data.worksheet_type.name, 'status': data.state, 'apply_time': str(data.created_at), 'finish_time': str(data.planned_at), 'apply_name': apply_name, 'operator_name': operator_name})
+			finish_time = data.update_at if data.worksheet_type.name == '已完成' else ''
+			worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'worksheet_type': data.worksheet_type.name, 'status': data.state, 'apply_time': str(data.created_at), 'finish_time': str(finish_time), 'apply_name': apply_name, 'operator_name': operator_name})
 
 	else:
 		if title:
@@ -179,7 +181,8 @@ def search_worksheet():
 		for data in worksheets:
 			operator_name = data.operator.username if data.operator else ''
 			apply_name = data.applier.username if data.applier else ''
-			worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'worksheet_type': data.worksheet_type.name, 'status': data.state, 'apply_time': str(data.created_at), 'finish_time': str(data.planned_at), 'apply_name': apply_name, 'operator_name': operator_name})
+			finish_time = data.updated_at if data.state == '已完成' else ''
+			worksheet_list.append({'worksheet_id': data.id, 'title': data.title, 'worksheet_type': data.worksheet_type.name, 'status': data.state, 'apply_time': str(data.created_at), 'finish_time': str(finish_time), 'apply_name': apply_name, 'operator_name': operator_name})
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'worksheet_list': worksheet_list}}
 	return json.dumps(result)
 
@@ -303,10 +306,14 @@ def update_worksheetstate():
 		worksheet_data = Worksheet.objects.filter(id=worksheet_id)[0]
 	except:
 		worksheet_data = None
-
+	ISOTIMEFORMAT='%Y-%m-%d %X'
+	now_time = time.strftime( ISOTIMEFORMAT, time.localtime( time.time() ) )
 	if user_data and worksheet_data:
 		if action_type == u"运维认领":
 			worksheet_data.operator_id = user_id
+			worksheet_data.save()
+		if action_type == u"运维执行成功":
+			worksheet_data.updated_at = now_time
 			worksheet_data.save()
 		if state_transfer(user_data, action_type, worksheet_data, reject_reason):
 			result = {'status': 200, 'message': '请求成功'}
@@ -383,9 +390,8 @@ def get_template():
 	worksheet_type_id = request.form.get('worksheet_type_id')
 	try:
 		template = WorksheetType.objects.get(id=worksheet_type_id).template
-		print(template)
 		# result = {'status': 200, 'message': '数据不存在','worksheet_content': ws_template_dict.get(ws_template_map.get(worksheet_type_id))}
-		result = {'status': 200, 'message': '数据不存在','worksheet_content': template}
+		result = {'status': 200, 'message': '请求成功','worksheet_content': template}
 	except:
 		result = {'status': 1001, 'message': '数据不存在'}
 	return json.dumps(result)
