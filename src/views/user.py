@@ -122,10 +122,10 @@ def login_check():
             password = get_pwd(password)
             update_user(email=email, password=password)
         user = set_user.get(email)
-        if _remember_me == 'on':
-            login_user(user, remember=True)
-        else:
-            login_user(user)
+        # if _remember_me == 'on':
+            # login_user(user, remember=True)
+        # else:
+        login_user(user)
         session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
         roles_data = user_data.role_set.all()
         own_roles_list = []
