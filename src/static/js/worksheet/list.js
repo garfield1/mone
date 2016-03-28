@@ -112,7 +112,7 @@ function ajax_post(title,apply_name,operator_id,worksheet_type_id,status,start_t
                     temp.find(".type").text(worksheet_list_item.worksheet_type);
                     temp.find(".state").text(worksheet_list_item.status);
                     temp.find(".applytime").text(worksheet_list_item.apply_time);
-                    temp.find(".finishtime").text(worksheet_list_item.end_time);
+                    temp.find(".finishtime").text(worksheet_list_item.finish_time);
                     temp.find(".applyname").text(worksheet_list_item.apply_name);
                     temp.find(".opsname").text(worksheet_list_item.operator_name);
                     temp.find("a").attr("href","/worksheet/details/"+worksheet_list_item.worksheet_id);

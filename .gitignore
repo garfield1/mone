@@ -8,3 +8,5 @@ example.py
 *.xml
 .idea/workspace.xml
 venv
+settings.py
+src/models/zz/settings.py
