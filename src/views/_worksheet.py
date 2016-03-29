@@ -7,7 +7,8 @@ from models.mone.models import EmailQueue, WS_USER_ACTION_TEAM_LEADER_CREATED, W
 	WS_USER_ACTION_DEVELOPER_RESUBMIT, WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_USER_ACTION_TEAM_LEADER_REJECTED, WS_USER_ACTION_OPERATOR_REJECTED, WS_USER_ACTION_OPERATOR_CLAIMED, \
 	WS_STATE_WAITTING_OPERATOR_EXECUTED, \
-	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_CLOSED, Role, WS_STATE_WAITTING_OPERATOER_COMPLETE, WS_STATE_HAVE_BACK
+	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_CLOSED, Role, WS_STATE_WAITTING_OPERATOER_COMPLETE, WS_STATE_HAVE_BACK, \
+	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
 
 
 # WS_STATE_WAITTING_DEVELOPER_CLOSED
@@ -63,9 +64,9 @@ def state_transfer(user,action,w,reject_reason=None):
 		return user.id
 
 	if action == WS_USER_ACTION_TEAM_LEADER_REJECTED or action == WS_USER_ACTION_OPERATOR_REJECTED:
-		state = WS_STATE_HAVE_BACK
+		state = WS_STATE_WAITTING_DEVELOPER_MODIFIED
 		if w.applier.is_team_leader():
-			state = WS_STATE_HAVE_BACK
+			state = WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier ,worksheet = w, state = state , reject_reason = reject_reason, action = action)
 		_send_email(w.applier.email,w,user.username+"拨回了你的"+w.title+"工单")
 		_send_email(user.email,w,"您拨回了"+w.applier.username+"的"+w.title+"工单")

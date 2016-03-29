@@ -9,6 +9,7 @@ from views.user import *
 from flask import Flask
 def create_app():
     app = Flask(__name__, static_url_path='/static')
+    app.secret_key = 'super secret string'
     app.register_blueprint(user, url_prefix='')
     app.register_blueprint(worksheet, url_prefix='/worksheet')
     app.register_blueprint(release_apply, url_prefix='/release_apply')
