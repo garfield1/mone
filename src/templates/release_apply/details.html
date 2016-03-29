@@ -1,0 +1,117 @@
+{% extends "headfoot.html" %}
+{% block styles %}
+<link href="/static/css/worksheet/details.css" rel="stylesheet">
+{% endblock %}
+{% block scripts %}
+<!--<script charset="utf-8" src="/static/js/worksheet/details.js"></script>-->
+{% endblock %}
+{% block content %}
+{% import "header.html" as header %}
+{{ header.render() }}
+<div id="main-content">
+    <div id="breadcrumb">
+        <ul class="breadcrumb">
+            <li>
+                <a href="/"><i class="icon icon-home"></i> 主页</a>
+            </li>
+            <li>
+                <a id="parent-bread" href="/">工单系统</a>
+            </li>
+            <li id="children-bread">工单详情</li>
+        </ul>
+    </div>
+    <div id="page-content">
+        <div class="page-header">
+            <h1>
+                工单详情
+            </h1>
+        </div>
+        <article class="article-top article">
+            <header>
+                <dl class="dl-inline">
+                    <dt>类型：</dt>
+                    <dt>期望完成时间：</dt>
+                </dl>
+            </header>
+            </div>-->
+        </article>
+
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                        <h4 class="modal-title">标题</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="tips"></p>
+                        <div id="reject-advice">
+                            <label></label>
+                            <textarea id="reject-reason" rows="5" class="form-control" autofocus></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="notSave" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" id="toSave" class="btn btn-primary" data-dismiss="modal">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <article class="article-top">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <div class="detail-font">
+                        工单内容
+                    </div>
+                    <table class="table table-hover table-bordered table-striped" >
+                        <thead>
+                            <tr>
+                                <th class="col-md-2">条目</th>
+                                <th>内容</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td >标题</td>
+                            </tr>
+                            <tr>
+                                <td >类型</td>
+                            </tr>
+                            <tr>
+                                <td >申请人</td>
+                            </tr>
+                            <tr>
+                                <td >申请时间</td>
+                            </tr>
+                            <tr>
+                                <td >期望完成时间</td>
+                            </tr>
+                            <tr>
+                                <td >描述：</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-font">
+                        日志
+                    </div>
+                    <table class="table table-hover table-bordered table-striped" >
+                        <thead>
+                            <tr>
+                                <th class="col-md-2">姓名</th>
+                                <th class="col-md-3">时间</th>
+                                <th class="col-md-2">状态</th>
+                                <th >备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}

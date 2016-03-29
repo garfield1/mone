@@ -10,3 +10,4 @@ example.py
 venv
 settings.py
 src/models/zz/settings.py
+src/templates/header.html

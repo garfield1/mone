@@ -47,19 +47,22 @@
                     </li>
                 </ul>
             </li>
-            <!--<li class="show"><a href="#"><i class="icon icon-list-alt"></i>发布系统</a>-->
-                <!--<ul class="nav">-->
-                    <!--<li>-->
-                        <!--<a href=""><i class="icon icon-list"></i>上线日历</a>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<a href=""><i class="icon icon-list"></i>新建发布申请</a>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<a href=""><i class="icon icon-list"></i>发布列表</a>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</li>-->
+            <li class="show"><a href="#"><i class="icon icon-list-alt"></i>发布系统</a>
+                <ul class="nav">
+                    <li>
+                        <a href="{{url_for('release_apply.taskpad')}}"><i class="icon icon-list"></i>上线日历</a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('release_apply.add')}}"><i class="icon icon-list"></i>新建发布申请</a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('release_apply.list')}}"><i class="icon icon-list"></i>发布列表</a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('release_apply.detail')}}"><i class="icon icon-list"></i>发布详情</a>
+                    </li>
+                </ul>
+            </li>
             <!--<li class="show"><a href="#"><i class="icon icon-list-alt"></i>数据源</a>-->
                 <!--<ul class="nav">-->
                     <!--<li>-->
@@ -85,17 +88,17 @@
                     <!--</li>-->
                 <!--</ul>-->
             <!--</li>-->
-            <!--<li class="show"><a href="#"><i class="icon icon-list-alt"></i>组别及权限</a>-->
-                <!--<ul class="nav">-->
-                    <!--<li>-->
-                        <!--<a href="/organization_control/"><i class="icon icon-list"></i>组织管理</a>-->
+            <li class="show"><a href="#"><i class="icon icon-list-alt"></i>组别及权限</a>
+                <ul class="nav">
+                    <li>
+                        <a href="/organization_control/"><i class="icon icon-list"></i>组织管理</a>
 
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<a href="/access_control/"><i class="icon icon-list"></i>权限管理</a>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</li>-->
+                    </li>
+                    <li>
+                        <a href="/access_control/"><i class="icon icon-list"></i>权限管理</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </nav>
 </div>

@@ -1,0 +1,85 @@
+{% extends "headfoot.html" %}
+{% block styles %}
+<style>
+    .card {
+        padding:20px;
+    }
+    a {
+        color: #333;
+    }
+    a:hover {
+        text-decoration: none;
+        color: #333
+    }
+    .state {
+        font-weight:bold
+    }
+    .title {
+        display:block;/*内联对象需加*/
+        word-break:keep-all;/* 不换行 */
+        white-space:nowrap;/* 不换行 */
+        overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+        text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...),需与overflow:hidden;一起使用。*/
+    }
+</style>
+{% endblock %}
+{% block scripts %}
+<!--<script charset="utf-8" src="/static/js/worksheet/taskpad.js"></script>-->
+{% endblock %}
+{% block content %}
+    {% import "header.html" as header %}
+    {{ header.render()}}
+    <div id="main-content">
+        <div id="breadcrumb">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/"><i class="icon icon-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a id="parent-bread" href="/">工单系统</a>
+                </li>
+                <li id="children-bread">任务看板</li>
+            </ul>
+        </div>
+        <div id="page-content">
+            <div class="page-header">
+                <h1>
+                    任务看板
+                </h1>
+            </div>
+            <article>
+                <div style="margin-left:15px">
+                    <button class="btn btn-default btn-primary task" type="button" value="own">我的任务</button>
+                    <button class="btn btn-default task" type="button" value="">全部任务</button>
+                </div>
+                <div class="list">
+                    <section id="cards" class="cards">
+                    </section>
+                </div>
+                <div class="btn-group" style="float: right">
+                    <button id="first" class="btn btn-md btn-pager"><<</button>
+                    <button id="previous" class="btn btn-md btn-pager"><</button>
+                    <button id="ppage" class="btn btn-md btn-pager btn-primary">1</button>
+                    <button id="cpage" class="btn btn-md btn-pager">2</button>
+                    <button id="npage" class="btn btn-md btn-pager">3</button>
+                    <button id="next" class="btn btn-md btn-pager">></button>
+                    <button id="last" class="btn btn-md btn-pager">>></button>
+                </div>
+            </article>
+        </div>
+        <div class="hide">
+            <div class="template col-md-4 col-sm-6 col-lg-3">
+                <a href="/worksheet/details/" class="">
+                    <div class="card">
+                        <div class="taskpad_content"><span class="title "></span></div>
+                        <div class="taskpad_content"><span class="type"></span></div>
+                        <div class="taskpad_content"><span class="applyname"></span></div>
+                        <div class="taskpad_content"><span class="applytime"></span></div>
+                        <div class="taskpad_content"><span class="finishtime"></span></div>
+                        <div class="taskpad_content"><span class="label state"></span></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
