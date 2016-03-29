@@ -61,7 +61,14 @@ def on_load(state):
 
 @login_manager.user_loader
 def load_user(id):
-	return set_user.get(id)
+    user_data = check_user(id)
+    session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
+    roles_data = user_data.role_set.all()
+    own_roles_list = []
+    for role_data in roles_data:
+        own_roles_list.append(role_data.id)
+    session['own_roles_list'] = own_roles_list
+    return set_user.get(id)
 
 @user.route('/login/')
 def login():
@@ -122,10 +129,10 @@ def login_check():
             password = get_pwd(password)
             update_user(email=email, password=password)
         user = set_user.get(email)
-        # if _remember_me == 'on':
-            # login_user(user, remember=True)
-        # else:
-        login_user(user)
+        if _remember_me == 'on':
+            login_user(user, remember=True)
+        else:
+            login_user(user)
         session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
         roles_data = user_data.role_set.all()
         own_roles_list = []
