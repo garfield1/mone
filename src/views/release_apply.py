@@ -52,15 +52,25 @@ def detail():
 def add_application():
 	name = request.form.get('name')
 	git_url = request.form.get('git_url')
+	user_id = session.get('user_data').get('user_id')
+	application_id = request.form.get('application_id')
 	result = {'status': 1001, 'message': '参数缺失'}
 	if name and git_url:
-		try:
-			application_data = Application(name=name, git_url=git_url)
-			application_data.save()
-			result = {'status': 200, 'message': '保存成功'}
-		except Exception,e:
-			result = {'status': 1001, 'message': '数据库异常'}
+		if application_id:
+			try:
+				Application.objects.get(id=application_id).update(name=name, git_url=git_url)
+				result = {'status': 200, 'message': '保存成功'}
+			except Exception,e:
+				result = {'status': 1001, 'message': '数据库异常'}
+		else:
+			try:
+				application_data = Application(name=name, git_url=git_url, user_id=user_id)
+				application_data.save()
+				result = {'status': 200, 'message': '保存成功'}
+			except Exception,e:
+				result = {'status': 1001, 'message': '数据库异常'}
 	return json.dumps(result)
+
 
 
 
