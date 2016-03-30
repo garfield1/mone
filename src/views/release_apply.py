@@ -90,7 +90,7 @@ def update_application():
 				result = {'status': 1001, 'message': '数据库异常'}
 		else:
 			try:
-				application_data = Application(name=name, git_url=git_url, user_id=user_id)
+				application_data = Application(name=name, git_url=git_url, apply_user_id=user_id)
 				application_data.save()
 				result = {'status': 200, 'message': '保存成功'}
 			except Exception,e:

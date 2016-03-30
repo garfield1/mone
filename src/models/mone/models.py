@@ -265,8 +265,8 @@ class Application(models.Model):
 	name = models.CharField(max_length = 255,null = True,blank = True,unique=True)
 	repo = models.CharField(max_length = 400,null = True,blank = True)
 	resources = models.ManyToManyField(Resource)#线上 测试
-	user = models.ForeignKey(User)
-	allow_user = models.ManyToManyField(User, related_name="allow_user")
+	user = models.ManyToManyField(User)
+	apply_user = models.ForeignKey(User, related_name="apply_user")
 	wiki_url = models.CharField(max_length = 400,null = True,blank = True)
 	git_url = models.CharField(max_length = 400,null = True,blank = True)
 	created_at= models.DateTimeField(auto_now_add=True)
