@@ -25,7 +25,7 @@ release_apply = Blueprint('release_apply', __name__)
 @release_apply.route('/add/application/', methods=['GET'])
 @login_required
 def add_application():
-	return render_template("release_apply/add_apply.html")
+	return render_template("release_apply/add_application.html")
 
 @release_apply.route('/taskpad/', methods=['GET'])
 @login_required
@@ -40,6 +40,7 @@ def add_release_apply():
 	producter_datas = Role.objects.filter(name__contains="产品经理")[0].user.all()
 	tester_datas = Role.objects.filter(name__contains="测试工程师")[0].user.all()
 	for producter_data in producter_datas:
+		print producter_data.id
 		producter_list.append({'user_id': producter_data.id, 'username': producter_data.username})
 	for tester_data in tester_datas:
 		tester_list.append({'user_id': tester_data.id, 'username': tester_data.username})
