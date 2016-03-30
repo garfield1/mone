@@ -19,6 +19,11 @@ cfgfile.close()
 
 release_apply = Blueprint('release_apply', __name__)
 
+@release_apply.route('/add_apply/', methods=['GET'])
+@login_required
+def add_apply():
+	return render_template("release_apply/add_apply.html")
+
 @release_apply.route('/taskpad/', methods=['GET'])
 @login_required
 def taskpad():
