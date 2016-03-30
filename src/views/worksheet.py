@@ -382,7 +382,6 @@ def add_post():
 		else:
 			result = {'status': 1001, 'message': '保存失败'}
 	except Exception,e:
-		print e
 		result = {'status': 1001, 'message': '数据库异常'}
 	return json.dumps(result)
 

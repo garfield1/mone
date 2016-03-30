@@ -10,7 +10,7 @@ from flask.ext.login import login_required
 import time
 # from models.mone.models import
 # from views._release_apply import state_transfer
-from models.mone.models import Application, ReleaseApply
+from models.mone.models import Application, ReleaseApply, User, Role
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -22,9 +22,9 @@ cfgfile.close()
 
 release_apply = Blueprint('release_apply', __name__)
 
-@release_apply.route('/add_apply/', methods=['GET'])
+@release_apply.route('/add/application/', methods=['GET'])
 @login_required
-def add_apply():
+def add_application():
 	return render_template("release_apply/add_apply.html")
 
 @release_apply.route('/taskpad/', methods=['GET'])
@@ -32,10 +32,36 @@ def add_apply():
 def taskpad():
 	return render_template("release_apply/taskpad.html")
 
-@release_apply.route('/add/', methods=['GET'])
+@release_apply.route('/add/release_apply/', methods=['GET'])
 @login_required
-def add():
-	return render_template("release_apply/add.html")
+def add_release_apply():
+	producter_list = []
+	tester_list = []
+	producter_datas = Role.objects.filter(name__contains="产品经理")[0].user.all()
+	tester_datas = Role.objects.filter(name__contains="测试工程师")[0].user.all()
+	for producter_data in producter_datas:
+		producter_list.append({'user_id': producter_data.id, 'username': producter_data.username})
+	for tester_data in tester_datas:
+		tester_list.append({'user_id': tester_data.id, 'username': tester_data.username})
+	return render_template("release_apply/add.html", producter_list=producter_list, tester_list=tester_list)
+
+@release_apply.route('/get/application_list/')
+@login_required
+def get_application_list():
+	user_id = session.get('user_data').get('user_id')
+	try:
+		user_data = User.objects.filter(id=user_id)[0]
+	except Exception,e:
+		user_data = None
+	application_list = []
+	result = {'status': 1001, 'message': '用户不存在', 'data': {'application_list': []}}
+	if user_data:
+		applications = user_data.application_set.all()
+		for application in applications:
+			application_list.append({'id': application.id, 'name': application.name, 'git_url': application.git_url})
+		result = {'status': 200, 'message': '请求成功', 'data': {'application_list': application_list}}
+	return json.dumps(result)
+
 
 @release_apply.route('/list/', methods=['GET'])
 @login_required
@@ -47,9 +73,9 @@ def list():
 def detail():
 	return render_template("release_apply/details.html")
 
-@release_apply.route('/add/application/', methods=['POST'])
+@release_apply.route('/update/application/', methods=['POST'])
 @login_required
-def add_application():
+def update_application():
 	name = request.form.get('name')
 	git_url = request.form.get('git_url')
 	user_id = session.get('user_data').get('user_id')
@@ -71,8 +97,8 @@ def add_application():
 				result = {'status': 1001, 'message': '数据库异常'}
 	return json.dumps(result)
 
-@release_apply.route('/add/release_apply/', methods=['POST'])
-def add_release_apply():
+@release_apply.route('/update/release_apply/', methods=['POST'])
+def update_release_apply():
 	title = request.form.get('title')
 	tester_id = request.form.get('tester_id')
 	producter_id = request.form.get('producter_id')
