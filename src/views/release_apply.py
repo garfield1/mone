@@ -10,7 +10,7 @@ from flask.ext.login import login_required
 import time
 # from models.mone.models import
 # from views._release_apply import state_transfer
-from models.mone.models import Application
+from models.mone.models import Application, ReleaseApply
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -70,6 +70,50 @@ def add_application():
 			except Exception,e:
 				result = {'status': 1001, 'message': '数据库异常'}
 	return json.dumps(result)
+
+@release_apply.route('/add/release_apply/', methods=['POST'])
+def add_release_apply():
+	title = request.form.get('title')
+	tester_id = request.form.get('tester_id')
+	producter_id = request.form.get('producter_id')
+	release_type = request.form.get('release_type')
+	risk_level = request.form.get('risk_level')
+	application_id = request.form.get('application_id')
+	deploy = request.form.get('deploy')
+	planned_at = request.form.get('planned_at')
+	wiki_url = request.form.get('wiki_url')
+	jira_url = request.form.get('jira_url')
+	is_self_test = request.form.get('is_self_test')
+	release_apply_id = request.form.get('release_apply_id')
+	result = {'status': 1001, 'message': '参数缺失'}
+	if title and application_id and is_self_test:
+		if release_apply_id:
+			try:
+				ReleaseApply.objects.get(id=release_apply_id).update(tester_id=tester_id, producter_id=producter_id, release_type=release_type,
+																 	risk_level=risk_level, application_id=application_id, deploy=deploy,
+																 	planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
+																 	is_self_test=is_self_test)
+				result = {'status': 200, 'message': '更新成功'}
+			except Exception,e:
+				result = {'status': 1001, 'message': '数据库异常'}
+		else:
+			try:
+				releaseapply_data = ReleaseApply(tester_id=tester_id, producter_id=producter_id, release_type=release_type,
+									risk_level=risk_level, application_id=application_id, deploy=deploy,
+									planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
+									is_self_test=is_self_test)
+				releaseapply_data.save()
+				result = {'status': 200, 'message': '保存成功'}
+			except Exception,e:
+				result = {'status': 1001, 'message': '数据库异常'}
+	return json.dumps(result)
+
+
+
+
+
+
+
 
 
 
