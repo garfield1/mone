@@ -5,13 +5,9 @@
         padding-top: 20px;
     }
 </style>
-<link rel="stylesheet" type="text/css" href="/static/zui/lib/kindeditor/kindeditor.css" />
 {% endblock %}
 {% block scripts %}
-<script charset="utf-8" src="/static/zui/lib/kindeditor/kindeditor.js"></script>
-<script charset="utf-8" src="/static/zui/lib/kindeditor/lang/zh_CN.js"></script>
-<!--<script charset="utf-8" src="/static/js/worksheet/add.js"></script>-->
-<script charset="utf-8" src="/static/js/ajaxfileupload.js"></script>
+<script charset="utf-8" src="/static/js/release_apply/add_apply.js"></script>
 {% endblock %}
 {% block content %}
 {% import "header.html" as header %}
@@ -19,18 +15,18 @@
 <div id="main-content">
     <div id="breadcrumb">
         <ul class="breadcrumb">
-            <li> <a href="/"><i class="icon icon-home"></i> 主页</a> </li>
-            <li> <a id="parent-bread" href="/">发布系统</a> </li>
-            <li id="children-bread" >新建应用</li>
+            <li><a href="/"><i class="icon icon-home"></i>主页</a></li>
+            <li><a id="parent-bread" href="/">发布系统</a></li>
+            <li id="children-bread">新建应用</li>
         </ul>
     </div>
     <div id="page-content">
         <div class="page-header">
-            <h1> 新建应用 </h1>
+            <h1>新建应用</h1>
         </div>
         <div id="goodnews" class="hide">
             <i class="icon-ok"></i>
-            <div class="content">恭喜！工单已提交成功！3秒后将会跳转到工单详情页！</div>
+            <div class="content">恭喜！新建应用已提交成功！3秒后将会跳转到xxxx页！</div>
         </div>
         <div id="badnews" class="hide">
             <i class="icon-times"></i>
@@ -41,15 +37,15 @@
             <div class="col-md-8">
                 <form class="form-horizontal" role="form" method="post">
                     <div class="form-group">
-                        <label class="col-md-2 control-label">标题</label>
-                        <div class="col-md-10 ">
-                            <input type="text" name="" id="" value="" class="form-control" placeholder="">
+                        <label class="col-md-2 control-label">应用名称</label>
+                        <div class="col-md-10">
+                            <input type="text" name="name" id="name" value="" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">git地址</label>
-                        <div class="col-md-10 ">
-                            <input type="text" name="" id="" value="" class="form-control" placeholder="">
+                        <div class="col-md-10">
+                            <input type="text" name="git_url" id="git_url" value="" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
