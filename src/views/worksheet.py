@@ -373,7 +373,7 @@ def add_post():
 		else:
 			worksheet_data = Worksheet(title=title, applier_id=user_id, content=content, worksheet_type_id=worksheet_type_id, planned_at=finish_at)
 		worksheet_data.save()
-		if apply_user.organization.leader_id == user_id:
+		if apply_user.user_data.is_manager():
 			state_transfer(apply_user, WS_USER_ACTION_TEAM_LEADER_CREATED, worksheet_data)
 		else:
 			state_transfer(apply_user, WS_USER_ACTION_DEVELOPER_CREATED, worksheet_data)
