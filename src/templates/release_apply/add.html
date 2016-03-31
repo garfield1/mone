@@ -12,16 +12,16 @@
 <script charset="utf-8" src="/static/zui/lib/kindeditor/lang/zh_CN.js"></script>
 <!--<script charset="utf-8" src="/static/js/worksheet/add.js"></script>-->
 <script>
-$(".form-date").datetimepicker({
-    language:  "zh-CN",
+//日期时间选择器
+$(".form-datetime").datetimepicker({
     weekStart: 1,
     todayBtn:  1,
     autoclose: 1,
     todayHighlight: 1,
     startView: 2,
-    minView: 2,
     forceParse: 0,
-    format: "yyyy-mm-dd"
+    showMeridian: 1,
+    format: "yyyy-mm-dd hh:ii"
 });
 </script>
 <script charset="utf-8" src="/static/js/ajaxfileupload.js"></script>
@@ -135,9 +135,9 @@ $(".form-date").datetimepicker({
                         </div>
                         <label class="col-md-1 control-label">上线时间</label>
                         <div class="col-md-2">
-                            <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <div class="input-group date form-datetime" id="datetime" data-date="" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                                 <input class="form-control" size="16" type="text" name="release_time" id="release_time" value="" readonly="">
-                                <span class="input-group-addon"><span class="icon-remove"></span></span>
+                                <!--<span class="input-group-addon"><span class="icon-remove"></span></span>-->
                                 <span class="input-group-addon"><span class="icon-calendar"></span></span>
                             </div>
                         </div>

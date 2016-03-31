@@ -14,7 +14,7 @@
 </style>
 {% endblock %}
 {% block scripts %}
-<!--<script charset="utf-8" src="/static/js/worksheet/list.js"></script>-->
+<script charset="utf-8" src="/static/js/release_apply/list.js"></script>
 {% endblock %}
 {% block content %}
 {% import "header.html" as header %}
@@ -37,25 +37,20 @@
                 发布列表
             </h1>
         </div>
-
         <article class="article-top">
             <form class="form-horizontal" role="form" method='post'>
                 <div class="form-group">
                     <label class="col-md-1 control-label">标题</label>
                     <div class="col-md-2">
-                        <input type='text' name='' id='' value='' class='form-control' />
+                        <input type='text' name='release_title' id='release_title' class='form-control' />
                     </div>
                     <label class="col-md-1 control-label">应用</label>
                     <div class="col-md-2">
-                        <select name='' id='' class='form-control'>
-                            <option value=''>全部</option>
-                            <option value='1'>xxx</option>
-                            <option value='2'>yyy</option>
-                        </select>
+                        <input type='text' name='release_app' id='release_app' class='form-control' />
                     </div>
                     <label class="col-md-1 control-label">状态</label>
                     <div class="col-md-2">
-                        <select name='' id='' class='form-control'>
+                        <select name='release_state' id='release_state' class='form-control'>
                             <option value=''>全部</option>
                             <option value='1'>xxx</option>
                             <option value='2'>yyy</option>
@@ -65,51 +60,41 @@
                 <div class="form-group">
                     <label class="col-md-1 control-label">开发人员</label>
                     <div class="col-md-2">
-                        <select name='devname' id='devname' class='form-control'>
-                            <option value=''>全部</option>
-                        </select>
+                        <input type='text' name='developer' id='developer' class='form-control' />
                     </div>
                     <label class="col-md-1 control-label">测试人员</label>
                     <div class="col-md-2">
-                        <select name='testname' id='testname' class='form-control'>
+                        <select name='tester' id='tester' class='form-control'>
                             <option value=''>全部</option>
                         </select>
                     </div>
                     <label class="col-md-1 control-label">运维人员</label>
                     <div class="col-md-2">
-                        <select name='opsname' id='opsname' class='form-control'>
+                        <select name='operator' id='operator' class='form-control'>
                             <option value=''>全部</option>
                         </select>
                     </div>
                     <label class="col-md-1 control-label">产品经理</label>
                     <div class="col-md-2">
-                        <select name='goodname' id='goodname' class='form-control'>
+                        <select name='producter' id='producter' class='form-control'>
                             <option value=''>全部</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-1 control-label">申请时间</label>
+                    <label class="col-md-1 control-label">上线时间</label>
                     <div class="col-md-2">
                         <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="16" type="text" name="starttime" id="starttime" value="" readonly="">
-                            <span class="input-group-addon"><span class="icon-remove"></span></span>
+                            <input class="form-control" size="16" type="text" name="start_formal_at" id="start_formal_at" value="" readonly="">
+                            <!--<span class="input-group-addon"><span class="icon-remove"></span></span>-->
                             <span class="input-group-addon"><span class="icon-calendar"></span></span>
                         </div>
                     </div>
-                    <label class="col-md-1 control-label">计划上线时间</label>
+                    <label class="col-md-1 control-label">至</label>
                     <div class="col-md-2">
                         <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="16" type="text" name="starttime" id="starttime" value="" readonly="">
-                            <span class="input-group-addon"><span class="icon-remove"></span></span>
-                            <span class="input-group-addon"><span class="icon-calendar"></span></span>
-                        </div>
-                    </div>
-                    <label class="col-md-1 control-label">正式上线时间</label>
-                    <div class="col-md-2">
-                        <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="16" type="text" name="endtime" id="endtime" value="" readonly="">
-                            <span class="input-group-addon"><span class="icon-remove"></span></span>
+                            <input class="form-control" size="16" type="text" name="end_formal_at" id="end_formal_at" value="" readonly="">
+                            <!--<span class="input-group-addon"><span class="icon-remove"></span></span>-->
                             <span class="input-group-addon"><span class="icon-calendar"></span></span>
                         </div>
                     </div>
@@ -124,23 +109,21 @@
                 <button class="btn btn-default aboutme query" type="button" id="myapplication" value="1">我的申请</button>
                 <button class="btn btn-default aboutme query" type="button" id="myapproval" value="2">我的审批</button>
                 <button class="btn btn-default aboutme query" type="button" id="mytest" value="3">我的测试</button>
-                <button class="btn btn-default aboutme query" type="button" id="myexecution" value="3">我的执行</button>
+                <button class="btn btn-default aboutme query" type="button" id="myexecution" value="3">我的发布</button>
             </div>
 
             <table class="nohide table table-hover table-bordered table-striped" style="margin-top: 60px">
                 <thead>
                     <tr>
-                        <th class="col-md-1">标题</th>
-                        <th class="col-md-1">应用名称</th>
+                        <th class="col-md-2">标题</th>
+                        <th class="col-md-2">应用名称</th>
                         <th class="col-md-1">状态</th>
                         <th class="col-md-1">申请人</th>
-                        <th class="col-md-1">开发人员</th>
                         <th class="col-md-1">测试人员</th>
                         <th class="col-md-1">运维人员</th>
                         <th class="col-md-1">产品经理</th>
                         <th class="col-md-1">申请时间</th>
-                        <th class="col-md-1">计划上线时间</th>
-                        <th class="col-md-1">正式上线时间</th>
+                        <th class="col-md-1">上线时间</th>
                         <th class="col-md-1">操作</th>
                     </tr>
                 </thead>
@@ -157,7 +140,6 @@
                 <button id="next" class="btn btn-md btn-pager">></button>
                 <button id="last" class="btn btn-md btn-pager">>></button>
             </div>
-
         </article>
     </div>
     <table class="hide">
@@ -166,13 +148,11 @@
             <td class="appname"></td>
             <td class="state"></td>
             <td class="applyname"></td>
-            <td class="devname"></td>
             <td class="testname"></td>
             <td class="opsname"></td>
-            <td class="goodname"></td>
+            <td class="productername"></td>
             <td class="applyname"></td>
-            <td class="plantime"></td>
-            <td class="plantime2"></td>
+            <td class="deploytime"></td>
             <td class="detail">
                 <a href=""><button class="btn btn-sm" type="button">查看</button></a>
             </td>
