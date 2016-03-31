@@ -35,16 +35,27 @@ def taskpad():
 @release_apply.route('/add/release_apply/', methods=['GET'])
 @login_required
 def add_release_apply():
+	user_id = session.get('user_data').get('user_id')
+	try:
+		user_data = User.objects.filter(id=user_id)[0]
+	except Exception,e:
+		user_data = None
+	application_list = []
+	application_dict = {}
+	if user_data:
+		applications = user_data.application_set.all()
+		for application in applications:
+			application_list.append({'id': application.id, 'name': application.name})
+			application_dict[application.id] = application.git_url
 	producter_list = []
 	tester_list = []
 	producter_datas = Role.objects.filter(name__contains="产品经理")[0].user.all()
 	tester_datas = Role.objects.filter(name__contains="测试工程师")[0].user.all()
 	for producter_data in producter_datas:
-		print producter_data.id
 		producter_list.append({'user_id': producter_data.id, 'username': producter_data.username})
 	for tester_data in tester_datas:
 		tester_list.append({'user_id': tester_data.id, 'username': tester_data.username})
-	return render_template("release_apply/add.html", producter_list=producter_list, tester_list=tester_list)
+	return render_template("release_apply/add.html", producter_list=producter_list, tester_list=tester_list, application_list=application_list, application_dict=application_dict)
 
 @release_apply.route('/get/application_list/')
 @login_required
@@ -128,6 +139,7 @@ def update_release_apply():
 	attention = request.form.get('attention')
 	memo = request.form.get('memo')
 	result = {'status': 1001, 'message': '参数缺失'}
+	user_id = session.get('user_data').get('user_id')
 	if title and application_id and is_self_test:
 		if release_apply_id:
 			try:
@@ -140,7 +152,7 @@ def update_release_apply():
 				result = {'status': 1001, 'message': '数据库异常'}
 		else:
 			try:
-				releaseapply_data = ReleaseApply(tester_id=tester_id, producter_id=producter_id, release_type=release_type,
+				releaseapply_data = ReleaseApply(tester_id=tester_id, applier_id=user_id, producter_id=producter_id, release_type=release_type,
 									risk_level=risk_level, application_id=application_id, deploy=deploy,
 									planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
 									is_self_test=is_self_test, update_model=update_model, attention=attention, memo=memo)
@@ -202,11 +214,16 @@ def search_release_apply():
 	page_count = total/page_size + 1
 	release_apply_list = []
 	for release_apply in release_applys:
-		release_apply_list.append({'title': release_apply.title, 'application_name': release_apply.application.name,
-								   'state': release_apply.state, 'applier_name': release_apply.applier.username,
-								   'tester_name': release_apply.tester.name, 'operator_name': release_apply.operator.name,
-								   'producter_name': release_apply.producter.name,'apply_time': release_apply.created_at,
-								   'planned_time': release_apply.planned_at, 'formal_time': release_apply.formal_at})
+		operator_name = release_apply.operator.username if release_apply.operator else ''
+		applier_name = release_apply.applier.username if release_apply.applier else ''
+		tester_name = release_apply.tester.username if release_apply.tester else ''
+		producter_name = release_apply.producter.username if release_apply.producter else ''
+		application_name = release_apply.application.name if release_apply.application else ''
+		release_apply_list.append({'title': release_apply.title, 'application_name': application_name,
+								   'state': release_apply.state, 'applier_name': applier_name,
+								   'tester_name': tester_name, 'operator_name': operator_name,
+								   'producter_name': producter_name,'apply_time': str(release_apply.created_at)[:19],
+								   'planned_time': str(release_apply.planned_at)[:19], 'formal_time': str(release_apply.formal_at)[:19]})
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
 	return json.dumps(result)
 
