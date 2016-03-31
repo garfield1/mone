@@ -89,10 +89,12 @@
                         <div class="col-md-5 ">
                             <select name='release_app' id='release_app' class='form-control'>
                                 <!--<option></option>-->
-                                <option value="1">xxxx</option>
-                                <option value="2">yyyy</option>
+                                {% for application in application_list %}
+                                <option value="{{ application.id }}">{{ application.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
+                        <label id="git_url_dict" class="col-md-1 control-label hide">{{application_dict}}</label>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">git地址</label>

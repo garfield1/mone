@@ -24,6 +24,9 @@ $(".form-datetime").datetimepicker({
     format: "yyyy-mm-dd hh:ii"
 });
 
+var git_url_dict = JSON.parse($("#git_url_dict").text());
+alert(git_url_dict);
+
 $("input#submit").click(function(){
     var release_title = $.trim($("#release_title").val());
     var producter = $.trim($("#producter").val());
