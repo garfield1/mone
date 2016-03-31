@@ -5,7 +5,6 @@ from ConfigParser import ConfigParser
 # import os
 # from django.db.models import Q
 import json
-import traceback
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
 from views._release_apply import state_transfer
@@ -55,7 +54,7 @@ def add_release_apply():
 		producter_list.append({'user_id': producter_data.id, 'username': producter_data.username})
 	for tester_data in tester_datas:
 		tester_list.append({'user_id': tester_data.id, 'username': tester_data.username})
-	return render_template("release_apply/add.html", producter_list=producter_list, tester_list=tester_list, application_list=application_list, application_dict=application_dict)
+	return render_template("release_apply/add.html", producter_list=producter_list, tester_list=tester_list, application_list=application_list, application_dict=json.dumps(application_dict))
 
 @release_apply.route('/get/application_list/')
 @login_required
@@ -225,7 +224,7 @@ def search_release_apply():
 		tester_name = release_apply.tester.username if release_apply.tester else ''
 		producter_name = release_apply.producter.username if release_apply.producter else ''
 		application_name = release_apply.application.name if release_apply.application else ''
-		release_apply_list.append({'title': release_apply.title, 'application_name': application_name,
+		release_apply_list.append({'title': release_apply.title or '', 'application_name': application_name,
 								   'state': release_apply.state, 'applier_name': applier_name,
 								   'tester_name': tester_name, 'operator_name': operator_name,
 								   'producter_name': producter_name,'apply_time': str(release_apply.created_at)[:19],
