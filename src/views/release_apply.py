@@ -69,6 +69,7 @@ def get_application_list():
 def list():
 	return render_template("release_apply/list.html")
 
+
 @release_apply.route('/detail/', methods=['GET'])
 @login_required
 def detail():
@@ -77,8 +78,12 @@ def detail():
 		releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
 	except Exception,e:
 		releaseapply_data = None
-
-	return render_template("release_apply/details.html")
+	releaseapplystate_list = []
+	if releaseapply_data:
+		releaseapplystates = releaseapply_data.ReleaseApplyState.all()
+		for releaseapplystate in releaseapplystates:
+			releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
+	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list)
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
@@ -163,7 +168,7 @@ def search_release_apply():
 	producter = request.form.get('producter')
 	start_planned_time = request.form.get('start_planned_time')
 	end_planned_time = request.form.get('end_planned_time')
-	page_num = request.form.get('page_num')
+	page_num = int(request.form.get('page_num') or 1)
 	start_formal_at = request.form.get('start_formal_at')
 	end_formal_at = request.form.get('end_formal_at')
 	kwargs = {}
