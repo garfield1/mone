@@ -1,14 +1,26 @@
 #!/usr/bin/env python
 #encoding=utf-8
-from _django_orm import *
+# from _django_orm import *
+from models.mone.models import EmailQueue, RA_USER_ACTION_TEAM_LEADER_CREATED, RA_USER_ACTION_TEAM_LEADER_RESUBMIT, \
+	RA_USER_ACTION_TEAM_LEADER_CONFIRMED, ReleaseApplyState, RA_STATE_WAITTING_MANAGER_CONFIRMED, \
+	RA_USER_ACTION_DEVELOPER_CREATED, RA_USER_ACTION_DEVELOPER_RESUBMIT, RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED, \
+	RA_USER_ACTION_MANAGER_CONFIRMED, RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED, \
+	RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED, RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED, \
+	RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED, RA_STATE_WAITTING_TESTER_CONFIRMED, RA_USER_ACTION_TESTER_CONFIRMED, \
+	RA_STATE_WAITTING_OPERATOR_CLAIMED, Organization, RA_USER_ACTION_TESTER_REJECT, RA_USER_ACTION_TEAM_LEADER_REJECTED, \
+	RA_USER_ACTION_OPERATOR_REJECTED, RA_USER_ACTION_MANAGER_REJECTED, RA_STATE_WAITTING_DEVELOPER_MODIFIED, \
+	RA_STATE_WAITTING_TEAM_LEADER_MODIFIED, RA_USER_ACTION_OPERATOR_CLAIMED, RA_STATE_WAITTING_OPERATOR_EXECUTED, \
+	RA_USER_ACTION_OPERATOR_EXECUTED, RA_STATE_WAITTING_DEVELOPER_CLOSED, RA_STATE_WAITTING_TEAM_LEADER_CLOSED, \
+	RA_USER_ACTION_DEVELOPER_CLOSED, RA_USER_ACTION_TEAM_LEADER_CLOSED, RA_STATE_CLOSED
+
 
 def _send_email(email,ra,state):
 	eq = EmailQueue()
 	eq.email = email
-	eq.title = ra.title + state
+	eq.title = ra.title or '' + state
 	eq.content = "http://localhost/release_apply/"+str(ra.id)
 	eq.save()
-	
+
 
 def state_transfer(user,action,ra,reject_reason = None):
 	"""
@@ -35,7 +47,7 @@ def state_transfer(user,action,ra,reject_reason = None):
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
 		_send_email(ra.applier.email,ra,"可以构建了")
 		return user.id
-	
+
 	if action == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.tester ,release_apply = ra, state = RA_STATE_WAITTING_TESTER_CONFIRMED , action = action)
 		#发测试全组
@@ -128,9 +140,9 @@ if __name__ == "__main__":
 	#print "operator id",state_transfer(operator,RA_USER_ACTION_OPERATOR_CLAIMED,ra)
 	#print "operator id",state_transfer(operator,RA_USER_ACTION_OPERATOR_EXECUTED,ra)
 	#print "team_leader id",state_transfer(team_leader,RA_USER_ACTION_TEAM_LEADER_CLOSED,ra)
-	
+
 	print "applier id",applier.created_release_applys_by_pagination(1)
 	print "applier id",applier.waitting_confirmed_release_applys_by_pagination(1)
 	done,cnt = manager.operated_release_applys_by_pagination(1)
 	print "manager id",done,cnt,done[0].state,done[0].action
-	
+

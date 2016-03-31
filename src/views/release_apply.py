@@ -5,12 +5,12 @@ from ConfigParser import ConfigParser
 # import os
 # from django.db.models import Q
 import json
+import traceback
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
-import time
-# from models.mone.models import
-# from views._release_apply import state_transfer
-from models.mone.models import Application, ReleaseApply, User, Role
+from views._release_apply import state_transfer
+from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
+	RA_USER_ACTION_DEVELOPER_CREATED
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -143,7 +143,7 @@ def update_release_apply():
 	if title and application_id and is_self_test:
 		if release_apply_id:
 			try:
-				ReleaseApply.objects.get(id=release_apply_id).update(tester_id=tester_id, producter_id=producter_id, release_type=release_type,
+				ReleaseApply.objects.get(id=release_apply_id).update(title=title, tester_id=tester_id, producter_id=producter_id, release_type=release_type,
 																 	risk_level=risk_level, application_id=application_id, deploy=deploy,
 																 	planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
 																 	is_self_test=is_self_test, update_model=update_model, attention=attention, memo=memo)
@@ -151,14 +151,20 @@ def update_release_apply():
 			except Exception,e:
 				result = {'status': 1001, 'message': '数据库异常'}
 		else:
+			user_data = User.objects.filter(id=user_id)[0]
+			is_manager = user_data.is_manager()
 			try:
-				releaseapply_data = ReleaseApply(tester_id=tester_id, applier_id=user_id, producter_id=producter_id, release_type=release_type,
+				releaseapply_data = ReleaseApply(title=title, tester_id=tester_id, applier_id=user_id, producter_id=producter_id, release_type=release_type,
 									risk_level=risk_level, application_id=application_id, deploy=deploy,
 									planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
 									is_self_test=is_self_test, update_model=update_model, attention=attention, memo=memo)
 				releaseapply_data.save()
+				if is_manager:
+					state_transfer(user_data, RA_USER_ACTION_TEAM_LEADER_CREATED, releaseapply_data)
+				else:
+					state_transfer(user_data, RA_USER_ACTION_DEVELOPER_CREATED, releaseapply_data)
 				result = {'status': 200, 'message': '保存成功'}
-			except Exception,e:
+			except IndexError as ex:
 				result = {'status': 1001, 'message': '数据库异常'}
 	return json.dumps(result)
 
