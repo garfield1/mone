@@ -71,6 +71,12 @@ def list():
 @release_apply.route('/detail/', methods=['GET'])
 @login_required
 def detail():
+	release_apply_id = request.args.get('release_apply_id')
+	try:
+		releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
+	except Exception,e:
+		releaseapply_data = None
+
 	return render_template("release_apply/details.html")
 
 @release_apply.route('/update/application/', methods=['POST'])
@@ -98,6 +104,7 @@ def update_application():
 	return json.dumps(result)
 
 @release_apply.route('/update/release_apply/', methods=['POST'])
+@login_required
 def update_release_apply():
 	title = request.form.get('title')
 	tester_id = request.form.get('tester_id')
@@ -132,6 +139,66 @@ def update_release_apply():
 				result = {'status': 200, 'message': '保存成功'}
 			except Exception,e:
 				result = {'status': 1001, 'message': '数据库异常'}
+	return json.dumps(result)
+
+def get_release_apply_by_page(page_num, **kwargs):
+	start_page = page_size*(page_num-1)
+	end_page = page_size*page_num
+	releaseapplys = ReleaseApply.objects.filter(**kwargs).order_by('-id')[start_page: end_page]
+	return releaseapplys
+
+def get_release_apply_count(**kwargs):
+	return ReleaseApply.objects.filter(**kwargs).count()
+
+@release_apply.route('/search_release_apply/', methods=['POST'])
+@login_required
+def search_release_apply():
+	title = request.form.get('title')
+	application_id = request.form.get('application_id')
+	state = request.form.get('state')
+	applier = request.form.get('applier')
+	tester = request.form.get('tester')
+	operator = request.form.get('operator')
+	producter = request.form.get('producter')
+	start_planned_time = request.form.get('start_planned_time')
+	end_planned_time = request.form.get('end_planned_time')
+	page_num = request.form.get('page_num')
+	start_formal_at = request.form.get('start_formal_at')
+	end_formal_at = request.form.get('end_formal_at')
+	kwargs = {}
+	if title:
+		kwargs['title__contains'] = title
+	if applier:
+		kwargs['applier__username__contains'] = applier
+	if tester:
+		kwargs['tester__username__contains'] = tester
+	if operator:
+		kwargs['operator__username__contains'] = operator
+	if producter:
+		kwargs['producter__username__contains'] = producter
+	if application_id:
+		kwargs['application_id'] = application_id
+	if state:
+		kwargs['state'] = state
+	if start_planned_time:
+		kwargs['planned_at__gte'] = start_planned_time
+	if end_planned_time:
+		kwargs['planned_at__lte'] = start_planned_time
+	if start_formal_at:
+		kwargs['formal_at__gte'] = start_formal_at
+	if end_formal_at:
+		kwargs['formal_at__lte'] = end_formal_at
+	release_applys = get_release_apply_by_page(page_num, **kwargs)
+	total = get_release_apply_count(**kwargs)
+	page_count = total/page_size + 1
+	release_apply_list = []
+	for release_apply in release_applys:
+		release_apply_list.append({'title': release_apply.title, 'application_name': release_apply.application.name,
+								   'state': release_apply.state, 'applier_name': release_apply.applier.username,
+								   'tester_name': release_apply.tester.name, 'operator_name': release_apply.operator.name,
+								   'producter_name': release_apply.producter.name,'apply_time': release_apply.created_at,
+								   'planned_time': release_apply.planned_at, 'formal_time': release_apply.formal_at})
+	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
 	return json.dumps(result)
 
 

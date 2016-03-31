@@ -61,6 +61,7 @@ def on_load(state):
 
 @login_manager.user_loader
 def load_user(id):
+    #考虑记住密码，需要回调时记录session
     user_data = check_user(id)
     session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
     roles_data = user_data.role_set.all()
@@ -133,12 +134,6 @@ def login_check():
             login_user(user, remember=True)
         else:
             login_user(user)
-        session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
-        roles_data = user_data.role_set.all()
-        own_roles_list = []
-        for role_data in roles_data:
-            own_roles_list.append(role_data.id)
-        session['own_roles_list'] = own_roles_list
         return redirect(url_for('user.index'))
     return redirect(url_for('user.login'))
 

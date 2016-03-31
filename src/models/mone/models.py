@@ -300,6 +300,7 @@ class ReleaseApply(models.Model):
 	wiki_url = models.CharField(max_length = 400,null = True,blank = True)
 	jira_url = models.CharField(max_length = 400,null = True,blank = True)
 	planned_at = models.DateTimeField()
+	formal_at = models.DateTimeField()
 	update_model = models.CharField(max_length = 5000,null = True,blank = True)
 	attention = models.CharField(max_length = 5000,null = True,blank = True)
 	update_content = models.CharField(max_length = 5000,null = True,blank = True)
