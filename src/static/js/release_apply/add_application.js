@@ -41,7 +41,7 @@ $("input#submit").click(function(){
             name: name,
             git_url: git_url}
         }
-        $.post("/release_apply/add/application/", application_data, function(result){
+        $.post("/release_apply/update/application/", application_data, function(result){
         if (result.status == 200) {
             if (result.status == "200") {
                 $("#goodnews").addClass("alert alert-success with-icon").show();
