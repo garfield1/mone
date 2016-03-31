@@ -124,6 +124,9 @@ def update_release_apply():
 	jira_url = request.form.get('jira_url')
 	is_self_test = request.form.get('is_self_test')
 	release_apply_id = request.form.get('release_apply_id')
+	update_model = request.form.get('update_model')
+	attention = request.form.get('attention')
+	memo = request.form.get('memo')
 	result = {'status': 1001, 'message': '参数缺失'}
 	if title and application_id and is_self_test:
 		if release_apply_id:
@@ -131,7 +134,7 @@ def update_release_apply():
 				ReleaseApply.objects.get(id=release_apply_id).update(tester_id=tester_id, producter_id=producter_id, release_type=release_type,
 																 	risk_level=risk_level, application_id=application_id, deploy=deploy,
 																 	planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
-																 	is_self_test=is_self_test)
+																 	is_self_test=is_self_test, update_model=update_model, attention=attention, memo=memo)
 				result = {'status': 200, 'message': '更新成功'}
 			except Exception,e:
 				result = {'status': 1001, 'message': '数据库异常'}
@@ -140,7 +143,7 @@ def update_release_apply():
 				releaseapply_data = ReleaseApply(tester_id=tester_id, producter_id=producter_id, release_type=release_type,
 									risk_level=risk_level, application_id=application_id, deploy=deploy,
 									planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
-									is_self_test=is_self_test)
+									is_self_test=is_self_test, update_model=update_model, attention=attention, memo=memo)
 				releaseapply_data.save()
 				result = {'status': 200, 'message': '保存成功'}
 			except Exception,e:
