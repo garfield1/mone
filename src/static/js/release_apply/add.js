@@ -9,12 +9,14 @@ if(aQuery.length > 1)
         var aTmp = aBuf[i].split("=");  //分离key与Value
         aGET[aTmp[0]] = aTmp[1];
     }
- }
+}
 var application_id = aGET['application_id'];
 
 $("input#submit").click(function(){
-    var name = $.trim($("#name").val());
-    var git_url = $.trim($("#git_url").val());
+    var release_title = $.trim($("#release_title").val());
+    var producter = $.trim($("#producter").val());
+    var release_title
+
     if (name=="" || git_url==""){
         $("#badnews .content").text('抱歉！表单填写不完整！请重新填写！');
         $("#badnews").addClass("alert alert-warning with-icon").show();

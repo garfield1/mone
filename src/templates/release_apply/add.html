@@ -55,10 +55,12 @@ $(".form-date").datetimepicker({
                 <form class="form-horizontal" role="form" method="post">
                     <div class="form-group">
                         <label class="col-md-2 control-label">标题</label>
-                        <div class="col-md-5 "> <input type="text" name="" id="" value="" class="form-control" placeholder=""> </div>
+                        <div class="col-md-5 ">
+                            <input type="text" name="release_title" id="release_title" class="form-control">
+                        </div>
                         <label class="col-md-1 control-label">产品经理</label>
-                        <div class="col-md-2 ">
-                            <select name='' id='' class='form-control'>
+                        <div class="col-md-2">
+                            <select name='producter' id='producter' class='form-control'>
                                 <option></option>
                                 {% for producter in producter_list %}
                                 <option value="{{ producter.user_id }}">{{ producter.username }}</option>
@@ -68,15 +70,15 @@ $(".form-date").datetimepicker({
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">发布方式</label>
-                        <div class="col-md-2 ">
-                            <select name='' id='' class='form-control'>
+                        <div class="col-md-2">
+                            <select name='release_way' id='release_way' class='form-control'>
                                 <option>自动发布</option>
                                 <option>手工</option>
                             </select>
                         </div>
                         <label class="col-md-1 control-label">风险级别</label>
                         <div class="col-md-2 ">
-                            <select name='' id='' class='form-control'>
+                            <select name='risk_level' id='risk_level' class='form-control'>
                                 <option></option>
                                 <option>低</option>
                                 <option>中</option>
@@ -87,11 +89,11 @@ $(".form-date").datetimepicker({
                     <div class="form-group">
                         <label class="col-md-2 control-label">开发人员</label>
                         <div class="col-md-2">
-                            <input disabled type="text" name="" id="" value="{{ session['user_data']['username'] }}" class="form-control">
+                            <input disabled type="text" name="developer" id="developer" value="{{ session['user_data']['username'] }}" class="form-control">
                         </div>
                         <label class="col-md-1 control-label">测试人员</label>
-                        <div class="col-md-2 ">
-                            <select name='' id='' class='form-control'>
+                        <div class="col-md-2">
+                            <select name='tester' id='tester' class='form-control'>
                                 <option></option>
                                 {% for tester in tester_list %}
                                 <option value="{{ tester.user_id }}">{{ tester.username }}</option>
@@ -102,7 +104,8 @@ $(".form-date").datetimepicker({
                     <div class="form-group">
                         <label class="col-md-2 control-label">选择应用</label>
                         <div class="col-md-5 ">
-                            <select name='' id='' class='form-control'>
+                            <select name='release_app' id='release_app' class='form-control'>
+                                <option></option>
                                 <option>xxxx</option>
                                 <option>yyyy</option>
                             </select>
@@ -110,7 +113,7 @@ $(".form-date").datetimepicker({
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">git地址</label>
-                        <div class="col-md-5"> <input type="text" name="" id="" value="" class="form-control" placeholder=""> </div>
+                        <div class="col-md-5"> <input type="text" name="git_url" id="git_url" class="form-control"> </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">是否已自测</label>
@@ -123,7 +126,8 @@ $(".form-date").datetimepicker({
                     <div class="form-group">
                         <label class="col-md-2 control-label">发布级别</label>
                         <div class="col-md-2 ">
-                            <select name='' id='' class='form-control'>
+                            <select name='release_class' id='release_class' class='form-control'>
+                                <option></option>
                                 <option>常规发布</option>
                                 <option>紧急发布</option>
                                 <option>临时发布</option>
@@ -132,7 +136,7 @@ $(".form-date").datetimepicker({
                         <label class="col-md-1 control-label">上线时间</label>
                         <div class="col-md-2">
                             <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                <input class="form-control" size="16" type="text" name="endtime" id="endtime" value="" readonly="">
+                                <input class="form-control" size="16" type="text" name="release_time" id="release_time" value="" readonly="">
                                 <span class="input-group-addon"><span class="icon-remove"></span></span>
                                 <span class="input-group-addon"><span class="icon-calendar"></span></span>
                             </div>
@@ -140,11 +144,11 @@ $(".form-date").datetimepicker({
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">wiki链接</label>
-                        <div class="col-md-5"> <input type="text" name="" id="" value="" class="form-control" placeholder=""> </div>
+                        <div class="col-md-5"> <input type="text" name="wiki_url" id="wiki_url" class="form-control"> </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">jira链接</label>
-                        <div class="col-md-5 "> <input type="text" name="" id="" value="" class="form-control" placeholder=""> </div>
+                        <div class="col-md-5 "> <input type="text" name="jira_url" id="jira_url" class="form-control"> </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-1"></div>
@@ -156,15 +160,15 @@ $(".form-date").datetimepicker({
                                     </tr>
                                     <tr>
                                         <th class="col-md-2">修改模块：</th>
-                                        <th><input type="text" name="" id="" value="" class="form-control" placeholder=""></th>
+                                        <th><input type="text" name="model_modified" id="model_modified" class="form-control"></th>
                                     </tr>
                                     <tr>
                                         <th>注意事项：</th>
-                                        <th><input type="text" name="" id="" value="" class="form-control" placeholder=""></th>
+                                        <th><input type="text" name="attension" id="attension" class="form-control"></th>
                                     </tr>
                                     <tr>
                                         <th>修改内容：</th>
-                                        <th><textarea id="" rows="10" class="form-control" autofocus></textarea></th>
+                                        <th><textarea id="content_modified" rows="10" class="form-control"></textarea></th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -179,7 +183,7 @@ $(".form-date").datetimepicker({
                                         <th style="text-align:center">测试环境说明</th>
                                     </tr>
                                     <tr>
-                                        <th><textarea id="" rows="5" class="form-control" autofocus></textarea></th>
+                                        <th><textarea id="explanation" rows="5" class="form-control" autofocus></textarea></th>
                                     </tr>
                                 </tbody>
                             </table>
