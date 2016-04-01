@@ -122,7 +122,7 @@ function ajax_post(release_title,release_app,release_state,developer,tester,oper
                     temp.find(".productername").text(release_apply_list_item.producter_name);
                     temp.find(".applytime").text(release_apply_list_item.apply_time);
                     temp.find(".deploytime").text(release_apply_list_item.formal_time);
-//                    temp.find("a").attr("href","/release_apply/details/"+release_apply_list_item.release_apply_id);
+                    temp.find("a").attr("href","/release_apply/details/"+release_apply_list_item.release_apply_id);
                     temp.appendTo($("table.nohide tbody"));
                     $("table.nohide .template").removeClass("template");
                 }
