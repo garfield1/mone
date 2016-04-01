@@ -9,7 +9,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from flask.ext.login import login_required
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
-	RA_USER_ACTION_DEVELOPER_CREATED
+	RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -80,19 +80,19 @@ def list():
 	return render_template("release_apply/list.html")
 
 
-@release_apply.route('/detail/', methods=['GET'])
+@release_apply.route('/details/<release_apply_id>')
 @login_required
-def detail():
-	release_apply_id = request.args.get('release_apply_id')
+def detail(release_apply_id):
 	try:
 		releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
 	except Exception,e:
 		releaseapply_data = None
+	if not releaseapply_data:
+		return redirect(url_for('user.index'))
 	releaseapplystate_list = []
-	if releaseapply_data:
-		releaseapplystates = releaseapply_data.ReleaseApplyState.all()
-		for releaseapplystate in releaseapplystates:
-			releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
+	releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
+	for releaseapplystate in releaseapplystates:
+		releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
 	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list)
 
 @release_apply.route('/update/application/', methods=['POST'])
@@ -224,14 +224,29 @@ def search_release_apply():
 		tester_name = release_apply.tester.username if release_apply.tester else ''
 		producter_name = release_apply.producter.username if release_apply.producter else ''
 		application_name = release_apply.application.name if release_apply.application else ''
-		release_apply_list.append({'title': release_apply.title or '', 'application_name': application_name,
-								   'state': release_apply.state, 'applier_name': applier_name,
+		release_apply_list.append({'release_apply_id': release_apply.id, 'title': release_apply.title or '', 'application_name': application_name,
+								   'state': release_apply.state or '', 'applier_name': applier_name,
 								   'tester_name': tester_name, 'operator_name': operator_name,
 								   'producter_name': producter_name,'apply_time': str(release_apply.created_at)[:19],
 								   'planned_time': str(release_apply.planned_at)[:19], 'formal_time': str(release_apply.formal_at)[:19] if release_apply.formal_at else ''})
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
 	return json.dumps(result)
 
+# @release_apply.route('/update/releaseapplystate/', methods=['GET', 'POST'])
+# @login_required
+# def update_releaseapplystate():
+# 	user_id = session["user_data"]["user_id"]
+# 	action_type = request.form.get('action_type')
+# 	reject_reason = request.form.get('reject_reason') or None
+# 	release_apply_id = request.form.get('release_apply_id')
+# 	result = {'status': 1001, 'message': '请求失败'}
+# 	try:
+# 		user_data = User.objects.filter(id=user_id)[0]
+# 	except:
+# 		user_data = None
+# 	try:
+# 		release_apply_data =
+#
 
 
 
