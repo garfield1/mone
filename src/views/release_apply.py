@@ -253,7 +253,7 @@ def search_release_apply():
 								   'state': release_apply.state or '', 'applier_name': applier_name,
 								   'tester_name': tester_name, 'operator_name': operator_name,
 								   'producter_name': producter_name,'apply_time': str(release_apply.created_at)[:19],
-								   'planned_time': str(release_apply.planned_at)[:19], 'finish_time': str(release_apply.updated_at)[:19] if release_apply.formal_at else ''})
+								   'planned_time': str(release_apply.planned_at)[:19], 'finish_time': str(release_apply.updated_at)[:19] if release_apply.updated_at else ''})
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
 	return json.dumps(result)
 
