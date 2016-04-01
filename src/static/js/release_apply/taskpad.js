@@ -85,6 +85,9 @@ function ajax_post(taskpad_type,page_num){
                     temp.find("a").attr("href","/worksheet/details/"+worksheet_list_item.worksheet_id);
                     temp.find(".title").text("标题："+worksheet_list_item.title);
                     temp.find(".application").text("应用： ");
+                    temp.find(".release_way").text("发布方式： ");
+                    temp.find(".risk_level").text("风险级别： ");
+                    temp.find(".release_class").text("发布级别： ");
                     temp.find(".tester").text("测试人员： ");
                     temp.find(".applyname").text("申请人："+worksheet_list_item.apply_name);
                     temp.find(".productor").text("产品经理： ");
