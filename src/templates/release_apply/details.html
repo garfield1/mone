@@ -164,59 +164,59 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-2">标题</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.title }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">发布类型</td>
-                                <td class="col-md-4">xx</td>
+                                <td class="col-md-4">{{ releaseapply_data.release_type or '' }}</td>
                                 <td class="col-md-2">风险级别</td>
-                                <td class="col-md-4">yy</td>
+                                <td class="col-md-4">{{ releaseapply_data.risk_level }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">开发人员</td>
-                                <td class="col-md-4">xx</td>
+                                <td class="col-md-4">{{ releaseapply_data.applier.username or ''}}</td>
                                 <td class="col-md-2">自测</td>
                                 <td class="col-md-4">已自测</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">测试人员</td>
-                                <td class="col-md-4">xx</td>
+                                <td class="col-md-4">{{ releaseapply_data.tester.username or '' }}</td>
                                 <td class="col-md-2">产品经理</td>
-                                <td class="col-md-4">yy</td>
+                                <td class="col-md-4">{{ releaseapply_data.producter.username or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">应用</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.application.name or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">git地址</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.application.git_url or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">发布级别</td>
                                 <td class="col-md-4">xx</td>
                                 <td class="col-md-2">上线时间</td>
-                                <td class="col-md-4">yy</td>
+                                <td class="col-md-4">{{ releaseapply_data.planned_at or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">wiki连接</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.wiki_url or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">jira连接</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.jira_url or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">修改模块</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.update_model or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">注意事项</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.attention or '' }}<</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">修改内容</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'>{{ releaseapply_data.memo or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">测试环境</td>
