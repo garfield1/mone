@@ -24,18 +24,12 @@ $(".form-datetime").datetimepicker({
     format: "yyyy-mm-dd hh:ii"
 });
 
-console.log($("#git_url_dict").text());
 var git_url_dict = JSON.parse($("#git_url_dict").text());
-//var git_url_dict = '{1: "测试", 2: "更新"}'
-console.log(git_url_dict);
 
 $("#release_app").change(function(){
     var application_id = $.trim($("#release_app").val());
     if (application_id){
-        console.log(application_id);
-        var git_url = git_url_dict[application_id];
-        //editor.html(git_url);
-        console.log(git_url);
+        $("#git_url").val(git_url_dict[application_id]);
     }
 });
 

@@ -88,7 +88,7 @@
                         <label class="col-md-2 control-label">选择应用</label>
                         <div class="col-md-5 ">
                             <select name='release_app' id='release_app' class='form-control'>
-                                <!--<option></option>-->
+                                <option></option>
                                 {% for application in application_list %}
                                 <option value="{{ application.id }}">{{ application.name }}</option>
                                 {% endfor %}
