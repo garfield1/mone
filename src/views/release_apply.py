@@ -7,9 +7,11 @@ from ConfigParser import ConfigParser
 import json
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
+import time
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
-	RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState
+	RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState, RA_USER_ACTION_OPERATOR_CLAIMED, \
+	RA_USER_ACTION_OPERATOR_EXECUTED
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -228,25 +230,40 @@ def search_release_apply():
 								   'state': release_apply.state or '', 'applier_name': applier_name,
 								   'tester_name': tester_name, 'operator_name': operator_name,
 								   'producter_name': producter_name,'apply_time': str(release_apply.created_at)[:19],
-								   'planned_time': str(release_apply.planned_at)[:19], 'formal_time': str(release_apply.formal_at)[:19] if release_apply.formal_at else ''})
+								   'planned_time': str(release_apply.planned_at)[:19], 'finish_time': str(release_apply.updated_at)[:19] if release_apply.formal_at else ''})
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
 	return json.dumps(result)
 
-# @release_apply.route('/update/releaseapplystate/', methods=['GET', 'POST'])
-# @login_required
-# def update_releaseapplystate():
-# 	user_id = session["user_data"]["user_id"]
-# 	action_type = request.form.get('action_type')
-# 	reject_reason = request.form.get('reject_reason') or None
-# 	release_apply_id = request.form.get('release_apply_id')
-# 	result = {'status': 1001, 'message': '请求失败'}
-# 	try:
-# 		user_data = User.objects.filter(id=user_id)[0]
-# 	except:
-# 		user_data = None
-# 	try:
-# 		release_apply_data =
-#
+@release_apply.route('/update/releaseapplystate/', methods=['GET', 'POST'])
+@login_required
+def update_releaseapplystate():
+	user_id = session["user_data"]["user_id"]
+	action_type = request.form.get('action_type')
+	reject_reason = request.form.get('reject_reason') or None
+	release_apply_id = request.form.get('release_apply_id')
+	result = {'status': 1001, 'message': '请求失败'}
+	try:
+		user_data = User.objects.filter(id=user_id)[0]
+	except:
+		user_data = None
+	try:
+		release_apply_data = ReleaseApplyState.objects.filter(id=release_apply_id)[0]
+	except:
+		release_apply_data = None
+	ISOTIMEFORMAT='%Y-%m-%d %X'
+	now_time = time.strftime( ISOTIMEFORMAT, time.localtime( time.time() ) )
+	if user_data and release_apply_data:
+		if action_type == RA_USER_ACTION_OPERATOR_CLAIMED:
+			release_apply_data.operator_id = user_id
+			release_apply_data.save()
+		if action_type == RA_USER_ACTION_OPERATOR_EXECUTED:
+			release_apply_data.updated_at = now_time
+			release_apply_data.save()
+		if state_transfer(user_data, action_type, release_apply_data, reject_reason):
+			result = {'status': 200, 'message': '请求成功'}
+	return json.dumps(result)
+
+
 
 
 
