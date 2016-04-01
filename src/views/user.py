@@ -69,6 +69,8 @@ def load_user(id):
     for role_data in roles_data:
         own_roles_list.append(role_data.id)
     session['own_roles_list'] = own_roles_list
+    session['is_operator'] = user_data.is_operator()
+    session['is_manager'] = user_data.is_manager()
     return set_user.get(id)
 
 @user.route('/login/')

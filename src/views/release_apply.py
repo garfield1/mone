@@ -81,18 +81,6 @@ def get_application_list():
 def list():
 	return render_template("release_apply/list.html")
 
-status = {
-	-2: '未知',
-	-1: '关闭',
-	0: '打回',
-	1: '主管审批',
-	2: '经理审批',
-	3: '构建',
-	4: '测试',
-	5: '发布',
-	6: '完成'
-}
-
 state_to_step = {
 	RA_STATE_CLOSED: -1,
 	RA_STATE_WAITTING_DEVELOPER_MODIFIED: 0,
@@ -105,6 +93,18 @@ state_to_step = {
 	RA_STATE_WAITTING_OPERATOR_CLAIMED: 5,
 	RA_STATE_WAITTING_OPERATOR_EXECUTED: 6,
 	RA_STATE_WAITTING_COMPLETE: 7
+}
+
+step_to_message = {
+	-1: '工单已关闭',
+	0: '工单已打回',
+	1: '主管待审批',
+	2: '经理待审批',
+	3: '待构建',
+	4: '带测试',
+	5: '运维发布中',
+	6: '运维发布中',
+	7: '已完成'
 }
 
 @release_apply.route('/details/<release_apply_id>')
@@ -139,7 +139,9 @@ def detail(release_apply_id):
 	for releaseapplystate in releaseapplystates:
 		releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
 	step = state_to_step[releaseapply_data.state] if releaseapply_data.state else -2
-	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step)
+
+	release_apply_message = step_to_message.get(step)
+	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step, release_apply_message=release_apply_message)
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
