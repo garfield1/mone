@@ -12,7 +12,11 @@ from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_AC
 	RA_STATE_WAITTING_TEAM_LEADER_MODIFIED, RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED, RA_STATE_WAITTING_MANAGER_CONFIRMED, \
 	RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED, RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED, \
 	RA_STATE_WAITTING_TESTER_CONFIRMED, RA_STATE_WAITTING_OPERATOR_CLAIMED, RA_STATE_WAITTING_OPERATOR_EXECUTED, \
-	RA_STATE_WAITTING_COMPLETE
+	RA_STATE_WAITTING_COMPLETE, RA_USER_ACTION_MANAGER_CONFIRMED, RA_USER_ACTION_MANAGER_REJECTED, \
+	RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED, RA_STATE_WAITTING_DEVELOPER_CLOSED, RA_USER_ACTION_TEAM_LEADER_REJECTED, \
+	RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED, RA_USER_ACTION_TEAM_LEADER_CONFIRMED, \
+	RA_STATE_WAITTING_TEAM_LEADER_CLOSED, RA_USER_ACTION_TESTER_CONFIRMED, RA_USER_ACTION_TESTER_REJECT, \
+	RA_USER_ACTION_OPERATOR_REJECTED
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -107,6 +111,7 @@ step_to_message = {
 	7: '已完成'
 }
 
+
 @release_apply.route('/details/<release_apply_id>')
 @login_required
 def detail(release_apply_id):
@@ -139,9 +144,46 @@ def detail(release_apply_id):
 	for releaseapplystate in releaseapplystates:
 		releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
 	step = state_to_step[releaseapply_data.state] if releaseapply_data.state else -2
-
+	last_action = ''
+	next_action = ''
+	if releaseapply_data.state == RA_STATE_CLOSED:
+		last_action = ''
+		next_action = ''
+	elif releaseapply_data.state == RA_STATE_WAITTING_MANAGER_CONFIRMED:
+		last_action = RA_USER_ACTION_MANAGER_CONFIRMED
+		next_action = RA_USER_ACTION_MANAGER_REJECTED
+	elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED:
+		last_action = ''
+		next_action = RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED
+	elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_MODIFIED:
+		last_action = ''
+		next_action = RA_USER_ACTION_DEVELOPER_CREATED
+	elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_CLOSED:
+		last_action = ''
+		next_action = RA_USER_ACTION_DEVELOPER_CREATED
+	elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED:
+		last_action = RA_USER_ACTION_TEAM_LEADER_REJECTED
+		next_action = RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED
+	elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_MODIFIED:
+		last_action = ''
+		next_action = RA_USER_ACTION_TEAM_LEADER_CREATED
+	elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED:
+		last_action = ''
+		next_action = RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED
+	elif releaseapply_data.state == RA_STATE_WAITTING_TESTER_CONFIRMED:
+		last_action = RA_USER_ACTION_TESTER_REJECT
+		next_action = RA_USER_ACTION_TESTER_CONFIRMED
+	elif releaseapply_data.state == RA_STATE_WAITTING_OPERATOR_CLAIMED:
+		last_action = RA_USER_ACTION_OPERATOR_REJECTED
+		next_action = RA_USER_ACTION_OPERATOR_CLAIMED
+	elif releaseapply_data.state == RA_STATE_WAITTING_OPERATOR_EXECUTED:
+		last_action = ''
+		next_action = RA_USER_ACTION_OPERATOR_EXECUTED
+	elif releaseapply_data.state == RA_STATE_WAITTING_COMPLETE:
+		last_action = ''
+		next_action = ''
 	release_apply_message = step_to_message.get(step)
-	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step, release_apply_message=release_apply_message)
+	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step, release_apply_message=release_apply_message, last_action=last_action, next_action=next_action)
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required

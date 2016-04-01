@@ -63,14 +63,16 @@ def on_load(state):
 def load_user(id):
     #考虑记住密码，需要回调时记录session
     user_data = check_user(id)
-    session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
-    roles_data = user_data.role_set.all()
-    own_roles_list = []
-    for role_data in roles_data:
-        own_roles_list.append(role_data.id)
-    session['own_roles_list'] = own_roles_list
-    session['is_operator'] = user_data.is_operator()
-    session['is_manager'] = user_data.is_manager()
+    is_session = session.get('user_data')
+    if not is_session:
+        session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
+        roles_data = user_data.role_set.all()
+        own_roles_list = []
+        for role_data in roles_data:
+            own_roles_list.append(role_data.id)
+        session['own_roles_list'] = own_roles_list
+        session['is_operator'] = user_data.is_operator()
+        session['is_manager'] = user_data.is_manager()
     return set_user.get(id)
 
 @user.route('/login/')
