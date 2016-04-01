@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 #encoding=utf-8
 from ConfigParser import ConfigParser
-# import json
-# import os
-# from django.db.models import Q
 import json
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
@@ -11,7 +8,10 @@ import time
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
 	RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState, RA_USER_ACTION_OPERATOR_CLAIMED, \
-	RA_USER_ACTION_OPERATOR_EXECUTED
+	RA_USER_ACTION_OPERATOR_EXECUTED, RA_STATE_CLOSED, RA_STATE_WAITTING_DEVELOPER_MODIFIED, \
+	RA_STATE_WAITTING_TEAM_LEADER_MODIFIED, RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED, RA_STATE_WAITTING_MANAGER_CONFIRMED, \
+	RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED, RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED, \
+	RA_STATE_WAITTING_TESTER_CONFIRMED, RA_STATE_WAITTING_OPERATOR_CLAIMED, RA_STATE_WAITTING_OPERATOR_EXECUTED
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -75,12 +75,34 @@ def get_application_list():
 		result = {'status': 200, 'message': '请求成功', 'data': {'application_list': application_list}}
 	return json.dumps(result)
 
-
 @release_apply.route('/list/', methods=['GET'])
 @login_required
 def list():
 	return render_template("release_apply/list.html")
 
+status = {
+	-1: '关闭',
+	0: '打回',
+	1: '主管审批',
+	2: '经理审批',
+	3: '构建',
+	4: '测试',
+	5: '发布',
+	6: '完成'
+}
+
+state_to_step = {
+	RA_STATE_CLOSED: -1,
+	RA_STATE_WAITTING_DEVELOPER_MODIFIED: 0,
+	RA_STATE_WAITTING_TEAM_LEADER_MODIFIED: 0,
+	RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED: 1,
+	RA_STATE_WAITTING_MANAGER_CONFIRMED: 2,
+	RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED: 3,
+	RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED: 3,
+	RA_STATE_WAITTING_TESTER_CONFIRMED: 4,
+	RA_STATE_WAITTING_OPERATOR_CLAIMED: 5,
+	RA_STATE_WAITTING_OPERATOR_EXECUTED: 6
+}
 
 @release_apply.route('/details/<release_apply_id>')
 @login_required
@@ -95,7 +117,8 @@ def detail(release_apply_id):
 	releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
 	for releaseapplystate in releaseapplystates:
 		releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
-	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list)
+	step = state_to_step[releaseapply_data.state]
+	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step)
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
