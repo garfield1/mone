@@ -11,7 +11,8 @@ from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_AC
 	RA_USER_ACTION_OPERATOR_EXECUTED, RA_STATE_CLOSED, RA_STATE_WAITTING_DEVELOPER_MODIFIED, \
 	RA_STATE_WAITTING_TEAM_LEADER_MODIFIED, RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED, RA_STATE_WAITTING_MANAGER_CONFIRMED, \
 	RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED, RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED, \
-	RA_STATE_WAITTING_TESTER_CONFIRMED, RA_STATE_WAITTING_OPERATOR_CLAIMED, RA_STATE_WAITTING_OPERATOR_EXECUTED
+	RA_STATE_WAITTING_TESTER_CONFIRMED, RA_STATE_WAITTING_OPERATOR_CLAIMED, RA_STATE_WAITTING_OPERATOR_EXECUTED, \
+	RA_STATE_WAITTING_COMPLETE
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -81,6 +82,7 @@ def list():
 	return render_template("release_apply/list.html")
 
 status = {
+	-2: '未知',
 	-1: '关闭',
 	0: '打回',
 	1: '主管审批',
@@ -101,12 +103,31 @@ state_to_step = {
 	RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED: 3,
 	RA_STATE_WAITTING_TESTER_CONFIRMED: 4,
 	RA_STATE_WAITTING_OPERATOR_CLAIMED: 5,
-	RA_STATE_WAITTING_OPERATOR_EXECUTED: 6
+	RA_STATE_WAITTING_OPERATOR_EXECUTED: 6,
+	RA_STATE_WAITTING_COMPLETE: 7
 }
 
 @release_apply.route('/details/<release_apply_id>')
 @login_required
 def detail(release_apply_id):
+	'''
+	state_to_step = {
+	已关闭上线申请单: -1,
+	待开发修改: 0,
+	待主管修改: 0,
+	待主管确认: 1,
+	待经理确认: 2,
+	待开发构建确认: 3,
+	待主管构建确认: 3,
+	待测试确认: 4,
+	待运维认领: 5,
+	待运维执行: 6,
+	已完成: 7
+}
+	当step为－2时: 状态未知
+	:param release_apply_id:
+	:return:
+	'''
 	try:
 		releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
 	except Exception,e:
@@ -117,7 +138,7 @@ def detail(release_apply_id):
 	releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
 	for releaseapplystate in releaseapplystates:
 		releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
-	step = state_to_step[releaseapply_data.state]
+	step = state_to_step[releaseapply_data.state] if releaseapply_data.state else -2
 	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step)
 
 @release_apply.route('/update/application/', methods=['POST'])

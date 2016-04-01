@@ -33,6 +33,94 @@
                     <dt>期望完成时间：</dt>
                 </dl>
             </header>
+            <div class="ant-steps article-top">
+             <div class="ant-steps-item {% if step < 1 %}  ant-steps-status-wait {% elif step == 1 %}ant-steps-status-process {% elif step >1 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">1</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">申请</div>
+                        <div class="ant-steps-description"></div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if step <3 %}  ant-steps-status-wait{% elif step ==3 %}ant-steps-status-process {% elif step > 3 %} ant-steps-status-finish{% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">2</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">审批</div>
+                        <div class="ant-steps-description"></div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if step < 4 %}ant-steps-status-wait{% elif step ==4 %}ant-steps-status-process {% elif step > 4 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">3</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">构建</div>
+                        <div class="ant-steps-description"></div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if step < 5 %}ant-steps-status-wait  {% elif step == 5 %}ant-steps-status-process {% elif step > 5 %} ant-steps-status-finish{% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">4</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">测试</div>
+                        <div class="ant-steps-description"></div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if step < 6  %}ant-steps-status-wait {% elif step ==6 %}ant-steps-status-process {% elif step > 6 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-tail"><i></i></div>
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">5</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">发布</div>
+                        <div class="ant-steps-description"></div>
+                    </div>
+                </div>
+                <div class="ant-steps-item {% if step < 7 %}ant-steps-status-wait {% elif step ==7 %}ant-steps-status-process {% endif %}" style="width: 150px;">
+                    <div class="ant-steps-head">
+                        <div class="ant-steps-head-inner">
+                            <span class="ant-steps-icon">6</span></div>
+                    </div>
+                    <div class="ant-steps-main" style="max-width:100px;">
+                        <div class="ant-steps-title">完成</div>
+                        <div class="ant-steps-description"></div>
+                    </div>
+                </div>
+{#                <button id="worksheet_id" class="hide">{{ worksheet_data.worksheet_id}}</button>#}
+{#                <div class="ant-steps-item ant-steps-status-wait" >#}
+{#                    <div class="detail-font"> {% if worksheet_data.state_id == 1  %} 待重新申请 {% elif worksheet_data.state_id == 2  %} 工单已申请，待审核 {% elif worksheet_data.state_id == 3 %} 主管已确认，待认领 {% elif worksheet_data.state_id == 4 %} 运维已认领， 待执行  {% elif worksheet_data.state_id >= 5 %}完成 {% else %} 未知 {% endif %}</div>#}
+{#                    <div class="btn-group" >#}
+{#                        {% if is_revise %}#}
+{#                            <a href="/worksheet/add/?worksheet_id={{ worksheet_data.worksheet_id}}" >#}
+{#                                <button class="btn btn-md" type="button">修改</button>#}
+{#                            </a>#}
+{#                        {% endif %}#}
+{#                        {% if is_leader %}#}
+{#                            <button class="btn btn-md decision tl_reject" type="button" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>#}
+{#                            <button class="btn btn-md decision tl_pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>#}
+{#                        {% endif %}#}
+{#                        {% if is_operator %}#}
+{#                        <button class="btn btn-md decision ops_reject" type="button" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>#}
+{#                        <button class="btn btn-md decision ops_pass" data-toggle="modal" data-position="100px" data-target="#myModal">认领</button>#}
+{#                        {% endif %}#}
+{#                        {% if is_operator_execute %}#}
+{#                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">完成</button>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                </div>#}
             </div>
         </article>
 
