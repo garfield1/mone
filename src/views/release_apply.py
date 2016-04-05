@@ -155,7 +155,6 @@ def detail(release_apply_id):
 	releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
 	for releaseapplystate in releaseapplystates:
 		releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
-	print releaseapply_data.state
 	step = state_to_step.get(releaseapply_data.state) if releaseapply_data.state else -2
 	last_action = ''
 	next_action = ''
@@ -265,7 +264,6 @@ def update_release_apply():
 					state_transfer(user_data, RA_USER_ACTION_DEVELOPER_RESUBMIT, releaseapply_data)
 				result = {'status': 200, 'message': '更新成功'}
 			except Exception,e:
-				print e
 				result = {'status': 1001, 'message': '数据库异常'}
 		else:
 			try:
@@ -282,14 +280,20 @@ def update_release_apply():
 				result = {'status': 1001, 'message': '数据库异常'}
 	return json.dumps(result)
 
-def get_release_apply_by_page(page_num, **kwargs):
+def get_release_apply_by_page(page_num, filter_type='taskpad', **kwargs):
 	start_page = page_size*(page_num-1)
 	end_page = page_size*page_num
-	releaseapplys = ReleaseApply.objects.filter(**kwargs).order_by('-id')[start_page: end_page]
+	if filter_type == 'taskpad':
+		releaseapplys = ReleaseApply.objects.filter(**kwargs).exclude(state='已完成').order_by('-id')[start_page: end_page]
+	else:
+		releaseapplys = ReleaseApply.objects.filter(**kwargs).order_by('-id')[start_page: end_page]
 	return releaseapplys
 
-def get_release_apply_count(**kwargs):
-	return ReleaseApply.objects.filter(**kwargs).count()
+def get_release_apply_count(filter_type='taskpad', **kwargs):
+	if filter_type == 'taskpad':
+		return ReleaseApply.objects.filter(**kwargs).count()
+	else:
+		return ReleaseApply.objects.filter(**kwargs).count()
 
 @release_apply.route('/search_release_apply/', methods=['POST'])
 @login_required
@@ -329,8 +333,8 @@ def search_release_apply():
 		kwargs['formal_at__gte'] = start_formal_at
 	if end_formal_at:
 		kwargs['formal_at__lte'] = end_formal_at
-	release_applys = get_release_apply_by_page(page_num, **kwargs)
-	total = get_release_apply_count(**kwargs)
+	release_applys = get_release_apply_by_page(page_num, filter_type='list', **kwargs)
+	total = get_release_apply_count(filter_type='list', **kwargs)
 	page_count = total/page_size + 1
 	release_apply_list = []
 	for release_apply in release_applys:
@@ -376,7 +380,32 @@ def update_releaseapplystate():
 			result = {'status': 200, 'message': '请求成功'}
 	return json.dumps(result)
 
-
+@release_apply.route('/get/taskpad/', methods=['POST'])
+def get_taskpad():
+	taskpad_type = request.form.get('taskpad_type')
+	page_num = int(request.form.get('page_num') or 1)
+	kwargs = {}
+	if page_num < 1:
+		page_num = 1
+	if taskpad_type == "own":
+		user_id = session.get("user_data").get("user_id")
+		kwargs['waitting_confirmer_id'] = user_id
+		release_applys = get_release_apply_by_page(page_num, filter_type='taskpad', **kwargs)
+		total = get_release_apply_count(filter_type='taskpad', **kwargs)
+	else:
+		release_applys = get_release_apply_by_page(page_num, filter_type='taskpad', **kwargs)
+		total = get_release_apply_count(filter_type='taskpad', **kwargs)
+	release_apply_list = []
+	page_count = total/page_size + 1
+	for data in release_applys:
+		producter = data.producter.username if data.producter else None
+		tester = data.tester.username if data.tester else None
+		operator = data.operator.username if data.operator else None
+		release_apply_list.append({'release_apply_id': data.id, 'title': data.title,
+								   'release_type': data.release_type, 'producter': producter,
+								   'tester': tester, 'operator': operator})
+	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
+	return json.dumps(result)
 
 
 
