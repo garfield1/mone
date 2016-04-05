@@ -16,7 +16,7 @@ from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_AC
 	RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED, RA_STATE_WAITTING_DEVELOPER_CLOSED, RA_USER_ACTION_TEAM_LEADER_REJECTED, \
 	RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED, RA_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	RA_STATE_WAITTING_TEAM_LEADER_CLOSED, RA_USER_ACTION_TESTER_CONFIRMED, RA_USER_ACTION_TESTER_REJECT, \
-	RA_USER_ACTION_OPERATOR_REJECTED
+	RA_USER_ACTION_OPERATOR_REJECTED, RA_USER_ACTION_TEAM_LEADER_RESUBMIT, RA_USER_ACTION_DEVELOPER_RESUBMIT
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -42,6 +42,7 @@ def taskpad():
 @login_required
 def add_release_apply():
 	user_id = session.get('user_data').get('user_id')
+	release_apply_id = request.args.get('release_apply_id')
 	try:
 		user_data = User.objects.filter(id=user_id)[0]
 	except Exception,e:
@@ -61,7 +62,14 @@ def add_release_apply():
 		producter_list.append({'user_id': producter_data.id, 'username': producter_data.username})
 	for tester_data in tester_datas:
 		tester_list.append({'user_id': tester_data.id, 'username': tester_data.username})
-	return render_template("release_apply/add.html", producter_list=producter_list, tester_list=tester_list, application_list=application_list, application_dict=json.dumps(application_dict))
+	if release_apply_id:
+		try:
+			releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
+		except Exception,e:
+			return redirect(url_for('user.index'))
+	else:
+		releaseapply_data = {}
+	return render_template("release_apply/add.html", releaseapply_data=releaseapply_data, producter_list=producter_list, tester_list=tester_list, application_list=application_list, application_dict=json.dumps(application_dict))
 
 @release_apply.route('/get/application_list/')
 @login_required
@@ -230,19 +238,31 @@ def update_release_apply():
 	memo = request.form.get('memo')
 	result = {'status': 1001, 'message': '参数缺失'}
 	user_id = session.get('user_data').get('user_id')
+	try:
+		user_data = User.objects.filter(id=user_id)[0]
+	except Exception,e:
+		result = {'status': 1001, 'message': '数据库异常'}
+		return json.dumps(result)
+	is_manager = user_data.is_manager()
 	if title and application_id and is_self_test:
 		if release_apply_id:
 			try:
-				ReleaseApply.objects.get(id=release_apply_id).update(title=title, tester_id=tester_id, producter_id=producter_id, release_type=release_type,
-																 	risk_level=risk_level, application_id=application_id, deploy=deploy,
-																 	planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
-																 	is_self_test=is_self_test, update_model=update_model, attention=attention, update_content=update_content, memo=memo)
+				releaseapply_datas = ReleaseApply.objects.filter(id=release_apply_id)
+				releaseapply_datas.update(title=title, tester=tester_id, producter=producter_id, release_type=release_type,
+										risk_level=risk_level, application=application_id, deploy=deploy,
+										planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
+										is_self_test=is_self_test, update_model=update_model, attention=attention, update_content=update_content, memo=memo)
+
+				releaseapply_data = releaseapply_datas[0]
+				if is_manager:
+					state_transfer(user_data, RA_USER_ACTION_TEAM_LEADER_RESUBMIT, releaseapply_data)
+				else:
+					state_transfer(user_data, RA_USER_ACTION_DEVELOPER_RESUBMIT, releaseapply_data)
 				result = {'status': 200, 'message': '更新成功'}
 			except Exception,e:
+				print e
 				result = {'status': 1001, 'message': '数据库异常'}
 		else:
-			user_data = User.objects.filter(id=user_id)[0]
-			is_manager = user_data.is_manager()
 			try:
 				releaseapply_data = ReleaseApply(title=title, tester_id=tester_id, applier_id=user_id, producter_id=producter_id, release_type=release_type,
 									risk_level=risk_level, application_id=application_id, deploy=deploy,planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
@@ -330,6 +350,7 @@ def update_releaseapplystate():
 	reject_reason = request.form.get('reject_reason') or None
 	release_apply_id = request.form.get('release_apply_id')
 	result = {'status': 1001, 'message': '请求失败'}
+	print action_type
 	try:
 		user_data = User.objects.filter(id=user_id)[0]
 	except:

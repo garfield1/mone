@@ -106,7 +106,7 @@
                     <div class="detail-font"> {{ release_apply_message }}</div>
                     <div class="btn-group" >
                         {% if step == 0 and releaseapply_data.applier_id == session['user_data']['user_id'] %}
-                            <a href="/release_apply/add/?release_apply_id={{ releaseapply_data.id}}" >
+                            <a href="/release_apply/add/release_apply/?release_apply_id={{ releaseapply_data.id}}" >
                                 <button class="btn btn-md" type="button">修改</button>
                             </a>
                         {% elif step == 1 and releaseapply_data.waitting_confirmer_id == session['user_data']['user_id'] %}

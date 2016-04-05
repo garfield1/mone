@@ -39,12 +39,12 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">标题</label>
                         <div class="col-md-5 ">
-                            <input type="text" name="release_title" id="release_title" class="form-control">
+                            <input type="text" name="release_title" id="release_title" class="form-control" value="{{ releaseapply_data.title }}">
                         </div>
                         <label class="col-md-1 control-label">产品经理</label>
                         <div class="col-md-2">
                             <select name='producter' id='producter' class='form-control'>
-                                <option></option>
+                                <option value="{{ releaseapply_data.producter_id }}">{{ releaseapply_data.producter.username }}</option>
                                 {% for producter in producter_list %}
                                 <option value="{{ producter.user_id }}">{{ producter.username }}</option>
                                 {% endfor %}
@@ -55,7 +55,7 @@
                         <label class="col-md-2 control-label">发布方式</label>
                         <div class="col-md-2">
                             <select name='release_way' id='release_way' class='form-control'>
-                                <option></option>
+                                <option value="{{ releaseapply_data.release_type }}">{{ releaseapply_data.release_type }}</option>
                                 <option value="手动发布">手动发布</option>
                                 <option value="自动发布">自动发布</option>
                             </select>
@@ -63,7 +63,7 @@
                         <label class="col-md-1 control-label">风险级别</label>
                         <div class="col-md-2 ">
                             <select name='risk_level' id='risk_level' class='form-control'>
-                                <option></option>
+                                <option value="{{ releaseapply_data.risk_level }}">{{ releaseapply_data.risk_level }}</option>
                                 <option value="低">低</option>
                                 <option value="中">中</option>
                                 <option value="高">高</option>
@@ -78,7 +78,7 @@
                         <label class="col-md-1 control-label">测试人员</label>
                         <div class="col-md-2">
                             <select name='tester' id='tester' class='form-control'>
-                                <option></option>
+                                <option value="{{ releaseapply_data.tester_id }}">{{ releaseapply_data.tester.username }}</option>
                                 {% for tester in tester_list %}
                                 <option value="{{ tester.user_id }}">{{ tester.username }}</option>
                                 {% endfor %}
@@ -89,7 +89,7 @@
                         <label class="col-md-2 control-label">选择应用</label>
                         <div class="col-md-5 ">
                             <select name='release_app' id='release_app' class='form-control'>
-                                <option></option>
+                                 <option value="{{ releaseapply_data.application_id }}">{{ releaseapply_data.application.name }}</option>
                                 {% for application in application_list %}
                                 <option value="{{ application.id }}">{{ application.name }}</option>
                                 {% endfor %}
@@ -99,13 +99,13 @@
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">git地址</label>
-                        <div class="col-md-5"> <input type="text" disabled name="git_url" id="git_url" class="form-control"> </div>
+                        <div class="col-md-5"> <input type="text" disabled name="git_url" id="git_url" value="{{ releaseapply_data.application.git_url }}" class="form-control"> </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">是否已自测</label>
                         <div class="radio col-md-5">
                             <label>
-                                <input type="radio" name="self_test" id="self_test" value="1">已自测
+                                <input type="checkbox" name="self_test" id="self_test" value="1" checked>已自测
                             </label>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
                         <label class="col-md-2 control-label">发布级别</label>
                         <div class="col-md-2 ">
                             <select name='release_class' id='release_class' class='form-control'>
-                                <option></option>
+                                <option value="{{ releaseapply_data.deploy }}">{{ releaseapply_data.deploy }}</option>
                                 <option value="常规发布">常规发布</option>
                                 <option value="紧急发布">紧急发布</option>
                                 <option value="临时发布">临时发布</option>
@@ -122,7 +122,7 @@
                         <label class="col-md-1 control-label">上线时间</label>
                         <div class="col-md-2">
                             <div class="input-group date form-datetime" id="datetime" data-date="" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                                <input class="form-control" size="16" type="text" name="release_time" id="release_time" value="" readonly="">
+                                <input class="form-control" size="16" type="text" name="release_time" id="release_time" value="{{ releaseapply_data.planned_at }}" readonly="">
                                 <!--<span class="input-group-addon"><span class="icon-remove"></span></span>-->
                                 <span class="input-group-addon"><span class="icon-calendar"></span></span>
                             </div>
@@ -130,11 +130,11 @@
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">wiki链接</label>
-                        <div class="col-md-5"> <input type="text" name="wiki_url" id="wiki_url" class="form-control" placeholder="如有wiki链接，请填写"> </div>
+                        <div class="col-md-5"> <input type="text" name="wiki_url" id="wiki_url" class="form-control" placeholder="如有wiki链接，请填写" value="{{ releaseapply_data.wiki_url }}"></div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">jira链接</label>
-                        <div class="col-md-5 "> <input type="text" name="jira_url" id="jira_url" class="form-control" placeholder="如有jira链接，请填写"> </div>
+                        <div class="col-md-5 "> <input type="text" name="jira_url" id="jira_url" class="form-control" placeholder="如有jira链接，请填写" value="{{ releaseapply_data.jira_url  }}"> </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-1"></div>
@@ -146,15 +146,15 @@
                                     </tr>
                                     <tr>
                                         <th class="col-md-2">修改模块：</th>
-                                        <th><input type="text" name="model_modified" id="model_modified" class="form-control"></th>
+                                        <th><input type="text" name="model_modified" id="model_modified" class="form-control" value="{{ releaseapply_data.update_model  }}"></th>
                                     </tr>
                                     <tr>
                                         <th>注意事项：</th>
-                                        <th><input type="text" name="attension" id="attension" class="form-control"></th>
+                                        <th><input type="text" name="attension" id="attension" class="form-control" value="{{ releaseapply_data.attention  }}"></th>
                                     </tr>
                                     <tr>
                                         <th>修改内容：</th>
-                                        <th><textarea id="content_modified" rows="10" class="form-control"></textarea></th>
+                                        <th><textarea id="content_modified" rows="10" class="form-control">{{ releaseapply_data.update_content }}</textarea></th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -169,7 +169,7 @@
                                         <th style="text-align:center">测试环境说明</th>
                                     </tr>
                                     <tr>
-                                        <th><textarea id="explanation" rows="5" class="form-control" autofocus></textarea></th>
+                                        <th><textarea id="explanation" rows="5" class="form-control" autofocus>{{ releaseapply_data.memo }}</textarea></th>
                                     </tr>
                                 </tbody>
                             </table>
