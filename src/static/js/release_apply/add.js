@@ -30,13 +30,19 @@ $("#release_app").change(function(){
     var application_id = $.trim($("#release_app").val());
     if (application_id){
         $("#git_url").val(git_url_dict[application_id]);
+    } else {
+         $("#git_url").val("");
     }
 });
 
-function getEditorData() {
-    //editor.sync();
-    return editor.html();
-}
+$("#self_test").click(function(){
+    var this_elt = $(this);
+    if (this_elt.is(":checked")){
+        $("#submit").removeClass("disabled");
+    } else {
+        $("#submit").addClass("disabled");
+    }
+});
 
 $("input#submit").click(function(){
     var release_title = $.trim($("#release_title").val());
