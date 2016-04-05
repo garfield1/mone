@@ -402,11 +402,12 @@ def get_taskpad():
 		tester = data.tester.username if data.tester else None
 		operator = data.operator.username if data.operator else None
 		application = data.application.name if data.application else None
+		applier = data.applier.username if data.applier else None
 		release_apply_list.append({'release_apply_id': data.id, 'title': data.title,
 								   'release_type': data.release_type, 'producter': producter,
 								   'tester': tester, 'operator': operator, 'state': data.state,
 								   'planned_at': str(data.planned_at)[:19], 'deploy': data.deploy,
-								   'application': application, 'created_at': str(data.created_at)[:19]})
+								   'application': application, 'created_at': str(data.created_at)[:19], 'applier': applier})
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
 	return json.dumps(result)
 
