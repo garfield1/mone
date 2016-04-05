@@ -68,7 +68,7 @@ function ajax_post(taskpad_type,page_num){
     if(taskpad_type){post_data['taskpad_type']=taskpad_type;}
     if(page_num){post_data['page_num']=page_num;}
 
-    $.post("/worksheet/get/taskpad/", post_data, function(result){
+    $.post("/release_apply/get/taskpad/", post_data, function(result){
         if (result.status == 200) {
             page_num = result.data.page_num;
             page_count = result.data.page_count;
@@ -79,34 +79,32 @@ function ajax_post(taskpad_type,page_num){
 //                $("table.nohide .template0").removeClass("template0");
             }else{
                 var worksheet_list_item = '';
-                for(i=0; i<result.data.worksheet_list.length; i++){
+                for(i=0; i<result.data.release_apply_list.length; i++){
                     var temp = $(".template").clone();
-                    worksheet_list_item =  result.data.worksheet_list[i];
-                    temp.find("a").attr("href","/worksheet/details/"+worksheet_list_item.worksheet_id);
-                    temp.find(".title").text("标题："+worksheet_list_item.title);
-                    temp.find(".application").text("应用： ");
-                    temp.find(".release_way").text("发布方式： ");
-                    temp.find(".risk_level").text("风险级别： ");
-                    temp.find(".release_class").text("发布级别： ");
-                    temp.find(".tester").text("测试人员： ");
-                    temp.find(".applyname").text("申请人："+worksheet_list_item.apply_name);
-                    temp.find(".productor").text("产品经理： ");
-                    temp.find(".applytime").text("申请时间："+worksheet_list_item.created_at);
-                    temp.find(".release_time").text("计划上线时间："+worksheet_list_item.planned_at);
-                    var ws_state_elt = temp.find(".state");
-                    ws_state_elt.text(worksheet_list_item.status);
-                    var ws_state = worksheet_list_item.status
-                    if (ws_state=="待开发修改" || ws_state=="待主管修改" ){
-                        ws_state_elt.addClass("label-danger");
-                    }else if(ws_state=="待主管确认"){
-                        ws_state_elt.addClass("label-warning");
-                    }else if(ws_state=="待运维认领"){
-                        ws_state_elt.addClass("label-info");
-                    }else if(ws_state=="待运维执行"){
-                        ws_state_elt.addClass("label-success");
-                    }else if(ws_state=="待主管关闭工单" || ws_state=="待开发关闭工单" ){
-                        ws_state_elt.addClass("label-primary");
-                    }
+                    release_apply_list_item =  result.data.release_apply_list[i];
+                    temp.find("a").attr("href","/release_apply/details/"+release_apply_list_item.release_apply_id);
+                    temp.find(".title").text("标题："+release_apply_list_item.title);
+                    temp.find(".application").text("应用："+release_apply_list_item.application);
+                    temp.find(".release_class").text("发布级别："+release_apply_list_item.deploy);
+                    temp.find(".applyname").text("申请人："+release_apply_list_item.deploy);
+                    temp.find(".tester").text("测试人员："+release_apply_list_item.tester);
+                    temp.find(".productor").text("产品经理："+release_apply_list_item.operator);
+                    temp.find(".applytime").text("申请时间："+release_apply_list_item.planned_at);
+                    temp.find(".release_time").text("计划上线时间："+release_apply_list_item.planned_at);
+                    var ra_state_elt = temp.find(".state");
+                    ra_state_elt.text(release_apply_list_item.state);
+                    var ra_state = release_apply_list_item.state
+//                    if (ws_state=="待开发修改" || ws_state=="待主管修改" ){
+//                        ws_state_elt.addClass("label-danger");
+//                    }else if(ws_state=="待主管确认"){
+//                        ws_state_elt.addClass("label-warning");
+//                    }else if(ws_state=="待运维认领"){
+//                        ws_state_elt.addClass("label-info");
+//                    }else if(ws_state=="待运维执行"){
+//                        ws_state_elt.addClass("label-success");
+//                    }else if(ws_state=="待主管关闭工单" || ws_state=="待开发关闭工单" ){
+//                        ws_state_elt.addClass("label-primary");
+//                    }
                     temp.appendTo($("#cards"));
                     $("#cards .template").removeClass("template");
                 }
