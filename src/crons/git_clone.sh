@@ -1,5 +1,5 @@
-#!/usr/bin/sh bash
-if [ -d "./store_marketing" ];then rm -rvf ./store_marketing;fi;
+#!/bin/bash
+if [ -d "./cart" ];then rm -rvf ./cart;fi;
 ./git_clone.exp
 #build cmd mvn clear;-Dtest.ignore package
 cd store_marketing

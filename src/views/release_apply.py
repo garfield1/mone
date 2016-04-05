@@ -405,7 +405,8 @@ def get_taskpad():
 		release_apply_list.append({'release_apply_id': data.id, 'title': data.title,
 								   'release_type': data.release_type, 'producter': producter,
 								   'tester': tester, 'operator': operator, 'state': data.state,
-								   'planned_at': data.planned_at, 'deploy': data.deploy, 'application': application})
+								   'planned_at': str(data.planned_at)[:19], 'deploy': data.deploy,
+								   'application': application, 'created_at': str(data.created_at)[:19]})
 	result = {'status': 200, 'data': {'total': total, 'page_num': page_num, 'page_count': page_count, 'release_apply_list': release_apply_list}}
 	return json.dumps(result)
 
