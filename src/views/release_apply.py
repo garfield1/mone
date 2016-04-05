@@ -245,8 +245,7 @@ def update_release_apply():
 			is_manager = user_data.is_manager()
 			try:
 				releaseapply_data = ReleaseApply(title=title, tester_id=tester_id, applier_id=user_id, producter_id=producter_id, release_type=release_type,
-									risk_level=risk_level, application_id=application_id, deploy=deploy,
-									planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
+									risk_level=risk_level, application_id=application_id, deploy=deploy,planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
 									is_self_test=is_self_test, update_model=update_model, attention=attention, update_content=update_content, memo=memo)
 				releaseapply_data.save()
 				if is_manager:
@@ -336,7 +335,7 @@ def update_releaseapplystate():
 	except:
 		user_data = None
 	try:
-		release_apply_data = ReleaseApplyState.objects.filter(id=release_apply_id)[0]
+		release_apply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
 	except:
 		release_apply_data = None
 	ISOTIMEFORMAT='%Y-%m-%d %X'
