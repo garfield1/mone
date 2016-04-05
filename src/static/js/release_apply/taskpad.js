@@ -86,10 +86,10 @@ function ajax_post(taskpad_type,page_num){
                     temp.find(".title").text("标题："+release_apply_list_item.title);
                     temp.find(".application").text("应用："+release_apply_list_item.application);
                     temp.find(".release_class").text("发布级别："+release_apply_list_item.deploy);
-                    temp.find(".applyname").text("申请人："+release_apply_list_item.deploy);
+                    temp.find(".applyname").text("申请人："+release_apply_list_item.applier);
                     temp.find(".tester").text("测试人员："+release_apply_list_item.tester);
                     temp.find(".productor").text("产品经理："+release_apply_list_item.operator);
-                    temp.find(".applytime").text("申请时间："+release_apply_list_item.planned_at);
+                    temp.find(".applytime").text("申请时间："+release_apply_list_item.created_at);
                     temp.find(".release_time").text("计划上线时间："+release_apply_list_item.planned_at);
                     var ra_state_elt = temp.find(".state");
                     ra_state_elt.text(release_apply_list_item.state);
