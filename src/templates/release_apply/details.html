@@ -3,7 +3,7 @@
 <link href="/static/css/worksheet/details.css" rel="stylesheet">
 {% endblock %}
 {% block scripts %}
-<!--<script charset="utf-8" src="/static/js/worksheet/details.js"></script>-->
+<script charset="utf-8" src="/static/js/release_apply/details.js"></script>
 {% endblock %}
 {% block content %}
 {% import "header.html" as header %}
@@ -34,7 +34,7 @@
                 </dl>
             </header>
             <div class="ant-steps article-top">
-             <div class="ant-steps-item {% if step < 1 %}  ant-steps-status-wait {% elif step == 1 %}ant-steps-status-process {% elif step >1 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
+                <div class="ant-steps-item {% if step < 1 %}  ant-steps-status-wait {% elif step == 1 %}ant-steps-status-process {% elif step >1 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
                     <div class="ant-steps-tail"><i></i></div>
                     <div class="ant-steps-head">
                         <div class="ant-steps-head-inner">
@@ -99,8 +99,9 @@
                         <div class="ant-steps-description"></div>
                     </div>
                 </div>
-                <button id="last_action" class="hide">{{ last_action}}</button>
-                <button id="next_action" class="hide">{{ next_action}}</button>
+                <button id="last_action" class="hide" value="{{ last_action }}"></button>
+                <button id="next_action" class="hide" value="{{ next_action }}"></button>
+                <button id="release_apply_id" class="hide" value="{{ releaseapply_data.id }}"></button>
                 <div class="ant-steps-item ant-steps-status-wait" >
                     <div class="detail-font"> {{ release_apply_message }}</div>
                     <div class="btn-group" >
@@ -109,29 +110,28 @@
                                 <button class="btn btn-md" type="button">修改</button>
                             </a>
                         {% elif step == 1 and releaseapply_data.waitting_confirmer_id == session['user_data']['user_id'] %}
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
+                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
+                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
                         {% elif step == 2 and releaseapply_data.waitting_confirmer_id == session['user_data']['user_id']%}
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
+                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
+                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
                         {% elif step == 3 and releaseapply_data.applier_id == session['user_data']['user_id'] %}
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">构建</button>
+                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
+                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">构建</button>
                         {% elif step == 4 and releaseapply_data.tester_id == session['user_data']['user_id'] %}
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
+                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
+                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
                         {% elif step == 5 and session['is_operator']%}
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">认领</button>
+                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
+                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">认领</button>
                         {% elif step == 6 and releaseapply_data.operator_id %}
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">执行</button>
+                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
+                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">执行</button>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </article>
-
         <div class="modal" id="myModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -212,7 +212,7 @@
                             </tr>
                             <tr>
                                 <td class="col-md-2">注意事项</td>
-                                <td colspan='3'>{{ releaseapply_data.attention or '' }}<</td>
+                                <td colspan='3'>{{ releaseapply_data.attention or '' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">修改内容</td>
@@ -220,7 +220,7 @@
                             </tr>
                             <tr>
                                 <td class="col-md-2">测试环境</td>
-                                <td colspan='3'>xx</td>
+                                <td colspan='3'></td>
                             </tr>
                         </tbody>
                     </table>
