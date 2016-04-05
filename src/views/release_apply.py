@@ -155,7 +155,8 @@ def detail(release_apply_id):
 	releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
 	for releaseapplystate in releaseapplystates:
 		releaseapplystate_list.append({'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at, 'state': releaseapplystate.state})
-	step = state_to_step[releaseapply_data.state] if releaseapply_data.state else -2
+	print releaseapply_data.state
+	step = state_to_step.get(releaseapply_data.state) if releaseapply_data.state else -2
 	last_action = ''
 	next_action = ''
 	if releaseapply_data.state == RA_STATE_CLOSED:
