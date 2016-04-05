@@ -238,6 +238,14 @@
                                 <th >备注</th>
                             </tr>
                         </thead>
+                        {% for data in releaseapplystate_list %}
+                            <tr>
+                                <td>{{ data.name }}</td>
+                                <td>{{ data.created_at }}</td>
+                                <td>{{ data.state }}</td>
+                                <td>{{ data.content }}</td>
+                            </tr>
+                        {% endfor %}
                         <tbody>
                         </tbody>
                     </table>
