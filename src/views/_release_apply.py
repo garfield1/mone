@@ -11,7 +11,7 @@ from models.mone.models import EmailQueue, RA_USER_ACTION_TEAM_LEADER_CREATED, R
 	RA_USER_ACTION_OPERATOR_REJECTED, RA_USER_ACTION_MANAGER_REJECTED, RA_STATE_WAITTING_DEVELOPER_MODIFIED, \
 	RA_STATE_WAITTING_TEAM_LEADER_MODIFIED, RA_USER_ACTION_OPERATOR_CLAIMED, RA_STATE_WAITTING_OPERATOR_EXECUTED, \
 	RA_USER_ACTION_OPERATOR_EXECUTED, RA_STATE_WAITTING_DEVELOPER_CLOSED, RA_STATE_WAITTING_TEAM_LEADER_CLOSED, \
-	RA_USER_ACTION_DEVELOPER_CLOSED, RA_USER_ACTION_TEAM_LEADER_CLOSED, RA_STATE_CLOSED
+	RA_USER_ACTION_DEVELOPER_CLOSED, RA_USER_ACTION_TEAM_LEADER_CLOSED, RA_STATE_CLOSED, Role
 
 
 def _send_email(email,ra,state):
@@ -21,6 +21,13 @@ def _send_email(email,ra,state):
 	eq.content = "http://localhost/release_apply/"+str(ra.id)
 	eq.save()
 
+def get_all_operator():
+	all_user_list = []
+	roles = Role.objects.filter(name__contains="运维")
+	for role in roles:
+		user_list = role.user.all()
+		all_user_list.extend(user_list)
+	return list(set(all_user_list))
 
 def state_transfer(user,action,ra,reject_reason = None):
 	"""
@@ -58,7 +65,7 @@ def state_transfer(user,action,ra,reject_reason = None):
 	if action == RA_USER_ACTION_TESTER_CONFIRMED:
 		ReleaseApplyState.objects.create(creator = user ,release_apply = ra, state = RA_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
 		#发运维全组
-		for operator in Organization.objects.filter(name="基础运维组").first().user_set.all():
+		for operator in get_all_operator():
 			_send_email(operator.email,ra,"需要运维组发布")
 		return user.id
 
@@ -79,7 +86,7 @@ def state_transfer(user,action,ra,reject_reason = None):
 		ra.save()
 		_send_email(ra.applier.email,ra,user.username+"认领了该上线申请")
 		#发运维全组
-		for operator in user.organization.user_set.all():
+		for operator in get_all_operator():
 			_send_email(operator.email,ra,user.username+"认领了"+ra.title+"上线申请")
 		_send_email(ra.applier.email,ra,user.username+"认领了您的"+ra.title+"上线申请")
 		return user.id

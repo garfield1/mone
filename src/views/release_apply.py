@@ -68,7 +68,11 @@ def add_release_apply():
 		except Exception,e:
 			return redirect(url_for('user.index'))
 	else:
-		releaseapply_data = {}
+		releaseapply_data = {'update_model': '', 'attention': '', 'update_content': '',
+							 'memo': '', 'producter_id': '', 'producter': {'username': ''},
+							 'release_type': '', 'risk_level': '', 'tester_id': '',
+							 'tester': {'username': ''}, 'application_id': '', 'application': {'name': ''},
+							 'deploy': '', 'wiki_url': ''}
 	return render_template("release_apply/add.html", releaseapply_data=releaseapply_data, producter_list=producter_list, tester_list=tester_list, application_list=application_list, application_dict=json.dumps(application_dict))
 
 @release_apply.route('/get/application_list/')
@@ -350,7 +354,6 @@ def update_releaseapplystate():
 	reject_reason = request.form.get('reject_reason') or None
 	release_apply_id = request.form.get('release_apply_id')
 	result = {'status': 1001, 'message': '请求失败'}
-	print action_type
 	try:
 		user_data = User.objects.filter(id=user_id)[0]
 	except:
