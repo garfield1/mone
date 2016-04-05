@@ -58,9 +58,8 @@ $("input#submit").click(function(){
     var explanation = $.trim($("#explanation").val());
 
     if (release_title=="" || producter=="" || release_way=="" || risk_level=="" || developer=="" || tester=="" ||
-        release_app=="" || self_test=="" || release_class=="" || release_time==""
-//        || model_modified=="" || attension=="" || content_modified=="" || explanation=="" || git_url==""
-        ){
+        release_app=="" || self_test=="" || release_class=="" || release_time=="" ||
+        model_modified=="" || attension=="" || content_modified=="" || explanation==""){
         $("#badnews .content").text('抱歉！表单填写不完整！请重新填写！');
         $("#badnews").addClass("alert alert-warning with-icon").show();
         setTimeout(function(){
@@ -89,7 +88,11 @@ $("input#submit").click(function(){
             planned_at: release_time,
             wiki_url: wiki_url,
             jira_url: jira_url,
-            is_self_test: self_test}
+            is_self_test: self_test,
+            update_model: model_modified,
+            attention: attension,
+            update_content: content_modified,
+            memo: explanation}
         }else{
             release_apply_data = {
             title: release_title,
@@ -102,7 +105,11 @@ $("input#submit").click(function(){
             planned_at: release_time,
             wiki_url: wiki_url,
             jira_url: jira_url,
-            is_self_test: self_test}
+            is_self_test: self_test,
+            update_model: model_modified,
+            attention: attension,
+            update_content: content_modified,
+            memo: explanation}
         }
         $.post("/release_apply/update/release_apply/", release_apply_data, function(result){
             if (result.status == 200) {
