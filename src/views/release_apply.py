@@ -398,11 +398,11 @@ def get_taskpad():
 	release_apply_list = []
 	page_count = total/page_size + 1
 	for data in release_applys:
-		producter = data.producter.username if data.producter else None
-		tester = data.tester.username if data.tester else None
-		operator = data.operator.username if data.operator else None
-		application = data.application.name if data.application else None
-		applier = data.applier.username if data.applier else None
+		producter = data.producter.username if data.producter else ''
+		tester = data.tester.username if data.tester else ''
+		operator = data.operator.username if data.operator else ''
+		application = data.application.name if data.application else ''
+		applier = data.applier.username if data.applier else ''
 		release_apply_list.append({'release_apply_id': data.id, 'title': data.title,
 								   'release_type': data.release_type, 'producter': producter,
 								   'tester': tester, 'operator': operator, 'state': data.state,
