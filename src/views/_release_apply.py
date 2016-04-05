@@ -92,9 +92,9 @@ def state_transfer(user,action,ra,reject_reason = None):
 		return user.id
 
 	if action == RA_USER_ACTION_OPERATOR_EXECUTED:
-		_state = RA_STATE_WAITTING_DEVELOPER_CLOSED
+		_state = RA_STATE_WAITTING_COMPLETE
 		if ra.applier.is_team_leader():
-			_state = RA_STATE_WAITTING_TEAM_LEADER_CLOSED
+			_state = RA_STATE_WAITTING_COMPLETE
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
 		_send_email("ecomdev@meizu.com",ra,"发布成功")
 		_send_email(ra.applier.email,ra,ra.title+"发布完成，请关闭上线申请单")
