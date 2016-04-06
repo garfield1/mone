@@ -122,7 +122,7 @@ $("input#submit").click(function(){
                 if (result.status == "200") {
                     $("#goodnews").addClass("alert alert-success with-icon").show();
                     setTimeout(function(){
-                        location.href = "/release_apply/list/"
+                        location.href = "/release_apply/details/" + result.data.release_apply_id
                     },3000);
                 }else{
                     $("#badnews .content").text('抱歉！服务器正忙！请尝试重新提交，或者联系运维！');

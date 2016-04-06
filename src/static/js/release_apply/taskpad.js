@@ -88,23 +88,23 @@ function ajax_post(taskpad_type,page_num){
                     temp.find(".release_class").text("发布级别："+release_apply_list_item.deploy);
                     temp.find(".applyname").text("申请人："+release_apply_list_item.applier);
                     temp.find(".tester").text("测试人员："+release_apply_list_item.tester);
-                    temp.find(".productor").text("产品经理："+release_apply_list_item.operator);
+                    temp.find(".productor").text("产品经理："+release_apply_list_item.producter);
                     temp.find(".applytime").text("申请时间："+release_apply_list_item.created_at);
                     temp.find(".release_time").text("计划上线时间："+release_apply_list_item.planned_at);
                     var ra_state_elt = temp.find(".state");
                     ra_state_elt.text(release_apply_list_item.state);
                     var ra_state = release_apply_list_item.state
-//                    if (ws_state=="待开发修改" || ws_state=="待主管修改" ){
-//                        ws_state_elt.addClass("label-danger");
-//                    }else if(ws_state=="待主管确认"){
-//                        ws_state_elt.addClass("label-warning");
-//                    }else if(ws_state=="待运维认领"){
-//                        ws_state_elt.addClass("label-info");
-//                    }else if(ws_state=="待运维执行"){
-//                        ws_state_elt.addClass("label-success");
-//                    }else if(ws_state=="待主管关闭工单" || ws_state=="待开发关闭工单" ){
-//                        ws_state_elt.addClass("label-primary");
-//                    }
+                    if (ra_state=="待开发修改" || ra_state=="待主管修改" ){
+                        ra_state_elt.addClass("label-danger");
+                    }else if(ra_state=="待主管确认" || ra_state=="待经理确认"){
+                        ra_state_elt.addClass("label-warning");
+                    }else if(ra_state=="待开发构建确认" || ra_state=="待主管构建确认"){
+                        ra_state_elt.addClass("label-info");
+                    }else if(ra_state=="待测试确认"){
+                        ra_state_elt.addClass("label-success");
+                    }else if(ra_state=="待运维认领" || ra_state=="待运维执行" ){
+                        ra_state_elt.addClass("label-primary");
+                    }
                     temp.appendTo($("#cards"));
                     $("#cards .template").removeClass("template");
                 }
