@@ -270,6 +270,7 @@ class Application(models.Model):
 	apply_user = models.ForeignKey(User, related_name="apply_user")
 	wiki_url = models.CharField(max_length = 400,null = True,blank = True)
 	git_url = models.CharField(max_length = 400,null = True,blank = True)
+	file_path = models.CharField(max_length = 400,null = True,blank = True)
 	created_at= models.DateTimeField(auto_now_add=True)
 	updated_at= models.DateTimeField(auto_now=True)
 
