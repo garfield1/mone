@@ -74,8 +74,7 @@ function show_built_info(){
 };
 
 if($("#step").val() == '4'){
-    //show_built_info();
-    //show_built_info();
+    show_built_info();
     setInterval(show_built_info,1000);
 }else{
     show_built_info();
