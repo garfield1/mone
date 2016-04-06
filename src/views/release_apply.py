@@ -8,6 +8,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from flask.ext.login import login_required
 import time
 import subprocess
+import gevent
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
     RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState, RA_USER_ACTION_OPERATOR_CLAIMED, \
@@ -397,37 +398,39 @@ def search_release_apply():
 @release_apply.route('/update/releaseapplystate/', methods=['GET', 'POST'])
 @login_required
 def update_releaseapplystate():
-    user_id = session["user_data"]["user_id"]
-    action_type = request.form.get('action_type')
-    reject_reason = request.form.get('reject_reason') or None
-    release_apply_id = request.form.get('release_apply_id')
-    result = {'status': 1001, 'message': '请求失败'}
-    try:
-        user_data = User.objects.filter(id=user_id)[0]
-    except:
-        user_data = None
-    try:
-        release_apply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
-    except:
-        release_apply_data = None
-    ISOTIMEFORMAT = '%Y-%m-%d %X'
-    now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
-    if user_data.id == release_apply_data.applier_id:
-        if action_type == RA_USER_ACTION_OPERATOR_CLAIMED:
-            release_apply_data.operator_id = user_id
-            release_apply_data.save()
-        if action_type == RA_USER_ACTION_OPERATOR_EXECUTED:
-            release_apply_data.updated_at = now_time
-            release_apply_data.save()
-        if action_type == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action_type == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
-            git_url = release_apply_data.application.git_url if release_apply_data.application else None
-            if git_url:
-                releaseapplybuilds = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
-                releaseapplybuilds.delete()
-                main(git_url, release_apply_id)
-        if state_transfer(user_data, action_type, release_apply_data, reject_reason):
-            result = {'status': 200, 'message': '请求成功'}
-    return json.dumps(result)
+	user_id = session["user_data"]["user_id"]
+	action_type = request.form.get('action_type')
+	reject_reason = request.form.get('reject_reason') or None
+	release_apply_id = request.form.get('release_apply_id')
+	result = {'status': 1001, 'message': '请求失败'}
+	try:
+		user_data = User.objects.filter(id=user_id)[0]
+	except:
+		user_data = None
+	try:
+		release_apply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
+	except:
+		release_apply_data = None
+	ISOTIMEFORMAT = '%Y-%m-%d %X'
+	now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
+	if user_data.id == release_apply_data.applier_id:
+		if action_type == RA_USER_ACTION_OPERATOR_CLAIMED:
+			release_apply_data.operator_id = user_id
+			release_apply_data.save()
+		if action_type == RA_USER_ACTION_OPERATOR_EXECUTED:
+			release_apply_data.updated_at = now_time
+			release_apply_data.save()
+		if action_type == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action_type == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
+			git_url = release_apply_data.application.git_url if release_apply_data.application else None
+			if git_url:
+				releaseapplybuilds = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
+				releaseapplybuilds.delete()
+				g1 = gevent.spawn(main, git_url, release_apply_id)
+				g1.join()
+				# main(git_url, release_apply_id)
+		if state_transfer(user_data, action_type, release_apply_data, reject_reason):
+			result = {'status': 200, 'message': '请求成功'}
+	return json.dumps(result)
 
 
 @release_apply.route('/get/taskpad/', methods=['POST'])
