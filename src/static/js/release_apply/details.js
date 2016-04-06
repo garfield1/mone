@@ -49,3 +49,25 @@ $("#toSave").click(function(){
         }
     }, "json");
 });
+
+var built_info_div = $("#built_info")
+var releaseapplybuild_id = '';
+
+function show_built_info(){
+    $.get("/release_apply/get/build_log/", {
+        release_apply_id: release_apply_id,
+        releaseapplybuild_id: releaseapplybuild_id
+    }, function(result){
+        if (result.status == "200") {
+            releaseapplybuild_id = result.data.releaseapplybuild_id;
+            for(i=0;i<result.data.releaseapplybuild_list.length;i++){
+                var releaseapplybuild_list_item = result.data.releaseapplybuild_list[i];
+                $('<div></div>').text(releaseapplybuild_list_item.created_at +": "+ releaseapplybuild_list_item.message).appendTo(built_info_div);
+            }
+        }else{
+            alert("数据库异常！请联系运维开发人员！")
+        }
+    }, "json");
+};
+
+show_built_info();
