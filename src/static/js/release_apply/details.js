@@ -52,17 +52,21 @@ $("#toSave").click(function(){
 
 var built_info_div = $("#built_info")
 var releaseapplybuild_id = '';
-
 function show_built_info(){
     $.get("/release_apply/get/build_log/", {
+        releaseapplybuild_id: releaseapplybuild_id,
         release_apply_id: release_apply_id,
-        releaseapplybuild_id: releaseapplybuild_id
+
     }, function(result){
         if (result.status == "200") {
-            releaseapplybuild_id = result.data.releaseapplybuild_id;
-            for(i=0;i<result.data.releaseapplybuild_list.length;i++){
-                var releaseapplybuild_list_item = result.data.releaseapplybuild_list[i];
-                $('<div></div>').text(releaseapplybuild_list_item.created_at +": "+ releaseapplybuild_list_item.message).appendTo(built_info_div);
+        console.log(result.data.releaseapplybuild_list);
+            if(result.data.releaseapplybuild_list){
+                var releaseapplybuild_length = result.data.releaseapplybuild_list.length;
+                releaseapplybuild_id = result.data.releaseapplybuild_list[releaseapplybuild_length-1].releaseapplybuild_id;
+                for(i=0;i<releaseapplybuild_length;i++){
+                    var releaseapplybuild_list_item = result.data.releaseapplybuild_list[i];
+                    $('<div></div>').text(releaseapplybuild_list_item.created_at +": "+ releaseapplybuild_list_item.message).prependTo(built_info_div);
+                }
             }
         }else{
             alert("数据库异常！请联系运维开发人员！")
@@ -70,4 +74,10 @@ function show_built_info(){
     }, "json");
 };
 
-show_built_info();
+if($("#step").val() == '4'){
+    show_built_info();
+    show_built_info();
+//    setInterval(show_built_info,1000);
+}else{
+    show_built_info();
+}

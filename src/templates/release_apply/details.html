@@ -102,6 +102,7 @@
                 <button id="last_action" class="hide" value="{{ last_action }}"></button>
                 <button id="next_action" class="hide" value="{{ next_action }}"></button>
                 <button id="release_apply_id" class="hide" value="{{ releaseapply_data.id }}"></button>
+                <button id="step" class="hide" value="{{ step }}"></button>
                 <div class="ant-steps-item ant-steps-status-wait" >
                     <div class="detail-font"> {{ release_apply_message }}</div>
                     <div class="btn-group" >
@@ -159,7 +160,7 @@
                     <div class="detail-font">
                         构建信息
                     </div>
-                    <div id="built_info" class="col-md-8" style="border:1px solid rgb(221,221,221);height:20em;overflow:scroll;margin-bottom:2em">
+                    <div id="built_info" style="border:1px solid rgb(221,221,221);height:20em;overflow:scroll;margin-bottom:2em">
                         <div id="xxx"></div>
                     </div>
                 </div>
