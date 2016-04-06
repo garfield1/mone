@@ -2,9 +2,12 @@
 #encoding=utf-8
 from ConfigParser import ConfigParser
 import json
+import os
+import re
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
 import time
+import subprocess
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
 	RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState, RA_USER_ACTION_OPERATOR_CLAIMED, \
@@ -16,7 +19,8 @@ from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_AC
 	RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED, RA_STATE_WAITTING_DEVELOPER_CLOSED, RA_USER_ACTION_TEAM_LEADER_REJECTED, \
 	RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED, RA_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	RA_STATE_WAITTING_TEAM_LEADER_CLOSED, RA_USER_ACTION_TESTER_CONFIRMED, RA_USER_ACTION_TESTER_REJECT, \
-	RA_USER_ACTION_OPERATOR_REJECTED, RA_USER_ACTION_TEAM_LEADER_RESUBMIT, RA_USER_ACTION_DEVELOPER_RESUBMIT
+	RA_USER_ACTION_OPERATOR_REJECTED, RA_USER_ACTION_TEAM_LEADER_RESUBMIT, RA_USER_ACTION_DEVELOPER_RESUBMIT, \
+	ApplicationBuild, ReleaseapplyBuild
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -369,13 +373,19 @@ def update_releaseapplystate():
 		release_apply_data = None
 	ISOTIMEFORMAT='%Y-%m-%d %X'
 	now_time = time.strftime( ISOTIMEFORMAT, time.localtime( time.time() ) )
-	if user_data and release_apply_data:
+	if user_data.id == release_apply_data.applier_id:
 		if action_type == RA_USER_ACTION_OPERATOR_CLAIMED:
 			release_apply_data.operator_id = user_id
 			release_apply_data.save()
 		if action_type == RA_USER_ACTION_OPERATOR_EXECUTED:
 			release_apply_data.updated_at = now_time
 			release_apply_data.save()
+		if 	action_type == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action_type == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
+			git_url = release_apply_data.application.git_url if release_apply_data.application else None
+			if git_url:
+				releaseapplybuilds = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
+				releaseapplybuilds.delete()
+				main(git_url, release_apply_id)
 		if state_transfer(user_data, action_type, release_apply_data, reject_reason):
 			result = {'status': 200, 'message': '请求成功'}
 	return json.dumps(result)
@@ -412,10 +422,72 @@ def get_taskpad():
 	return json.dumps(result)
 
 
+def get_file_name(git_url):
+	'''
+	获取文件名
+	:param git_url:
+	:return:
+	'''
+	file_path = git_url.split('/')[-1]
+	p = re.compile(r'([\s\S]*).git')
+	file_name = p.findall(file_path)
+	return file_name[0]
+
+def save_build_message(release_apply_id, message, created_at):
+	applicationbuild_data = ReleaseapplyBuild(release_apply_id=release_apply_id, message=message, created_at=created_at)
+	applicationbuild_data.save()
+
+def main(git_url, release_apply_id):
+	'''
+	构建
+	:param git_url:
+	:return:
+	'''
+	file_name = get_file_name(git_url)
+	command_rm = 'rm -rf {0}'.format(file_name)
+	command_git = 'git clone {0}'.format(git_url)
+	if os.path.exists(file_name):
+		os.system(command_rm)
+	os.system(command_git)
+	os.chdir(file_name)
+	command_bulit = 'mvn clean package'
+	ps = subprocess.Popen(command_bulit, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+	while True:
+		data = ps.stdout.readline()
+		if ps.poll() is not None:
+			break
+		else:
+			ISOTIMEFORMAT='%Y-%m-%d %X'
+			now_time = time.strftime( ISOTIMEFORMAT, time.localtime( time.time() ) )
+			save_build_message(release_apply_id, data, now_time)
+
+@release_apply.route('/get/build_log/', methods=['GET'])
+def get_build_log():
+	release_apply_id = request.args.get('release_apply_id')
+	releaseapplybuild_id = request.args.get('releaseapplybuild_id')
+	if releaseapplybuild_id:
+		try:
+			releaseapplybuild_datas = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id, id__gt=releaseapplybuild_id)
+		except Exception,e:
+			result = {'status': 1001, 'message': '数据库异常'}
+			return json.dumps(result)
+	else:
+		try:
+			releaseapplybuild_datas = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
+		except Exception,e:
+			result = {'status': 1001, 'message': '数据库异常'}
+			return json.dumps(result)
+	releaseapplybuild_list = []
+	for releaseapplybuild_data in releaseapplybuild_datas:
+		releaseapplybuild_list.append({'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message, 'created_at': str(releaseapplybuild_data.created_at)[:19]})
+	return 	json.dumps({'status': 200, 'message': '请求成功', 'data': {'releaseapplybuild_list': releaseapplybuild_list}})
 
 
-
-
+# @release_apply.route('/get/build/')
+# def get_build():
+# 	git_url = 'http://huangfuzepeng@10.2.81.210:7990/scm/store_meizu_hz/cart.git'
+# 	main(git_url, 14)
+# 	return 'success'
 
 
 

@@ -332,6 +332,12 @@ def release_apply_state_post_save(sender, instance, signal, *args, **kwargs):
 
 post_save.connect(release_apply_state_post_save, sender = ReleaseApplyState)
 
+class ReleaseapplyBuild(models.Model):
+	release_apply = models.ForeignKey(ReleaseApply)
+	message = models.CharField(max_length = 5000,null = True,blank = True)
+	created_at= models.DateTimeField(auto_now_add=True)
+	updated_at= models.DateTimeField(auto_now=True)
+
 class ApplicationBuildState(models.Model):
 	name = models.CharField(max_length = 400,null = True,blank = True)
 	desc = models.CharField(max_length = 400,null = True,blank = True)
