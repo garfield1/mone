@@ -199,7 +199,15 @@ def detail(release_apply_id):
 		last_action = ''
 		next_action = ''
 	release_apply_message = step_to_message.get(step)
-	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step, release_apply_message=release_apply_message, last_action=last_action, next_action=next_action)
+	try:
+		releaseapplybuild_datas = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
+	except Exception,e:
+		releaseapplybuild_datas = None
+	releaseapplybuild_list = []
+	if releaseapplybuild_datas:
+		for releaseapplybuild_data in releaseapplybuild_datas:
+			releaseapplybuild_list.append({'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message, 'created_at': str(releaseapplybuild_data.created_at)[:19]})
+	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data, releaseapplystate_list=releaseapplystate_list, step=step, release_apply_message=release_apply_message, last_action=last_action, next_action=next_action, releaseapplybuild_list=releaseapplybuild_list)
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
@@ -483,11 +491,6 @@ def get_build_log():
 	return 	json.dumps({'status': 200, 'message': '请求成功', 'data': {'releaseapplybuild_list': releaseapplybuild_list}})
 
 
-# @release_apply.route('/get/build/')
-# def get_build():
-# 	git_url = 'http://huangfuzepeng@10.2.81.210:7990/scm/store_meizu_hz/cart.git'
-# 	main(git_url, 14)
-# 	return 'success'
 
 
 
