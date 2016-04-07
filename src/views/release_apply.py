@@ -441,11 +441,11 @@ def search_release_apply():
         if applier:
             kwargs['applier__username__contains'] = applier
         if tester:
-            kwargs['tester__username__contains'] = tester
+            kwargs['tester_id'] = tester
         if operator:
-            kwargs['operator__username__contains'] = operator
+            kwargs['operator_id'] = operator
         if producter:
-            kwargs['producter__username__contains'] = producter
+            kwargs['producter_id'] = producter
         if application_id:
             kwargs['application_id'] = application_id
         if state:
@@ -504,7 +504,7 @@ def update_releaseapplystate():
             release_apply_data.operator_id = user_id
             release_apply_data.save()
         if action_type == RA_USER_ACTION_OPERATOR_EXECUTED:
-            release_apply_data.updated_at = now_time
+            release_apply_data.formal_at = now_time
             release_apply_data.save()
         if action_type == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action_type == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
             git_url = release_apply_data.application.git_url if release_apply_data.application else None

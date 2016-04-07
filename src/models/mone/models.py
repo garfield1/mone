@@ -312,6 +312,7 @@ class ReleaseApply(models.Model):
 	state_value = models.BigIntegerField(null = True,blank = True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	formal_at = models.DateTimeField(null = True)
 	
 class ReleaseApplyState(models.Model):
 	creator = models.ForeignKey(User,related_name='creator') #sys or specific user
