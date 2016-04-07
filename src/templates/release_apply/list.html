@@ -52,8 +52,16 @@
                     <div class="col-md-2">
                         <select name='release_state' id='release_state' class='form-control'>
                             <option value=''>全部</option>
-                            <option value='1'>xxx</option>
-                            <option value='2'>yyy</option>
+                            <option value='待开发修改'>待开发修改</option>
+                            <option value='待主管修改'>待主管修改</option>
+                            <option value='待经理确认'>待经理确认</option>
+                            <option value='待主管确认'>待主管确认</option>
+                            <option value='待开发构建确认'>待开发构建确认</option>
+                            <option value='待主管构建确认'>待主管构建确认</option>
+                            <option value='待测试确认'>待测试确认</option>
+                            <option value='待运维认领'>待运维认领</option>
+                            <option value='待运维执行'>待运维执行</option>
+                            <option value='已完成'>已完成</option>
                         </select>
                     </div>
                 </div>
@@ -66,18 +74,27 @@
                     <div class="col-md-2">
                         <select name='tester' id='tester' class='form-control'>
                             <option value=''>全部</option>
+                            {% for data in tester_list %}
+                            <option value='{{data.user_id}}'>{{data.username}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <label class="col-md-1 control-label">运维人员</label>
                     <div class="col-md-2">
                         <select name='operator' id='operator' class='form-control'>
                             <option value=''>全部</option>
+                            {% for data in operator_list %}
+                            <option value='{{data.user_id}}'>{{data.username}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <label class="col-md-1 control-label">产品经理</label>
                     <div class="col-md-2">
                         <select name='producter' id='producter' class='form-control'>
                             <option value=''>全部</option>
+                            {% for data in producter_list %}
+                            <option value='{{data.user_id}}'>{{data.username}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
