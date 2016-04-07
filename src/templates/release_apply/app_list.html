@@ -40,20 +40,21 @@
             <table class="nohide table table-hover table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th class="col-md-4">应用名称</th>
+                        <th class="col-md-3">应用名称</th>
                         <th class="col-md-3">git地址</th>
                         <th class="col-md-3">构建地址</th>
-                        <th class="col-md-2">申请时间</th>
+                        <th class="col-md-2">更新时间</th>
+                        <th class="col-md-1">操作</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for application in application_list%}
-                    <tr class="template">
-
-                        <td class="appname">{{ application.name }}</td>
-                        <td class="state">{{ application.git_url }}</td>
-                        <td class="applyname">{{ application.file_path }}</td>
-                        <td class="applytime">{{ application.created_at }}</td>
+                    <tr>
+                        <td>{{ application.name }}</td>
+                        <td>{{ application.git_url }}</td>
+                        <td>{{ application.file_path }}</td>
+                        <td>{{ application.created_at }}</td>
+                        <td><a href="/release_apply/add/application/?application_id={{application.application_id}}"><button class="btn btn-sm" type="button">修改</button></a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
