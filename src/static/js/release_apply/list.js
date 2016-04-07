@@ -80,12 +80,14 @@ var developer = '';
 var tester = '';
 var operator = '';
 var producter = '';
+var start_planned_time = '';
+var end_planned_time = '';
 var start_formal_at = '';
 var end_formal_at = '';
 var page_num = '';
-var my_app_status = '';
+var own_release_apply_status_id = '';
 
-function ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_formal_at,end_formal_at,page_num,own_release_apply_status_id){
+function ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_planned_time,end_planned_time,start_formal_at,end_formal_at,page_num,own_release_apply_status_id){
     var post_data = {};
     if(release_title){post_data['title']=release_title;}
     if(release_app){post_data['application_id']=release_app;}
@@ -94,6 +96,8 @@ function ajax_post(release_title,release_app,release_state,developer,tester,oper
     if(tester){post_data['tester']=tester;}
     if(operator){post_data['operator']=operator;}
     if(producter){post_data['producter']=producter;}
+    if(start_planned_time){post_data['start_planned_time']=start_planned_time;}
+    if(end_planned_time){post_data['end_planned_time']=end_planned_time;}
     if(start_formal_at){post_data['start_formal_at']=start_formal_at;}
     if(end_formal_at){post_data['end_formal_at']=end_formal_at;}
     if(page_num){post_data['page_num']=page_num;}
@@ -139,6 +143,8 @@ $("input#submit").click(function(){
     tester = $.trim($("#tester").val());
     operator = $.trim($("#operator").val());
     producter = $.trim($("#producter").val());
+    start_planned_time = $.trim($("#start_planned_time").val());
+    end_planned_time = $.trim($("#end_planned_time").val());
     start_formal_at = $.trim($("#start_formal_at").val());
     end_formal_at = $.trim($("#end_formal_at").val());
     page_num = 1;
@@ -155,6 +161,8 @@ $(".aboutme").click(function(){
     tester = '';
     operator = '';
     producter = '';
+    start_planned_time = '';
+    end_planned_time = '';
     start_formal_at = '';
     end_formal_at = '';
     page_num = 1;
@@ -185,4 +193,4 @@ $(".query").click(function(){
     this_button.addClass("btn-primary");
 });
 
-ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_formal_at,end_formal_at,page_num,my_app_status);
+ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);

@@ -64,12 +64,46 @@
                             <option value='已完成'>已完成</option>
                         </select>
                     </div>
-                </div>
-                <div class="form-group">
                     <label class="col-md-1 control-label">开发人员</label>
                     <div class="col-md-2">
                         <input type='text' name='developer' id='developer' class='form-control' />
                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-1 control-label">申请时间</label>
+                    <div class="col-md-2">
+                        <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" name="start_planned_time" id="start_planned_time" value="" readonly="">
+                            <span class="input-group-addon"><span class="icon-remove"></span></span>
+                            <span class="input-group-addon"><span class="icon-calendar"></span></span>
+                        </div>
+                    </div>
+                    <label class="col-md-1 control-label">至</label>
+                    <div class="col-md-2">
+                        <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" name="end_planned_time" id="end_planned_time" value="" readonly="">
+                            <span class="input-group-addon"><span class="icon-remove"></span></span>
+                            <span class="input-group-addon"><span class="icon-calendar"></span></span>
+                        </div>
+                    </div>
+                    <label class="col-md-1 control-label">上线时间</label>
+                    <div class="col-md-2">
+                        <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" name="start_formal_at" id="start_formal_at" value="" readonly="">
+                            <span class="input-group-addon"><span class="icon-remove"></span></span>
+                            <span class="input-group-addon"><span class="icon-calendar"></span></span>
+                        </div>
+                    </div>
+                    <label class="col-md-1 control-label">至</label>
+                    <div class="col-md-2">
+                        <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" name="end_formal_at" id="end_formal_at" value="" readonly="">
+                            <span class="input-group-addon"><span class="icon-remove"></span></span>
+                            <span class="input-group-addon"><span class="icon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-md-1 control-label">测试人员</label>
                     <div class="col-md-2">
                         <select name='tester' id='tester' class='form-control'>
@@ -97,29 +131,12 @@
                             {% endfor %}
                         </select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">上线时间</label>
-                    <div class="col-md-2">
-                        <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="16" type="text" name="start_formal_at" id="start_formal_at" value="" readonly="">
-                            <!--<span class="input-group-addon"><span class="icon-remove"></span></span>-->
-                            <span class="input-group-addon"><span class="icon-calendar"></span></span>
-                        </div>
-                    </div>
-                    <label class="col-md-1 control-label">至</label>
-                    <div class="col-md-2">
-                        <div class="input-group date form-date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="16" type="text" name="end_formal_at" id="end_formal_at" value="" readonly="">
-                            <!--<span class="input-group-addon"><span class="icon-remove"></span></span>-->
-                            <span class="input-group-addon"><span class="icon-calendar"></span></span>
-                        </div>
-                    </div>
                     <div class="col-md-1"></div>
                     <div class="col-md-2">
                         <input type='button' id='submit' class='btn btn-primary query' value='查询' data-loading-text="正在加载..." />
                     </div>
                 </div>
+
             </form>
 
             <div style="float:right">
