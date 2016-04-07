@@ -124,7 +124,7 @@ def list():
     operator_list = []
     producter_datas = Role.objects.filter(name__contains="产品经理")[0].user.all()
     tester_datas = Role.objects.filter(name__contains="测试工程师")[0].user.all()
-    operator_datas = Role.objects.filter(name__contains="基础运维")[0].user.all()
+    operator_datas = Role.objects.filter(name__contains="运维")[0].user.all()
     for producter_data in producter_datas:
         producter_list.append({'user_id': producter_data.id, 'username': producter_data.username})
     for tester_data in tester_datas:
@@ -373,6 +373,7 @@ def search_release_apply():
     page_num = int(request.form.get('page_num') or 1)
     start_formal_at = request.form.get('start_formal_at')
     end_formal_at = request.form.get('end_formal_at')
+
     kwargs = {}
     if title:
         kwargs['title__contains'] = title
