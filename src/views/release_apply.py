@@ -358,6 +358,52 @@ def get_release_apply_count(filter_type='taskpad', **kwargs):
     else:
         return ReleaseApply.objects.filter(**kwargs).count()
 
+def get_own_release_apply_by_type(user_id, page_num, release_apply_type):
+    start_page = page_size*(page_num-1)
+    end_page = page_size*page_num
+    if release_apply_type == 'tester':
+        releaseapplys = ReleaseApply.objects.filter(tester_id=user_id).order_by('-id')[start_page: end_page]
+        total = ReleaseApply.objects.filter(tester_id=user_id).count()
+    elif release_apply_type == 'producter':
+        releaseapplys = ReleaseApply.objects.filter(producter_id=user_id).order_by('-id')[start_page: end_page]
+        total = ReleaseApply.objects.filter(producter_id=user_id).count()
+    elif release_apply_type == 'operator':
+        releaseapplys = ReleaseApply.objects.filter(operator_id=user_id).order_by('-id')[start_page: end_page]
+        total = ReleaseApply.objects.filter(operator_id=user_id).count()
+    else:
+        releaseapplys = None
+        total = 0
+    return releaseapplys, total
+
+# class recursion_user_list():
+#     '''
+#     递归获取下面所有员工
+#     '''
+#     def __init__(self):
+#         self.result_list  = []
+#
+#     def get_children_data(self, children_list):
+#         data_list = []
+#         for data in children_list:
+#             all_data_list = self.get_all_user()
+#             for all_data in all_data_list:
+#                 if all_data.organization:
+#                     if data.id == all_data.organization.leader_id and data.id !=data.organization.leader_id:
+#                         data_list.append(all_data)
+#         if data_list:
+#             self.result_list.extend(data_list)
+#             return self.get_children_data(data_list)
+#         return self.result_list
+#
+#     def get_all_user(self):
+#         return User.objects.all()
+
+# @release_apply.route('/test/')
+# def test():
+#     user_data = User.objects.filter(id=5)
+#     print recursion_user_list().get_children_data(user_data)
+#     return 'test'
+
 @release_apply.route('/search_release_apply/', methods=['POST'])
 @login_required
 def search_release_apply():
@@ -373,32 +419,47 @@ def search_release_apply():
     page_num = int(request.form.get('page_num') or 1)
     start_formal_at = request.form.get('start_formal_at')
     end_formal_at = request.form.get('end_formal_at')
-
-    kwargs = {}
-    if title:
-        kwargs['title__contains'] = title
-    if applier:
-        kwargs['applier__username__contains'] = applier
-    if tester:
-        kwargs['tester__username__contains'] = tester
-    if operator:
-        kwargs['operator__username__contains'] = operator
-    if producter:
-        kwargs['producter__username__contains'] = producter
-    if application_id:
-        kwargs['application_id'] = application_id
-    if state:
-        kwargs['state'] = state
-    if start_planned_time:
-        kwargs['planned_at__gte'] = start_planned_time
-    if end_planned_time:
-        kwargs['planned_at__lte'] = start_planned_time
-    if start_formal_at:
-        kwargs['formal_at__gte'] = start_formal_at
-    if end_formal_at:
-        kwargs['formal_at__lte'] = end_formal_at
-    release_applys = get_release_apply_by_page(page_num, filter_type='list', **kwargs)
-    total = get_release_apply_count(filter_type='list', **kwargs)
+    own_release_apply_status_id = request.form.get('own_release_apply_status_id')
+    if own_release_apply_status_id:
+        user_id = session.get('user_data').get('user_id')
+        user_data = User.objects.filter(id=user_id)
+        if own_release_apply_status_id == '1':
+            release_applys, total = user_data.created_release_applys_by_pagination(page_num, page_size)
+        elif own_release_apply_status_id == '2':
+            release_applys, total = user_data.waitting_confirmed_release_applys_by_pagination(page_num, page_size)
+        elif own_release_apply_status_id == '3':
+            release_applys, total = get_own_release_apply_by_type(user_id, page_num, release_apply_type='tester')
+        elif own_release_apply_status_id == '4':
+            release_applys, total = get_own_release_apply_by_type(user_id, page_num, release_apply_type='operator')
+        else:
+            release_applys = None
+            total = 0
+    else:
+        kwargs = {}
+        if title:
+            kwargs['title__contains'] = title
+        if applier:
+            kwargs['applier__username__contains'] = applier
+        if tester:
+            kwargs['tester__username__contains'] = tester
+        if operator:
+            kwargs['operator__username__contains'] = operator
+        if producter:
+            kwargs['producter__username__contains'] = producter
+        if application_id:
+            kwargs['application_id'] = application_id
+        if state:
+            kwargs['state'] = state
+        if start_planned_time:
+            kwargs['planned_at__gte'] = start_planned_time
+        if end_planned_time:
+            kwargs['planned_at__lte'] = start_planned_time
+        if start_formal_at:
+            kwargs['formal_at__gte'] = start_formal_at
+        if end_formal_at:
+            kwargs['formal_at__lte'] = end_formal_at
+        release_applys = get_release_apply_by_page(page_num, filter_type='list', **kwargs)
+        total = get_release_apply_count(filter_type='list', **kwargs)
     page_count = total / page_size + 1
     release_apply_list = []
     for release_apply in release_applys:
