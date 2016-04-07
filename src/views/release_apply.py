@@ -2,13 +2,9 @@
 # encoding=utf-8
 from ConfigParser import ConfigParser
 import json
-import os
-import re
 from flask import Blueprint, render_template, request, session, redirect, url_for, send_file
 from flask.ext.login import login_required
 import time
-import subprocess
-import gevent
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
     RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState, RA_USER_ACTION_OPERATOR_CLAIMED, \
@@ -61,7 +57,7 @@ def taskpad():
 @release_apply.route('/add/release_apply/', methods=['GET'])
 @login_required
 def add_release_apply():
-    user_id = session.get('user_data').get('user_id')
+    # user_id = session.get('user_data').get('user_id')
     release_apply_id = request.args.get('release_apply_id')
     # try:
     #     user_data = User.objects.filter(id=user_id)[0]
@@ -123,7 +119,19 @@ def get_application_list():
 @release_apply.route('/list/', methods=['GET'])
 @login_required
 def list():
-    return render_template("release_apply/list.html")
+    producter_list = []
+    tester_list = []
+    operator_list = []
+    producter_datas = Role.objects.filter(name__contains="产品经理")[0].user.all()
+    tester_datas = Role.objects.filter(name__contains="测试工程师")[0].user.all()
+    operator_datas = Role.objects.filter(name__contains="基础运维")[0].user.all()
+    for producter_data in producter_datas:
+        producter_list.append({'user_id': producter_data.id, 'username': producter_data.username})
+    for tester_data in tester_datas:
+        tester_list.append({'user_id': tester_data.id, 'username': tester_data.username})
+    for operator_data in operator_datas:
+        operator_list.append({'user_id': operator_data.id, 'username': operator_data.username})
+    return render_template("release_apply/list.html", producter_list=producter_list, tester_list=tester_list, operator_list=operator_list)
 
 
 state_to_step = {
@@ -350,7 +358,6 @@ def get_release_apply_count(filter_type='taskpad', **kwargs):
     else:
         return ReleaseApply.objects.filter(**kwargs).count()
 
-
 @release_apply.route('/search_release_apply/', methods=['POST'])
 @login_required
 def search_release_apply():
@@ -442,15 +449,9 @@ def update_releaseapplystate():
             if git_url:
                 bulidqueue_data = BulidQueue(git_url=git_url, release_apply_id=release_apply_id)
                 bulidqueue_data.save()
-                # releaseapplybuilds = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
-                # releaseapplybuilds.delete()
-                # g1 = gevent.spawn(main, git_url, release_apply_id)
-                # g1.join()
-                # main(git_url, release_apply_id)
         if state_transfer(user_data, action_type, release_apply_data, reject_reason):
             result = {'status': 200, 'message': '请求成功'}
     return json.dumps(result)
-
 
 @release_apply.route('/get/taskpad/', methods=['POST'])
 def get_taskpad():
@@ -485,49 +486,6 @@ def get_taskpad():
                                       'release_apply_list': release_apply_list}}
     return json.dumps(result)
 
-
-# def get_file_name(git_url):
-#     '''
-# 	获取文件名
-# 	:param git_url:
-# 	:return:
-# 	'''
-#     file_path = git_url.split('/')[-1]
-#     p = re.compile(r'([\s\S]*).git')
-#     file_name = p.findall(file_path)
-#     return file_name[0]
-#
-#
-# def save_build_message(release_apply_id, message, created_at):
-#     applicationbuild_data = ReleaseapplyBuild(release_apply_id=release_apply_id, message=message, created_at=created_at)
-#     applicationbuild_data.save()
-#
-#
-# def main(git_url, release_apply_id):
-#     '''
-# 	构建
-# 	:param git_url:
-# 	:return:
-# 	'''
-#     file_name = get_file_name(git_url)
-#     command_rm = 'rm -rf {0}'.format(file_name)
-#     command_git = 'git clone {0}'.format(git_url)
-#     if os.path.exists(file_name):
-#         os.system(command_rm)
-#     os.system(command_git)
-#     os.chdir(file_name)
-#     command_bulit = 'mvn clean package'
-#     ps = subprocess.Popen(command_bulit, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-#     while True:
-#         data = ps.stdout.readline()
-#         if ps.poll() is not None:
-#             break
-#         else:
-#             ISOTIMEFORMAT = '%Y-%m-%d %X'
-#             now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
-#             save_build_message(release_apply_id, data, now_time)
-
-
 @release_apply.route('/get/build_log/', methods=['GET'])
 def get_build_log():
     release_apply_id = request.args.get('release_apply_id')
@@ -551,7 +509,6 @@ def get_build_log():
             {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
              'created_at': str(releaseapplybuild_data.created_at)[:19]})
     return json.dumps({'status': 200, 'message': '请求成功', 'data': {'releaseapplybuild_list': releaseapplybuild_list}})
-
 
 @release_apply.route('/download/<path:path>')
 @login_required
