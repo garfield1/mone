@@ -1,0 +1,61 @@
+{% extends "headfoot.html" %}
+{% block styles %}
+<style>
+    .article-top{
+        padding-top: 20px;
+    }
+    a {
+        color: #333;
+    }
+    a:hover {
+        text-decoration: none;
+        color: #333
+    }
+</style>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block content %}
+{% import "header.html" as header %}
+{{ header.render() }}
+<div id="main-content">
+    <div id="breadcrumb">
+        <ul class="breadcrumb">
+            <li>
+                <a href="/"><i class="icon icon-home"></i>主页</a>
+            </li>
+            <li>
+                <a id="parent-bread" href="/">发布系统</a>
+            </li>
+            <li id="children-bread">应用列表</li>
+        </ul>
+    </div>
+    <div id="page-content">
+        <div class="page-header">
+            <h1>
+                应用列表
+            </h1>
+        </div>
+        <article class="article-top">
+            <table class="nohide table table-hover table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-md-4">应用名称</th>
+                        <th class="col-md-3">git地址</th>
+                        <th class="col-md-3">构建地址</th>
+                        <th class="col-md-2">申请时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="template">
+                        <td class="appname"></td>
+                        <td class="state"></td>
+                        <td class="applyname"></td>
+                        <td class="applytime"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+    </div>
+</div>
+{% endblock %}

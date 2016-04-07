@@ -39,6 +39,10 @@ release_apply = Blueprint('release_apply', __name__)
 def add_application():
     return render_template("release_apply/add_application.html")
 
+@release_apply.route('/application/list/', methods=['GET'])
+@login_required
+def app_list():
+    return render_template("release_apply/app_list.html")
 
 @release_apply.route('/taskpad/', methods=['GET'])
 @login_required

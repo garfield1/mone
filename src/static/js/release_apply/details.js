@@ -60,6 +60,7 @@ function show_built_info(){
     }, function(result){
         if (result.status == "200") {
             if(result.data.releaseapplybuild_list.length > 0 ){
+                $("#built_info_div").removeClass("hide");
                 var releaseapplybuild_length = result.data.releaseapplybuild_list.length;
                 releaseapplybuild_id = result.data.releaseapplybuild_list[releaseapplybuild_length-1].releaseapplybuild_id;
                 for(i=0;i<releaseapplybuild_length;i++){
@@ -74,8 +75,7 @@ function show_built_info(){
 };
 
 if($("#step").val() == '4'){
-    //show_built_info();
-    //show_built_info();
+    show_built_info();
     setInterval(show_built_info,1000);
 }else{
     show_built_info();
