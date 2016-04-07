@@ -37,7 +37,12 @@ release_apply = Blueprint('release_apply', __name__)
 @release_apply.route('/add/application/', methods=['GET'])
 @login_required
 def add_application():
-    return render_template("release_apply/add_application.html")
+    application_id = request.args.get('application_id')
+    try:
+        application_data = Application.objects.filter(id=application_id)[0]
+    except Exception, e:
+        application_data = {'name': '', 'git_url': '', 'file_url': ''}
+    return render_template("release_apply/add_application.html", application_data=application_data)
 
 @release_apply.route('/application/list/')
 def application_list():
@@ -46,11 +51,6 @@ def application_list():
     for application_data in application_datas:
         application_list.append({'application_id': application_data.id, 'name': application_data.name, 'git_url': application_data.git_url, 'file_path': application_data.file_path or '', 'created_at': application_data.created_at or ''})
     return render_template("release_apply/app_list.html", application_list=application_list)
-
-# @release_apply.route('/application/list/', methods=['GET'])
-# @login_required
-# def app_list():
-#     return render_template("release_apply/app_list.html")
 
 @release_apply.route('/taskpad/', methods=['GET'])
 @login_required
@@ -241,27 +241,28 @@ def detail(release_apply_id):
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
 def update_application():
-	name = request.form.get('name')
-	git_url = request.form.get('git_url')
-	user_id = session.get('user_data').get('user_id')
-	file_path = request.form.get('file_path')
-	application_id = request.form.get('application_id')
-	result = {'status': 1001, 'message': '参数缺失'}
-	if name and git_url:
-		if application_id:
-			try:
-				Application.objects.get(id=application_id).update(name=name, git_url=git_url, file_path=file_path)
-				result = {'status': 200, 'message': '保存成功'}
-			except Exception, e:
-				result = {'status': 1001, 'message': '数据库异常'}
-		else:
-			try:
-				application_data = Application(name=name, git_url=git_url, apply_user_id=user_id, file_path=file_path)
-				application_data.save()
-				result = {'status': 200, 'message': '保存成功'}
-			except Exception, e:
-				result = {'status': 1001, 'message': '数据库异常'}
-	return json.dumps(result)
+    name = request.form.get('name')
+    git_url = request.form.get('git_url')
+    user_id = session.get('user_data').get('user_id')
+    file_path = request.form.get('file_path')
+    application_id = request.form.get('application_id')
+    result = {'status': 1001, 'message': '参数缺失'}
+    if name and git_url:
+        if application_id:
+            try:
+                Application.objects.filter(id=application_id).update(name=name, git_url=git_url, file_path=file_path)
+                result = {'status': 200, 'message': '保存成功'}
+            except Exception, e:
+                print e
+                result = {'status': 1001, 'message': '数据库异常'}
+        else:
+            try:
+                application_data = Application(name=name, git_url=git_url, apply_user_id=user_id, file_path=file_path)
+                application_data.save()
+                result = {'status': 200, 'message': '保存成功'}
+            except Exception, e:
+                result = {'status': 1001, 'message': '数据库异常'}
+    return json.dumps(result)
 
 
 @release_apply.route('/update/release_apply/', methods=['POST'])
