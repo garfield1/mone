@@ -47,12 +47,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                {% for application in application_list%}
                     <tr class="template">
-                        <td class="appname"></td>
-                        <td class="state"></td>
-                        <td class="applyname"></td>
-                        <td class="applytime"></td>
+
+                        <td class="appname">{{ application.name }}</td>
+                        <td class="state">{{ application.git_url }}</td>
+                        <td class="applyname">{{ application.file_path }}</td>
+                        <td class="applytime">{{ application.created_at }}</td>
                     </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </article>

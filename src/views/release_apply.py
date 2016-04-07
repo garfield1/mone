@@ -39,10 +39,18 @@ release_apply = Blueprint('release_apply', __name__)
 def add_application():
     return render_template("release_apply/add_application.html")
 
-@release_apply.route('/application/list/', methods=['GET'])
-@login_required
-def app_list():
-    return render_template("release_apply/app_list.html")
+@release_apply.route('/application/list/')
+def application_list():
+    application_datas = Application.objects.all()
+    application_list = []
+    for application_data in application_datas:
+        application_list.append({'application_id': application_data.id, 'name': application_data.name, 'git_url': application_data.git_url, 'file_path': application_data.file_path or '', 'created_at': application_data.created_at or ''})
+    return render_template("release_apply/app_list.html", application_list=application_list)
+
+# @release_apply.route('/application/list/', methods=['GET'])
+# @login_required
+# def app_list():
+#     return render_template("release_apply/app_list.html")
 
 @release_apply.route('/taskpad/', methods=['GET'])
 @login_required
@@ -550,11 +558,4 @@ def download_file(path):
 		file = json.dumps({'status': 1001, 'message': '文件不存在'})
 	return file
 
-@release_apply.route('/application/list/')
-def application_list():
-    application_datas = Application.objects.all()
-    application_list = []
-    for application_data in application_datas:
-        application_list.append({'application_id': application_data.id, 'name': application_data.name, 'git_url': application_data.git_url})
-    return  ''
 
