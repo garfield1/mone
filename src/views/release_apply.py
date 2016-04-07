@@ -63,15 +63,19 @@ def taskpad():
 def add_release_apply():
     user_id = session.get('user_data').get('user_id')
     release_apply_id = request.args.get('release_apply_id')
-    try:
-        user_data = User.objects.filter(id=user_id)[0]
-    except Exception, e:
-        user_data = None
+    # try:
+    #     user_data = User.objects.filter(id=user_id)[0]
+    # except Exception, e:
+    #     user_data = None
     application_list = []
     application_dict = {}
-    if user_data:
-        applications = user_data.application_set.all()
-        for application in applications:
+    # if user_data:
+    #     applications = user_data.application_set.all()
+    #     for application in applications:
+    #         application_list.append({'id': application.id, 'name': application.name})
+    #         application_dict[application.id] = application.git_url
+    applications = Application.objects.all()
+    for application in applications:
             application_list.append({'id': application.id, 'name': application.name})
             application_dict[application.id] = application.git_url
     producter_list = []
