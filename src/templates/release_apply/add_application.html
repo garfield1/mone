@@ -7,7 +7,7 @@
 </style>
 {% endblock %}
 {% block scripts %}
-<script charset="utf-8" src="/static/js/release_apply/add_apply.js"></script>
+<script charset="utf-8" src="/static/js/release_apply/add_application.js"></script>
 {% endblock %}
 {% block content %}
 {% import "header.html" as header %}
@@ -46,6 +46,12 @@
                         <label class="col-md-2 control-label">git地址</label>
                         <div class="col-md-10">
                             <input type="text" name="git_url" id="git_url" value="" class="form-control" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">构建地址</label>
+                        <div class="col-md-10">
+                            <input type="text" name="file_path" id="file_path" value="" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">

@@ -15,7 +15,8 @@ var application_id = aGET['application_id'];
 $("input#submit").click(function(){
     var name = $.trim($("#name").val());
     var git_url = $.trim($("#git_url").val());
-    if (name=="" || git_url==""){
+    var file_path = $.trim($("#file_path").val());
+    if (name=="" || git_url=="" || file_path==""){
         $("#badnews .content").text('抱歉！表单填写不完整！请重新填写！');
         $("#badnews").addClass("alert alert-warning with-icon").show();
         setTimeout(function(){
@@ -31,15 +32,17 @@ $("input#submit").click(function(){
         var this_elt = $(this);
         this_elt.addClass("disabled");
         var application_data;
-        if (application_id){
+        if (application_id == ""){
+            application_data = {
+            name: name,
+            git_url: git_url,
+            file_path: file_path}
+        }else{
             application_data = {
             application_id: application_id,
             name: name,
-            git_url: git_url}
-        }else{
-            application_data = {
-            name: name,
-            git_url: git_url}
+            git_url: git_url,
+            file_path: file_path}
         }
         $.post("/release_apply/update/application/", application_data, function(result){
         if (result.status == 200) {
