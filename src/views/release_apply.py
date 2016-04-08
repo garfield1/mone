@@ -321,7 +321,7 @@ def update_release_apply():
                     state_transfer(user_data, RA_USER_ACTION_TEAM_LEADER_RESUBMIT, releaseapply_data)
                 else:
                     state_transfer(user_data, RA_USER_ACTION_DEVELOPER_RESUBMIT, releaseapply_data)
-                result = {'status': 200, 'message': '更新成功'}
+                result = {'status': 200, 'message': '更新成功', 'data': {'release_apply_id': releaseapply_data.id}}
             except Exception, e:
                 result = {'status': 1001, 'message': '数据库异常'}
         else:
@@ -337,7 +337,7 @@ def update_release_apply():
                     state_transfer(user_data, RA_USER_ACTION_TEAM_LEADER_CREATED, releaseapply_data)
                 else:
                     state_transfer(user_data, RA_USER_ACTION_DEVELOPER_CREATED, releaseapply_data)
-                result = {'status': 200, 'message': '保存成功'}
+                result = {'status': 200, 'message': '保存成功', 'data': {'release_apply_id': releaseapply_data.id}}
             except IndexError as ex:
                 result = {'status': 1001, 'message': '数据库异常'}
     return json.dumps(result)
