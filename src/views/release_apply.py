@@ -154,7 +154,7 @@ step_to_message = {
     1: '主管待审批',
     2: '经理待审批',
     3: '待构建',
-    4: '带测试',
+    4: '待测试',
     5: '运维发布中',
     6: '运维发布中',
     7: '已完成'
@@ -577,11 +577,11 @@ def get_build_log():
 @release_apply.route('/download/<path:path>')
 @login_required
 def download_file(path):
-	path = 'crons/{0}'.format(path)
-	try:
-		file = send_file(path)
-	except:
-		file = json.dumps({'status': 1001, 'message': '文件不存在'})
-	return file
+    path = 'crons/{0}'.format(path)
+    try:
+        file = send_file(path)
+    except:
+        file = json.dumps({'status': 1001, 'message': '文件不存在'})
+    return file
 
 
