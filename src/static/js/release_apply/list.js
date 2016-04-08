@@ -149,7 +149,7 @@ $("input#submit").click(function(){
     end_formal_at = $.trim($("#end_formal_at").val());
     page_num = 1;
     own_release_apply_status_id = '';
-    ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
+    ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_planned_time,end_planned_time,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
 });
 
 $(".aboutme").click(function(){
@@ -167,7 +167,7 @@ $(".aboutme").click(function(){
     end_formal_at = '';
     page_num = 1;
     own_release_apply_status_id = this_button.val();
-    ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
+    ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_planned_time,end_planned_time,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
 });
 
 $(".btn-pager").click(function () {
@@ -184,7 +184,7 @@ $(".btn-pager").click(function () {
     }else {
         page_num = this_text;
     }
-    ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
+    ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_planned_time,end_planned_time,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
 });
 
 $(".query").click(function(){
@@ -193,4 +193,4 @@ $(".query").click(function(){
     this_button.addClass("btn-primary");
 });
 
-ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
+ajax_post(release_title,release_app,release_state,developer,tester,operator,producter,start_planned_time,end_planned_time,start_formal_at,end_formal_at,page_num,own_release_apply_status_id);
