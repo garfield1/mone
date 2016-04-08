@@ -201,8 +201,8 @@ def detail(release_apply_id):
         last_action = ''
         next_action = ''
     elif releaseapply_data.state == RA_STATE_WAITTING_MANAGER_CONFIRMED:
-        last_action = RA_USER_ACTION_MANAGER_CONFIRMED
-        next_action = RA_USER_ACTION_MANAGER_REJECTED
+        last_action = RA_USER_ACTION_MANAGER_REJECTED
+        next_action = RA_USER_ACTION_MANAGER_CONFIRMED
     elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED:
         last_action = ''
         next_action = RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED
@@ -214,7 +214,7 @@ def detail(release_apply_id):
         next_action = RA_USER_ACTION_DEVELOPER_CREATED
     elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED:
         last_action = RA_USER_ACTION_TEAM_LEADER_REJECTED
-        next_action = RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED
+        next_action = RA_USER_ACTION_TEAM_LEADER_CONFIRMED
     elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_MODIFIED:
         last_action = ''
         next_action = RA_USER_ACTION_TEAM_LEADER_CREATED

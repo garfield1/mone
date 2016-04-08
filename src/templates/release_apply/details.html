@@ -122,7 +122,8 @@
                         {% elif step == 4 and releaseapply_data.tester_id == session['user_data']['user_id'] %}
                         <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
                         <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
-                        {% elif step == 5 and session['is_operator']%}
+                        {% elif step == 5 and session['is_operator'] %}
+                            {{ session['is_operator'] }}
                         <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
                         <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">认领</button>
                         {% elif step == 6 and releaseapply_data.operator_id %}
