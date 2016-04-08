@@ -49,7 +49,9 @@ def build(git_url, release_apply_id):
     os.system(command_git)
     os.chdir(file_name)
     command_bulit = 'mvn clean package'
+    log(command_bulit)
     ps = subprocess.Popen(command_bulit, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+    log(ps)
     while True:
         data = ps.stdout.readline()
         log(data)
