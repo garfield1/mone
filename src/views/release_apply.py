@@ -164,90 +164,91 @@ step_to_message = {
 @release_apply.route('/details/<release_apply_id>')
 @login_required
 def detail(release_apply_id):
-	'''
-	state_to_step = {
-	已关闭上线申请单: -1,
-	待开发修改: 0,
-	待主管修改: 0,
-	待主管确认: 1,
-	待经理确认: 2,
-	待开发构建确认: 3,
-	待主管构建确认: 3,
-	待测试确认: 4,
-	待运维认领: 5,
-	待运维执行: 6,
-	已完成: 7
-	}
-	当step为－2时: 状态未知
-	:param release_apply_id:
-	:return:
-	'''
-	try:
-		releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
-	except Exception, e:
-		releaseapply_data = None
-	if not releaseapply_data:
-		return redirect(url_for('user.index'))
-	releaseapplystate_list = []
-	releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
-	for releaseapplystate in releaseapplystates:
-		releaseapplystate_list.append(
-			{'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at,
-			 'state': releaseapplystate.state})
-	step = state_to_step.get(releaseapply_data.state) if releaseapply_data.state else -2
-	last_action = ''
-	next_action = ''
-	if releaseapply_data.state == RA_STATE_CLOSED:
-		last_action = ''
-		next_action = ''
-	elif releaseapply_data.state == RA_STATE_WAITTING_MANAGER_CONFIRMED:
-		last_action = RA_USER_ACTION_MANAGER_CONFIRMED
-		next_action = RA_USER_ACTION_MANAGER_REJECTED
-	elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED:
-		last_action = ''
-		next_action = RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED
-	elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_MODIFIED:
-		last_action = ''
-		next_action = RA_USER_ACTION_DEVELOPER_CREATED
-	elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_CLOSED:
-		last_action = ''
-		next_action = RA_USER_ACTION_DEVELOPER_CREATED
-	elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED:
-		last_action = RA_USER_ACTION_TEAM_LEADER_REJECTED
-		next_action = RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED
-	elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_MODIFIED:
-		last_action = ''
-		next_action = RA_USER_ACTION_TEAM_LEADER_CREATED
-	elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED:
-		last_action = ''
-		next_action = RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED
-	elif releaseapply_data.state == RA_STATE_WAITTING_TESTER_CONFIRMED:
-		last_action = RA_USER_ACTION_TESTER_REJECT
-		next_action = RA_USER_ACTION_TESTER_CONFIRMED
-	elif releaseapply_data.state == RA_STATE_WAITTING_OPERATOR_CLAIMED:
-		last_action = RA_USER_ACTION_OPERATOR_REJECTED
-		next_action = RA_USER_ACTION_OPERATOR_CLAIMED
-	elif releaseapply_data.state == RA_STATE_WAITTING_OPERATOR_EXECUTED:
-		last_action = ''
-		next_action = RA_USER_ACTION_OPERATOR_EXECUTED
-	elif releaseapply_data.state == RA_STATE_WAITTING_COMPLETE:
-		last_action = ''
-		next_action = ''
-	release_apply_message = step_to_message.get(step)
-	try:
-		releaseapplybuild_datas = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
-	except Exception, e:
-		releaseapplybuild_datas = None
-	releaseapplybuild_list = []
-	if releaseapplybuild_datas:
-		for releaseapplybuild_data in releaseapplybuild_datas:
-			releaseapplybuild_list.append(
-				{'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
-				 'created_at': str(releaseapplybuild_data.created_at)[:19]})
-	return render_template("release_apply/details.html", releaseapply_data=releaseapply_data,
-						   releaseapplystate_list=releaseapplystate_list, step=step,
-						   release_apply_message=release_apply_message, last_action=last_action,
-						   next_action=next_action, releaseapplybuild_list=releaseapplybuild_list)
+    '''
+    state_to_step = {
+    已关闭上线申请单: -1,
+    待开发修改: 0,
+    待主管修改: 0,
+    待主管确认: 1,
+    待经理确认: 2,
+    待开发构建确认: 3,
+    待主管构建确认: 3,
+    待测试确认: 4,
+    待运维认领: 5,
+    待运维执行: 6,
+    已完成: 7
+    }
+    当step为－2时: 状态未知
+    :param release_apply_id:
+    :return:
+    '''
+    try:
+        releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
+    except Exception, e:
+        releaseapply_data = None
+    if not releaseapply_data:
+        return redirect(url_for('user.index'))
+    releaseapplystate_list = []
+    releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
+    for releaseapplystate in releaseapplystates:
+        releaseapplystate_list.append(
+            {'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at,
+             'state': releaseapplystate.state})
+    step = state_to_step.get(releaseapply_data.state) if releaseapply_data.state else -2
+    last_action = ''
+    next_action = ''
+    if releaseapply_data.state == RA_STATE_CLOSED:
+        last_action = ''
+        next_action = ''
+    elif releaseapply_data.state == RA_STATE_WAITTING_MANAGER_CONFIRMED:
+        last_action = RA_USER_ACTION_MANAGER_CONFIRMED
+        next_action = RA_USER_ACTION_MANAGER_REJECTED
+    elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED:
+        last_action = ''
+        next_action = RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED
+    elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_MODIFIED:
+        last_action = ''
+        next_action = RA_USER_ACTION_DEVELOPER_CREATED
+    elif releaseapply_data.state == RA_STATE_WAITTING_DEVELOPER_CLOSED:
+        last_action = ''
+        next_action = RA_USER_ACTION_DEVELOPER_CREATED
+    elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED:
+        last_action = RA_USER_ACTION_TEAM_LEADER_REJECTED
+        next_action = RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED
+    elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_MODIFIED:
+        last_action = ''
+        next_action = RA_USER_ACTION_TEAM_LEADER_CREATED
+    elif releaseapply_data.state == RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED:
+        last_action = ''
+        next_action = RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED
+    elif releaseapply_data.state == RA_STATE_WAITTING_TESTER_CONFIRMED:
+        last_action = RA_USER_ACTION_TESTER_REJECT
+        next_action = RA_USER_ACTION_TESTER_CONFIRMED
+    elif releaseapply_data.state == RA_STATE_WAITTING_OPERATOR_CLAIMED:
+        last_action = RA_USER_ACTION_OPERATOR_REJECTED
+        next_action = RA_USER_ACTION_OPERATOR_CLAIMED
+    elif releaseapply_data.state == RA_STATE_WAITTING_OPERATOR_EXECUTED:
+        last_action = ''
+        next_action = RA_USER_ACTION_OPERATOR_EXECUTED
+    elif releaseapply_data.state == RA_STATE_WAITTING_COMPLETE:
+        last_action = ''
+        next_action = ''
+    release_apply_message = step_to_message.get(step)
+    try:
+        releaseapplybuild_datas = ReleaseapplyBuild.objects.filter(release_apply_id=release_apply_id)
+    except Exception, e:
+        releaseapplybuild_datas = None
+    releaseapplybuild_list = []
+    if releaseapplybuild_datas:
+        for releaseapplybuild_data in releaseapplybuild_datas:
+            releaseapplybuild_list.append(
+                {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
+                 'created_at': str(releaseapplybuild_data.created_at)[:19]})
+    is_build = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')[0].is_build if BulidQueue.objects.filter(release_apply_id=release_apply_id) else False
+    return render_template("release_apply/details.html", releaseapply_data=releaseapply_data,
+                           releaseapplystate_list=releaseapplystate_list, step=step,
+                           release_apply_message=release_apply_message, last_action=last_action,
+                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build)
 
 
 @release_apply.route('/update/application/', methods=['POST'])
@@ -566,11 +567,12 @@ def get_build_log():
             result = {'status': 1001, 'message': '数据库异常'}
             return json.dumps(result)
     releaseapplybuild_list = []
+    is_build = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')[0].is_build if BulidQueue.objects.filter(release_apply_id=release_apply_id) else False
     for releaseapplybuild_data in releaseapplybuild_datas:
         releaseapplybuild_list.append(
             {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
              'created_at': str(releaseapplybuild_data.created_at)[:19]})
-    return json.dumps({'status': 200, 'message': '请求成功', 'data': {'releaseapplybuild_list': releaseapplybuild_list}})
+    return json.dumps({'status': 200, 'message': '请求成功', 'data': {'releaseapplybuild_list': releaseapplybuild_list, 'is_build': is_build}})
 
 @release_apply.route('/download/<path:path>')
 @login_required
