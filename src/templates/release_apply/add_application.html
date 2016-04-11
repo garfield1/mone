@@ -39,19 +39,19 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">应用名称</label>
                         <div class="col-md-10">
-                            <input type="text" name="name" id="name" value="{{ application_data.name }}" class="form-control" placeholder="">
+                            <input type="text" name="name" id="name" value="{{ application_data.name }}" class="form-control" placeholder="应用名称">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">git地址</label>
                         <div class="col-md-10">
-                            <input type="text" name="git_url" id="git_url" value="{{ application_data.git_url or '' }}" class="form-control" placeholder="">
+                            <input type="text" name="git_url" id="git_url" value="{{ application_data.git_url or '' }}" class="form-control" placeholder="git clone with SSH key. example: ssh://git@git.hz.meizu.com:7999......">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">构建地址</label>
                         <div class="col-md-10">
-                            <input type="text" name="file_path" id="file_path" value="{{ application_data.file_path or '' }}" class="form-control" placeholder="">
+                            <input type="text" name="file_path" id="file_path" value="{{ application_data.file_path or '' }}" class="form-control" placeholder="构建文件生成地址. example: cart/distribution/target/store-cart-1.0.0-SNAPSHOT.war">
                         </div>
                     </div>
                     <div class="form-group">

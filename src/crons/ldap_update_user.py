@@ -8,7 +8,8 @@ os.environ['DJANGO_SETTING_MODULE']='models.zz.settings'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "models.zz.settings")
 from models.mone.models import User
 
-LDAP_BASE_DN = 'OU=系统开发组,OU=线上销售,OU=销售事业二部,OU=营销中心,OU=魅族科技,DC=meizu,DC=com'
+LDAP_developer_BASE_DN = 'OU=系统开发组,OU=线上销售,OU=销售事业二部,OU=营销中心,OU=魅族科技,DC=meizu,DC=com'
+LDAP_producter_BASE_DN = 'OU=产品经理组,OU=线上销售,OU=销售事业二部,OU=营销中心,OU=魅族科技,DC=meizu,DC=com'
 LDAP_HOST = '172.16.1.110'
 MGR_CRED = 'hfsystem'
 MGR_PASSWD = 'hfmeizu123Go2016!'
@@ -40,8 +41,18 @@ def add_user(**kwargs):
     user_data.save()
     return user_data
 
-def update_user():
+def update_user(user_type):
+    '''
+    当user_type 为 developer： 同步开发
+    当user_type 为 producter： 同步产品
+    :param user_type:
+    :return:
+    '''
     l = LdapMgmt()
+    if user_type == "developer":
+        LDAP_BASE_DN = LDAP_developer_BASE_DN
+    elif user_type == "producter":
+        LDAP_BASE_DN = LDAP_producter_BASE_DN
     try:
         all_user_data = l.get_ldap_data(LDAP_BASE_DN)
     except:
@@ -62,7 +73,13 @@ def update_user():
 
 
 if __name__ == "__main__":
-    update_user()
+    if 2 == len(sys.argv):
+        print "参数检查正确"
+    else:
+        print "输入需要同步的用户类型"
+        sys.exit(0)
+    user_type = sys.argv[1]
+    update_user(user_type)
 
 
 

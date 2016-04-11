@@ -267,12 +267,18 @@ def update_application():
                 print e
                 result = {'status': 1001, 'message': '数据库异常'}
         else:
+            result = {'status': 1002, 'message': '应用名称重复'}
             try:
-                application_data = Application(name=name, git_url=git_url, apply_user_id=user_id, file_path=file_path)
-                application_data.save()
-                result = {'status': 200, 'message': '保存成功'}
+                check_application_data = Application.objects.filter(name=name)[0]
             except Exception, e:
-                result = {'status': 1001, 'message': '数据库异常'}
+                check_application_data = None
+            if not check_application_data:
+                try:
+                    application_data = Application(name=name, git_url=git_url, apply_user_id=user_id, file_path=file_path)
+                    application_data.save()
+                    result = {'status': 200, 'message': '保存成功'}
+                except Exception, e:
+                    result = {'status': 1001, 'message': '数据库异常'}
     return json.dumps(result)
 
 
