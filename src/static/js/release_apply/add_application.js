@@ -60,6 +60,14 @@ $("input#submit").click(function(){
                 },3000);
             }
         }
+        else if (result.status == 1002){
+            $("#badnews .content").text('抱歉！应用名重复！请修改您的应用名！');
+            $("#badnews").addClass("alert alert-danger with-icon").show();
+            setTimeout(function(){
+                $("#badnews").removeClass("alert alert-danger with-icon").hide();
+                this_elt.removeClass("disabled");
+            },3000);
+        }
     }, "json");
     }
 });
