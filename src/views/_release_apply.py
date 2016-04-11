@@ -37,7 +37,10 @@ def state_transfer(user,action,ra,reject_reason = None):
 	开发or研发主管发起上线申请，经主管和经理审批再进行构建提测到发布
 	"""
 	if action == RA_USER_ACTION_TEAM_LEADER_CREATED or action == RA_USER_ACTION_TEAM_LEADER_RESUBMIT or action == RA_USER_ACTION_TEAM_LEADER_CONFIRMED:
-		manager = user.organization.parent.leader
+		if user.username == "毛凌志":
+			manager = user
+		else:
+			manager = user.organization.parent.leader
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = manager ,release_apply = ra, state = RA_STATE_WAITTING_MANAGER_CONFIRMED , action = action)
 		_send_email(manager.email,ra,"需要您审批")
 		return user.id
