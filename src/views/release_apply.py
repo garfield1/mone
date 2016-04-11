@@ -160,7 +160,6 @@ step_to_message = {
     7: '已完成'
 }
 
-
 @release_apply.route('/details/<release_apply_id>')
 @login_required
 def detail(release_apply_id):
@@ -249,7 +248,6 @@ def detail(release_apply_id):
                            releaseapplystate_list=releaseapplystate_list, step=step,
                            release_apply_message=release_apply_message, last_action=last_action,
                            next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build)
-
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
@@ -376,34 +374,6 @@ def get_own_release_apply_by_type(user_id, page_num, release_apply_type):
         total = 0
     return releaseapplys, total
 
-# class recursion_user_list():
-#     '''
-#     递归获取下面所有员工
-#     '''
-#     def __init__(self):
-#         self.result_list  = []
-#
-#     def get_children_data(self, children_list):
-#         data_list = []
-#         for data in children_list:
-#             all_data_list = self.get_all_user()
-#             for all_data in all_data_list:
-#                 if all_data.organization:
-#                     if data.id == all_data.organization.leader_id and data.id !=data.organization.leader_id:
-#                         data_list.append(all_data)
-#         if data_list:
-#             self.result_list.extend(data_list)
-#             return self.get_children_data(data_list)
-#         return self.result_list
-#
-#     def get_all_user(self):
-#         return User.objects.all()
-
-# @release_apply.route('/test/')
-# def test():
-#     user_data = User.objects.filter(id=5)
-#     print recursion_user_list().get_children_data(user_data)
-#     return 'test'
 
 @release_apply.route('/search_release_apply/', methods=['POST'])
 @login_required
