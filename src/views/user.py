@@ -126,11 +126,19 @@ def login_check():
     password = request.form.get('password')
     _remember_me = request.form.get('_remember_me')
     if login_type == 'ldap':
-        if email == 'maolingzhi@meizu.com':
-            print 11111
-            user = set_user.get(email)
-            login_user(user)
-            return redirect(url_for('user.index'))
+        # if email == 'maolingzhi@meizu.com':
+        #     user = set_user.get(email)
+        #     login_user(user)
+        #     user_data = check_user(email)
+        #     session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
+        #     roles_data = user_data.role_set.all()
+        #     own_roles_list = []
+        #     for role_data in roles_data:
+        #         own_roles_list.append(role_data.id)
+        #     session['own_roles_list'] = own_roles_list
+        #     session['is_operator'] = user_data.is_operator()
+        #     session['is_manager'] = user_data.is_manager()
+        #     return redirect(url_for('user.index'))
         if not ldap_check_user(email, password):
             flash('用户名或密码错误')
             return redirect(url_for('user.login'))
@@ -143,6 +151,14 @@ def login_check():
             login_user(user, remember=True)
         else:
             login_user(user)
+        session['user_data'] = {"email": user_data.email, "username": user_data.username, "user_id": user_data.id}
+        roles_data = user_data.role_set.all()
+        own_roles_list = []
+        for role_data in roles_data:
+            own_roles_list.append(role_data.id)
+        session['own_roles_list'] = own_roles_list
+        session['is_operator'] = user_data.is_operator()
+        session['is_manager'] = user_data.is_manager()
         return redirect(url_for('user.index'))
     return redirect(url_for('user.login'))
 
@@ -152,6 +168,7 @@ def logout():
     登出
     :return:
     '''
+    session.pop('user_data', None)
     logout_user()
     return redirect(url_for('user.login'))
 
