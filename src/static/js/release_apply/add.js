@@ -62,7 +62,7 @@ $("input#submit").click(function(){
     var attension = $.trim($("#attension").val());
     var content_modified = $.trim($("#content_modified").val());
     var explanation = $.trim($("#explanation").val());
-
+    var version = $.trim($("#version").val());
     if (release_title=="" || producter=="" || release_way=="" || risk_level=="" || developer=="" || tester=="" ||
         release_app=="" || self_test=="" || release_class=="" || release_time=="" ||
         model_modified=="" || attension=="" || content_modified=="" || explanation==""){
@@ -98,7 +98,8 @@ $("input#submit").click(function(){
             update_model: model_modified,
             attention: attension,
             update_content: content_modified,
-            memo: explanation}
+            memo: explanation,
+            version: version}
         }else{
             release_apply_data = {
             title: release_title,
@@ -115,7 +116,8 @@ $("input#submit").click(function(){
             update_model: model_modified,
             attention: attension,
             update_content: content_modified,
-            memo: explanation}
+            memo: explanation,
+            version: version}
         }
         $.post("/release_apply/update/release_apply/", release_apply_data, function(result){
             if (result.status == 200) {

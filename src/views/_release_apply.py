@@ -53,25 +53,35 @@ def state_transfer(user,action,ra,reject_reason = None):
 		return user.id
 
 	if action == RA_USER_ACTION_MANAGER_CONFIRMED:
-		_state = RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED
-		if ra.applier.is_team_leader():
-			state = RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED
-		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.applier ,release_apply = ra, state = _state , action = action)
-		_send_email(ra.applier.email,ra,"可以构建了")
-		return user.id
-
-	if action == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
-		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.tester ,release_apply = ra, state = RA_STATE_WAITTING_TESTER_CONFIRMED , action = action)
-		#发测试全组
+		# _state = RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED
+		# if ra.applier.is_team_leader():
+		# 	state = RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED
+		_state = RA_STATE_WAITTING_TESTER_CONFIRMED
+		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = ra.tester , release_apply = ra, state = _state , action = action)
+		# _send_email(ra.applier.email,ra,"可以构建了")
 		for tester in ra.tester.organization.user_set.all():
 			_send_email(tester.email,ra,"需要测试组测试")
 		return user.id
 
-	if action == RA_USER_ACTION_TESTER_CONFIRMED:
-		ReleaseApplyState.objects.create(creator = user ,release_apply = ra, state = RA_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
+	if action == RA_USER_ACTION_DEVELOPER_BUILD_CONFIRMED or action == RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED:
+		ReleaseApplyState.objects.create(creator = user, release_apply = ra, state = RA_STATE_WAITTING_OPERATOR_CLAIMED , action = action)
+		# #发测试全组
+		# for tester in ra.tester.organization.user_set.all():
+		# 	_send_email(tester.email,ra,"需要测试组测试")
 		#发运维全组
 		for operator in get_all_operator():
 			_send_email(operator.email,ra,"需要运维组发布")
+		return user.id
+
+	if action == RA_USER_ACTION_TESTER_CONFIRMED:
+		_state = RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED
+		if ra.applier.is_team_leader():
+			_state = RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED
+		ReleaseApplyState.objects.create(creator = user , waitting_confirmer = ra.applier, release_apply = ra, state = _state , action = action)
+		# #发运维全组
+		# for operator in get_all_operator():
+		# 	_send_email(operator.email,ra,"需要运维组发布")
+		_send_email(ra.applier.email,ra,"可以构建了")
 		return user.id
 
 	if action == RA_USER_ACTION_TESTER_REJECT or \

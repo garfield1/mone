@@ -140,9 +140,9 @@ state_to_step = {
     RA_STATE_WAITTING_TEAM_LEADER_MODIFIED: 0,
     RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED: 1,
     RA_STATE_WAITTING_MANAGER_CONFIRMED: 2,
-    RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED: 3,
-    RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED: 3,
-    RA_STATE_WAITTING_TESTER_CONFIRMED: 4,
+    RA_STATE_WAITTING_DEVELOPER_BUILD_CONFIRMED: 4,
+    RA_STATE_WAITTING_TEAM_LEADER_BUILD_CONFIRMED: 4,
+    RA_STATE_WAITTING_TESTER_CONFIRMED: 3,
     RA_STATE_WAITTING_OPERATOR_CLAIMED: 5,
     RA_STATE_WAITTING_OPERATOR_EXECUTED: 6,
     RA_STATE_WAITTING_COMPLETE: 7
@@ -153,8 +153,8 @@ step_to_message = {
     0: '工单已打回',
     1: '主管待审批',
     2: '经理待审批',
-    3: '待构建',
-    4: '待测试',
+    3: '待测试',
+    4: '待构建',
     5: '运维发布中',
     6: '运维发布中',
     7: '已完成'
@@ -256,12 +256,15 @@ def update_application():
     git_url = request.form.get('git_url')
     user_id = session.get('user_data').get('user_id')
     file_path = request.form.get('file_path')
+    test_mvn = request.form.get('test_mvn')
+    pre_release_mvn = request.form.get('pre_release_mvn')
+    formal_mvn = request.form.get('formal_mvn')
     application_id = request.form.get('application_id')
     result = {'status': 1001, 'message': '参数缺失'}
     if name and git_url:
         if application_id:
             try:
-                Application.objects.filter(id=application_id).update(name=name, git_url=git_url, file_path=file_path)
+                Application.objects.filter(id=application_id).update(name=name, git_url=git_url, file_path=file_path, test_mvn=test_mvn, pre_release_mvn=pre_release_mvn, formal_mvn=formal_mvn)
                 result = {'status': 200, 'message': '保存成功'}
             except Exception, e:
                 print e
@@ -274,7 +277,7 @@ def update_application():
                 check_application_data = None
             if not check_application_data:
                 try:
-                    application_data = Application(name=name, git_url=git_url, apply_user_id=user_id, file_path=file_path)
+                    application_data = Application(name=name, git_url=git_url, apply_user_id=user_id, file_path=file_path, test_mvn=test_mvn, pre_release_mvn=pre_release_mvn, formal_mvn=formal_mvn)
                     application_data.save()
                     result = {'status': 200, 'message': '保存成功'}
                 except Exception, e:
@@ -301,6 +304,7 @@ def update_release_apply():
     update_content = request.form.get('update_content')
     attention = request.form.get('attention')
     memo = request.form.get('memo')
+    version = request.form.get('version')
     result = {'status': 1001, 'message': '参数缺失'}
     user_id = session.get('user_data').get('user_id')
     try:
@@ -318,7 +322,7 @@ def update_release_apply():
                                           risk_level=risk_level, application=application_id, deploy=deploy,
                                           planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
                                           is_self_test=is_self_test, update_model=update_model, attention=attention,
-                                          update_content=update_content, memo=memo)
+                                          update_content=update_content, memo=memo, version=version)
 
                 releaseapply_data = releaseapply_datas[0]
                 if is_manager:
@@ -335,7 +339,7 @@ def update_release_apply():
                                                  risk_level=risk_level, application_id=application_id, deploy=deploy,
                                                  planned_at=planned_at, wiki_url=wiki_url, jira_url=jira_url,
                                                  is_self_test=is_self_test, update_model=update_model,
-                                                 attention=attention, update_content=update_content, memo=memo)
+                                                 attention=attention, update_content=update_content, memo=memo, version=version)
                 releaseapply_data.save()
                 if is_manager:
                     state_transfer(user_data, RA_USER_ACTION_TEAM_LEADER_CREATED, releaseapply_data)

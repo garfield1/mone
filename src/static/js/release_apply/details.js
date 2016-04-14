@@ -74,7 +74,7 @@ function show_built_info(){
     }, "json");
 };
 
-if($("#step").val() == '4'){
+if($("#step").val() == '5'){
     show_built_info();
     setInterval(show_built_info,1000);
 }else{

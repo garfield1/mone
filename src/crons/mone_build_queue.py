@@ -1,5 +1,6 @@
 # coding=utf-8
 import re
+import shutil
 import gevent
 import time
 import subprocess
@@ -15,7 +16,6 @@ def get_file_name(git_url):
     p = re.compile(r'([\s\S]*).git')
     file_name = p.findall(file_path)
     return file_name[0]
-
 
 def save_build_message(release_apply_id, message, created_at):
     applicationbuild_data = ReleaseapplyBuild(release_apply_id=release_apply_id, message=message, created_at=created_at)
@@ -35,7 +35,7 @@ def log(content="debug", path='/tmp/test.log'):
     fsock.close()
     return result
 
-def build(git_url, release_apply_id):
+def build(git_url, release_apply_id, formal_mvn_command):
     '''
 	构建
 	:param git_url:
@@ -48,13 +48,9 @@ def build(git_url, release_apply_id):
         os.system(command_rm)
     os.system(command_git)
     os.chdir(file_name)
-    command_bulit = 'mvn clean package'
-    log(command_bulit)
-    ps = subprocess.Popen(command_bulit, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-    log(ps)
+    ps = subprocess.Popen(formal_mvn_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     while True:
         data = ps.stdout.readline()
-        log(data)
         if ps.poll() is not None:
             break
         else:
@@ -62,15 +58,41 @@ def build(git_url, release_apply_id):
             now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
             save_build_message(release_apply_id, data, now_time)
 
+def save_mvn_file(release_apply_id, Application_file_path, application_name):
+    '''
+    保存文件，备份
+    :param Application_file_path:
+    :param application_name:
+    :return:
+    '''
+    file_name = str(time.time())[0:10]
+    ISOTIMEFORMAT = '%Y-%m-%d %X'
+    now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
+    suffix = os.path.splitext(Application_file_path)[1]
+    file_name = file_name + suffix
+    save_file_path = application_name + '/' + file_name
+    try:
+        build_file_data = build_file(release_apply_id=release_apply_id, file_path=save_file_path, file_name=file_name, created_at=now_time)
+        build_file_data.save()
+        shutil.copy(Application_file_path, save_file_path)
+        return True
+    except Exception, e:
+        print e
+        return False
+
 def main():
     for build_queue in BulidQueue.objects.filter(is_build=False):
         releaseapplybuilds = ReleaseapplyBuild.objects.filter(release_apply_id=build_queue.release_apply_id)
         releaseapplybuilds.delete()
-        g1 = gevent.spawn(build, build_queue.git_url, build_queue.release_apply_id)
+        try:
+            formal_mvn_command = build_queue.release_apply.application.formal_mvn if build_queue.release_apply.application.formal_mvn else 'mvn clean package'
+        except Exception, e:
+            formal_mvn_command = 'mvn clean package'
+        save_mvn_file(build_queue.release_apply_id, build_queue.release_apply.application.file_path, build_queue.release_apply.application.name)
+        g1 = gevent.spawn(build, build_queue.git_url, build_queue.release_apply_id, formal_mvn_command)
         g1.join()
         build_queue.is_build = True
         build_queue.save()
-
 
 if __name__ == "__main__":
     main()

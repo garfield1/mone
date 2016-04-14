@@ -270,6 +270,9 @@ class Application(models.Model):
 	apply_user = models.ForeignKey(User, related_name="apply_user")
 	wiki_url = models.CharField(max_length = 400,null = True,blank = True)
 	git_url = models.CharField(max_length = 400,null = True,blank = True)
+	test_mvn = models.CharField(max_length = 400,null = True,blank = True)
+	pre_release_mvn = models.CharField(max_length = 400,null = True,blank = True)
+	formal_mvn = models.CharField(max_length = 400,null = True,blank = True)
 	file_path = models.CharField(max_length = 400,null = True,blank = True)
 	created_at= models.DateTimeField(auto_now_add=True)
 	updated_at= models.DateTimeField(auto_now=True)
@@ -306,6 +309,7 @@ class ReleaseApply(models.Model):
 	attention = models.CharField(max_length = 5000,null = True,blank = True)
 	update_content = models.CharField(max_length = 5000,null = True,blank = True)
 	memo  = models.CharField(max_length = 400,null = True,blank = True)
+	version  = models.CharField(max_length = 400,null = True,blank = True)
 	is_self_test = models.BooleanField(default=False, verbose_name=u'是否已经自测')
 	waitting_confirmer_id = models.IntegerField(null = True , blank = True)
 	state = models.CharField(max_length = 400,null = True,blank = True)
@@ -313,7 +317,16 @@ class ReleaseApply(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	formal_at = models.DateTimeField(null = True)
-	
+
+class build_file(models.Model):
+	'''
+	包文件备份
+	'''
+	release_apply = models.ForeignKey(ReleaseApply)
+	file_path = models.CharField(max_length = 400,null = True,blank = True)
+	file_name = models.CharField(max_length = 400,null = True,blank = True)
+	created_at= models.DateTimeField(auto_now_add=True)
+
 class ReleaseApplyState(models.Model):
 	creator = models.ForeignKey(User,related_name='creator') #sys or specific user
 	waitting_confirmer = models.ForeignKey(User,related_name='waitting_confirmer',null = True,blank=True)#creator must be sys

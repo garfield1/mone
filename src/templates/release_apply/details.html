@@ -65,8 +65,8 @@
                             <span class="ant-steps-icon">3</span></div>
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">构建</div>
-                        <div class="ant-steps-description">{% if releaseapply_data.application.file_path and is_build %}<a href="/release_apply/download/{{ releaseapply_data.application.file_path }}" class="btn btn-md">下载<i class="icon icon-download-alt"></i></a>{% endif %}</div>
+                        <div class="ant-steps-title">测试</div>
+                        <div class="ant-steps-description"></div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 4 %}ant-steps-status-wait  {% elif step == 4 %}ant-steps-status-process {% elif step > 4 %} ant-steps-status-finish{% endif %}" style="width: 150px;">
@@ -76,8 +76,8 @@
                             <span class="ant-steps-icon">4</span></div>
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">测试</div>
-                        <div class="ant-steps-description"></div>
+                        <div class="ant-steps-title">构建</div>
+                        <div class="ant-steps-description">{% if releaseapply_data.application.file_path and is_build %}<a href="/release_apply/download/{{ releaseapply_data.application.file_path }}" class="btn btn-md">下载<i class="icon icon-download-alt"></i></a>{% endif %}</div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 5  %}ant-steps-status-wait {% elif step ==5 %}ant-steps-status-process {% elif step > 5 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
@@ -118,12 +118,12 @@
                         {% elif step == 2 and releaseapply_data.waitting_confirmer_id == session['user_data']['user_id']%}
                         <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
                         <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
-                        {% elif step == 3 and releaseapply_data.applier_id == session['user_data']['user_id'] %}
-                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">构建</button>
-                        {% elif step == 4 and releaseapply_data.tester_id == session['user_data']['user_id'] %}
+                        {% elif step == 3 and releaseapply_data.tester_id == session['user_data']['user_id'] %}
                         <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
                         <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
+                        {% elif step == 4 and releaseapply_data.applier_id == session['user_data']['user_id'] %}
+                        <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
+                        <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">构建</button>
                         {% elif step == 5 and session['is_operator'] %}
                         <button class="btn btn-md decision reject" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
                         <button class="btn btn-md decision pass" data-toggle="modal" data-position="100px" data-target="#myModal">认领</button>
@@ -233,6 +233,10 @@
                             <tr>
                                 <td class="col-md-2">测试环境</td>
                                 <td colspan='3'>{{ releaseapply_data.memo or '' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-2">版本号</td>
+                                <td colspan='3'>{{ releaseapply_data.version or '' }}</td>
                             </tr>
                         </tbody>
                     </table>
