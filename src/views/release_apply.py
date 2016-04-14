@@ -244,8 +244,7 @@ def detail(release_apply_id):
                 {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
                  'created_at': str(releaseapplybuild_data.created_at)[:19]})
     is_build = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')[0].is_build if BulidQueue.objects.filter(release_apply_id=release_apply_id) else False
-    build_files = build_file.objects.filter(application_id = releaseapply_data.application_id)
-    print build_files
+    build_files = build_file.objects.filter(application_id = releaseapply_data.application_id).order_by('-id')
     return render_template("release_apply/details.html", releaseapply_data=releaseapply_data,
                            releaseapplystate_list=releaseapplystate_list, step=step,
                            release_apply_message=release_apply_message, last_action=last_action,
