@@ -12,6 +12,9 @@ a:hover {
     text-decoration: none;
     color: #333
 }
+.red{
+    color: red;
+}
 </style>
 
 {% endblock %}
@@ -42,6 +45,8 @@ a:hover {
         <article class="article-top article">
             <header>
                 <dl class="dl-inline">
+                    <dt>发布级别：</dt>
+                    <dd>{{ releaseapply_data.deploy or '' }}</dd>
                     <dt>类型：</dt>
                     <dd>{{ releaseapply_data.release_type }}</dd>
                     <dt>期望完成时间：</dt>
@@ -170,7 +175,7 @@ a:hover {
             </div>
         </div>
         <article class="article-top">
-            <div class="form-group hide" id="built_info_div">
+            <div class="form-group" id="built_info_div">
                 <div class="col-md-6">
                     <div class="detail-font">
                         构建信息
@@ -191,6 +196,10 @@ a:hover {
                     <tbody><tr>
                       <td>构建时间</td>
                       <td>包名</td>
+                    </tr>
+                    <tr>
+                        <td>{{ releaseapply_data.created_at }}</td>
+                        <td><a href="/release_apply/download/{{ releaseapply_data.application.file_path }}">{{ new_build_file_name }}</a></td>
                     </tr>
                     {% for build_file in build_files %}
                         <tr>
@@ -247,12 +256,8 @@ a:hover {
                                 <td class="col-md-4">{{ releaseapply_data.deploy or '' }}</td>
                             </tr>
                             <tr>
-                                <td class="col-md-2">wiki连接</td>
-                                <td colspan='3'>{{ releaseapply_data.wiki_url or '' }}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-2">jira连接</td>
-                                <td colspan='3'>{{ releaseapply_data.jira_url or '' }}</td>
+                                <td class="col-md-2">版本号</td>
+                                <td colspan='3' class="red">{{ releaseapply_data.version or 'master' }}</td>
                             </tr>
                             <tr>
                                 <td class="col-md-2">修改模块</td>
@@ -270,9 +275,14 @@ a:hover {
                                 <td class="col-md-2">测试环境</td>
                                 <td colspan='3'>{{ releaseapply_data.memo or '' }}</td>
                             </tr>
+
                             <tr>
-                                <td class="col-md-2">版本号</td>
-                                <td colspan='3'>{{ releaseapply_data.version or '' }}</td>
+                                <td class="col-md-2">wiki连接</td>
+                                <td colspan='3'>{{ releaseapply_data.wiki_url or '' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-2">jira连接</td>
+                                <td colspan='3'>{{ releaseapply_data.jira_url or '' }}</td>
                             </tr>
                         </tbody>
                     </table>

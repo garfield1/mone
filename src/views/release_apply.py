@@ -5,6 +5,7 @@ import json
 from flask import Blueprint, render_template, request, session, redirect, url_for, send_file
 from flask.ext.login import login_required
 import time
+import os.path
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
     RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState, RA_USER_ACTION_OPERATOR_CLAIMED, \
@@ -245,10 +246,11 @@ def detail(release_apply_id):
                  'created_at': str(releaseapplybuild_data.created_at)[:19]})
     is_build = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')[0].is_build if BulidQueue.objects.filter(release_apply_id=release_apply_id) else False
     build_files = build_file.objects.filter(application_id = releaseapply_data.application_id).order_by('-id')
+    new_build_file_name = os.path.basename(releaseapply_data.application.file_path)
     return render_template("release_apply/details.html", releaseapply_data=releaseapply_data,
                            releaseapplystate_list=releaseapplystate_list, step=step,
                            release_apply_message=release_apply_message, last_action=last_action,
-                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build, build_files=build_files)
+                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build, build_files=build_files, new_build_file_name=new_build_file_name)
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
