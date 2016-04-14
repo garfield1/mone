@@ -333,6 +333,7 @@ def add_post():
 	worksheet_id = request.form.get('worksheet_id')
 	file = request.files.get('file')
 	file_location = None
+	print 11111
 	if file:
 		filename = file.filename
 		UPLOAD_FOLDER = upload_path + email.split('@')[0] + '/'
@@ -373,7 +374,7 @@ def add_post():
 		else:
 			worksheet_data = Worksheet(title=title, applier_id=user_id, content=content, worksheet_type_id=worksheet_type_id, planned_at=finish_at)
 		worksheet_data.save()
-		if apply_user.user_data.is_manager():
+		if apply_user.is_manager():
 			state_transfer(apply_user, WS_USER_ACTION_TEAM_LEADER_CREATED, worksheet_data)
 		else:
 			state_transfer(apply_user, WS_USER_ACTION_DEVELOPER_CREATED, worksheet_data)

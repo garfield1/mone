@@ -54,18 +54,18 @@
                             <input type="text" name="file_path" id="file_path" value="{{ application_data.file_path or '' }}" class="form-control" placeholder="构建文件生成地址. example: cart/distribution/target/store-cart-1.0.0-SNAPSHOT.war">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">测试环境构建命令</label>
-                        <div class="col-md-10">
-                            <input type="text" name="test_mvn" id="test_mvn" value="{{ application_data.test_mvn or '' }}" class="form-control" placeholder="默认命令: mvn clean package">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">预发布环境构建命令</label>
-                        <div class="col-md-10">
-                            <input type="text" name="pre_release_mvn" id="pre_release_mvn" value="{{ application_data.pre_release_mvn or '' }}" class="form-control" placeholder="默认命令: mvn clean package">
-                        </div>
-                    </div>
+{#                    <div class="form-group">#}
+{#                        <label class="col-md-2 control-label">测试环境构建命令</label>#}
+{#                        <div class="col-md-10">#}
+{#                            <input type="text" name="test_mvn" id="test_mvn" value="{{ application_data.test_mvn or '' }}" class="form-control" placeholder="默认命令: mvn clean package">#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label class="col-md-2 control-label">预发布环境构建命令</label>#}
+{#                        <div class="col-md-10">#}
+{#                            <input type="text" name="pre_release_mvn" id="pre_release_mvn" value="{{ application_data.pre_release_mvn or '' }}" class="form-control" placeholder="默认命令: mvn clean package">#}
+{#                        </div>#}
+{#                    </div>#}
                     <div class="form-group">
                         <label class="col-md-2 control-label">正式环境构建命令</label>
                         <div class="col-md-10">

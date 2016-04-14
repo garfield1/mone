@@ -18,10 +18,13 @@ $(".decision").click(function(){
         $("#toSave").addClass("disabled");
         action_type = $("#last_action").val();
     } else {
-        $("#tips").hide();
-        reject_advice.find("label").text("请填写通过意见(选填):");
-        reject_advice.show();
-        $("#toSave").removeClass("disabled");
+        //$("#tips").hide();
+        //reject_advice.find("label").text("请填写通过意见(选填):");
+        //reject_advice.show();
+        //$("#toSave").removeClass("disabled");
+        //action_type = $("#next_action").val();
+        tips.show().text("确认通过吗？");
+        reject_advice.hide();
         action_type = $("#next_action").val();
     }
 });
@@ -60,6 +63,7 @@ function show_built_info(){
     }, function(result){
         if (result.status == "200") {
             if(result.data.releaseapplybuild_list.length > 0 ){
+                $("#built_info_message").addClass("hide");
                 $("#built_info_div").removeClass("hide");
                 var releaseapplybuild_length = result.data.releaseapplybuild_list.length;
                 releaseapplybuild_id = result.data.releaseapplybuild_list[releaseapplybuild_length-1].releaseapplybuild_id;
