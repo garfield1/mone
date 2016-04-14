@@ -1,6 +1,19 @@
 {% extends "headfoot.html" %}
 {% block styles %}
 <link href="/static/css/worksheet/details.css" rel="stylesheet">
+<style>
+.article-top{
+    padding-top: 20px;
+}
+a {
+    color: #333;
+}
+a:hover {
+    text-decoration: none;
+    color: #333
+}
+</style>
+
 {% endblock %}
 {% block scripts %}
 <script charset="utf-8" src="/static/js/release_apply/details.js"></script>
@@ -158,13 +171,36 @@
         </div>
         <article class="article-top">
             <div class="form-group hide" id="built_info_div">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="detail-font">
                         构建信息
                     </div>
                     <div id="built_info" style="border:1px solid rgb(221,221,221);height:20em;overflow:scroll;margin-bottom:2em">
                         <div id="xxx"></div>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="detail-font">
+                        预发布包信息
+                    </div>
+                    <div id="built_info" style="border:1px solid rgb(221,221,221);height:20em;overflow:scroll;margin-bottom:2em">
+{#                        {% for build_file in build_files %}#}
+{#                        <div><a href="/release_apply/download/{{ build_file.file_path }}">{{ build_file.file_name }}</a></div>#}
+{#                        {% endfor %}#}
+                    <table class="table">
+                    <tbody><tr>
+                      <td>构建时间</td>
+                      <td>包名</td>
+                    </tr>
+                    {% for build_file in build_files %}
+                        <tr>
+                          <td>{{ build_file.created_at }}</td>
+                          <td><a href="/release_apply/download/{{ build_file.file_path }}">{{ build_file.file_name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                  </tbody></table>
+                    </div>
+
                 </div>
             </div>
             <div class="form-group">

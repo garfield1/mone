@@ -18,7 +18,7 @@ from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_AC
     RA_USER_ACTION_TEAM_LEADER_BUILD_CONFIRMED, RA_USER_ACTION_TEAM_LEADER_CONFIRMED, \
     RA_STATE_WAITTING_TEAM_LEADER_CLOSED, RA_USER_ACTION_TESTER_CONFIRMED, RA_USER_ACTION_TESTER_REJECT, \
     RA_USER_ACTION_OPERATOR_REJECTED, RA_USER_ACTION_TEAM_LEADER_RESUBMIT, RA_USER_ACTION_DEVELOPER_RESUBMIT, \
-    ApplicationBuild, ReleaseapplyBuild, BulidQueue
+    ApplicationBuild, ReleaseapplyBuild, BulidQueue, build_file
 
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
@@ -244,10 +244,12 @@ def detail(release_apply_id):
                 {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
                  'created_at': str(releaseapplybuild_data.created_at)[:19]})
     is_build = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')[0].is_build if BulidQueue.objects.filter(release_apply_id=release_apply_id) else False
+    build_files = build_file.objects.filter(application_id = releaseapply_data.application_id)
+    print build_files
     return render_template("release_apply/details.html", releaseapply_data=releaseapply_data,
                            releaseapplystate_list=releaseapplystate_list, step=step,
                            release_apply_message=release_apply_message, last_action=last_action,
-                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build)
+                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build, build_files=build_files)
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required

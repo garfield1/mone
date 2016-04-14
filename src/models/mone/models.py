@@ -322,7 +322,7 @@ class build_file(models.Model):
 	'''
 	包文件备份
 	'''
-	release_apply = models.ForeignKey(ReleaseApply)
+	application = models.ForeignKey(Application)
 	file_path = models.CharField(max_length = 400,null = True,blank = True)
 	file_name = models.CharField(max_length = 400,null = True,blank = True)
 	created_at= models.DateTimeField(auto_now_add=True)

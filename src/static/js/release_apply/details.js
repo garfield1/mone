@@ -50,12 +50,12 @@ $("#toSave").click(function(){
     }, "json");
 });
 
-var built_info_div = $("#built_info")
+var built_info_div = $("#built_info");
 var releaseapplybuild_id = '';
 function show_built_info(){
     $.get("/release_apply/get/build_log/", {
         releaseapplybuild_id: releaseapplybuild_id,
-        release_apply_id: release_apply_id,
+        release_apply_id: release_apply_id
 
     }, function(result){
         if (result.status == "200") {
@@ -72,7 +72,7 @@ function show_built_info(){
             alert("数据库异常！请联系运维开发人员！")
         }
     }, "json");
-};
+}
 
 if($("#step").val() == '5'){
     show_built_info();

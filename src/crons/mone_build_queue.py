@@ -58,21 +58,20 @@ def build(git_url, release_apply_id, formal_mvn_command):
             now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
             save_build_message(release_apply_id, data, now_time)
 
-def save_mvn_file(release_apply_id, Application_file_path, application_name):
+def save_mvn_file(application_id, Application_file_path, application_name):
     '''
     保存文件，备份
     :param Application_file_path:
     :param application_name:
     :return:
     '''
-    file_name = str(time.time())[0:10]
     ISOTIMEFORMAT = '%Y-%m-%d %X'
     now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
     suffix = os.path.splitext(Application_file_path)[1]
-    file_name = file_name + suffix
+    file_name = str(now_time) + suffix
     save_file_path = application_name + '/' + file_name
     try:
-        build_file_data = build_file(release_apply_id=release_apply_id, file_path=save_file_path, file_name=file_name, created_at=now_time)
+        build_file_data = build_file(application_id=application_id, file_path=save_file_path, file_name=file_name, created_at=now_time)
         build_file_data.save()
         shutil.copy(Application_file_path, save_file_path)
         return True
@@ -88,7 +87,7 @@ def main():
             formal_mvn_command = build_queue.release_apply.application.formal_mvn if build_queue.release_apply.application.formal_mvn else 'mvn clean package'
         except Exception, e:
             formal_mvn_command = 'mvn clean package'
-        save_mvn_file(build_queue.release_apply_id, build_queue.release_apply.application.file_path, build_queue.release_apply.application.name)
+        save_mvn_file(build_queue.release_apply.application_id, build_queue.release_apply.application.file_path, build_queue.release_apply.application.name)
         g1 = gevent.spawn(build, build_queue.git_url, build_queue.release_apply_id, formal_mvn_command)
         g1.join()
         build_queue.is_build = True
