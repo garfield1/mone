@@ -5,9 +5,6 @@
 .article-top{
     padding-top: 20px;
 }
-a {
-    color: #333;
-}
 a:hover {
     text-decoration: none;
     color: #333
@@ -95,7 +92,7 @@ a:hover {
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
                         <div class="ant-steps-title">构建</div>
-                        <div class="ant-steps-description">{% if releaseapply_data.application.file_path and is_build %}<a href="/release_apply/download/{{ releaseapply_data.application.file_path }}" class="btn btn-md">下载<i class="icon icon-download-alt"></i></a>{% endif %}</div>
+                        <div class="ant-steps-description"></div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 5  %}ant-steps-status-wait {% elif step ==5 %}ant-steps-status-process {% elif step > 5 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
@@ -308,7 +305,7 @@ a:hover {
                                 <td>{{ data.name }}</td>
                                 <td>{{ data.created_at }}</td>
                                 <td>{{ data.state }}</td>
-                                <td>{{ data.content }}</td>
+                                <td>{{ data.reject_reason }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

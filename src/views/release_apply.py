@@ -189,7 +189,7 @@ def detail(release_apply_id):
     if not releaseapply_data:
         return redirect(url_for('user.index'))
     releaseapplystate_list = []
-    releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id)
+    releaseapplystates = ReleaseApplyState.objects.filter(release_apply_id=releaseapply_data.id).order_by('-id')
     for releaseapplystate in releaseapplystates:
         releaseapplystate_list.append(
             {'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at,
