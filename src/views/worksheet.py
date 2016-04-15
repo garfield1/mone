@@ -9,8 +9,9 @@ import time
 from models.mone.models import Worksheet, WorksheetType, WorksheetState, User, WS_USER_ACTION_TEAM_LEADER_CONFIRMED, \
 	WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED, WS_STATE_WAITTING_OPERATOR_CLAIMED, WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_USER_ACTION_DEVELOPER_CREATED, WS_USER_ACTION_DEVELOPER_RESUBMIT, \
-	WS_USER_ACTION_TEAM_LEADER_CREATED, Role, WS_STATE_HAVE_BACK
+	WS_USER_ACTION_TEAM_LEADER_CREATED, Role, WS_STATE_HAVE_BACK, WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
 from views._worksheet import state_transfer
+
 config = ConfigParser()
 with open('mone.conf', 'r') as cfgfile:
 	config.readfp(cfgfile)
@@ -286,7 +287,7 @@ def worksheet_details(worksheet_id):
 		if operator_id == user_id:
 			is_operator_execute = True
 	is_revise = False
-	if worksheet.state == WS_STATE_HAVE_BACK:
+	if worksheet.state == WS_STATE_WAITTING_DEVELOPER_MODIFIED or worksheet.state == WS_STATE_WAITTING_TEAM_LEADER_MODIFIED:
 		applier_id = worksheet.applier_id
 		if user_id == applier_id:
 			is_revise = True
