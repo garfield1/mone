@@ -398,8 +398,8 @@ def search_release_apply():
     tester = request.form.get('tester')
     operator = request.form.get('operator')
     producter = request.form.get('producter')
-    start_planned_time = request.form.get('start_planned_time')
-    end_planned_time = request.form.get('end_planned_time')
+    start_apply_time = request.form.get('start_planned_time')
+    end_apply_time = request.form.get('end_planned_time')
     page_num = int(request.form.get('page_num') or 1)
     start_formal_at = request.form.get('start_formal_at')
     end_formal_at = request.form.get('end_formal_at')
@@ -434,10 +434,10 @@ def search_release_apply():
             kwargs['application_id'] = application_id
         if state:
             kwargs['state'] = state
-        if start_planned_time:
-            kwargs['planned_at__gte'] = start_planned_time
-        if end_planned_time:
-            kwargs['planned_at__lte'] = start_planned_time
+        if start_apply_time:
+            kwargs['created_at__gte'] = start_apply_time
+        if end_apply_time:
+            kwargs['created_at__lte'] = end_apply_time
         if start_formal_at:
             kwargs['formal_at__gte'] = start_formal_at
         if end_formal_at:
