@@ -193,7 +193,7 @@ def detail(release_apply_id):
     for releaseapplystate in releaseapplystates:
         releaseapplystate_list.append(
             {'name': releaseapplystate.creator.username, 'created_at': releaseapplystate.created_at,
-             'state': releaseapplystate.state})
+             'state': releaseapplystate.state, 'reject_reason': releaseapplystate.reject_reason})
     step = state_to_step.get(releaseapply_data.state) if releaseapply_data.state else -2
     last_action = ''
     next_action = ''

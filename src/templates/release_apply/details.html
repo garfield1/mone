@@ -185,8 +185,7 @@ a:hover {
                         <div id="xxx"></div>
                     </div>
                 </div>
-            {% if is_build %}
-                <div class="col-md-4">
+                <div class="col-md-4 {% if not is_build %} hide {% endif %}" id="built_info_package">
                     <div class="detail-font">
                         预发布包信息
                     </div>
@@ -213,7 +212,6 @@ a:hover {
                     </div>
 
                 </div>
-            {% endif %}
             </div>
             <div class="form-group">
                 <div class="col-md-6">
@@ -309,7 +307,7 @@ a:hover {
                                 <td>{{ data.name }}</td>
                                 <td>{{ data.created_at }}</td>
                                 <td>{{ data.state }}</td>
-                                <td>{{ data.reject_reason }}</td>
+                                <td>{{ data.reject_reason or ''}}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

@@ -65,6 +65,7 @@ function show_built_info(){
             if(result.data.releaseapplybuild_list.length > 0 ){
                 $("#built_info_message").addClass("hide");
                 $("#built_info_div").removeClass("hide");
+                $("#built_info_package").removeClass("hide");
                 var releaseapplybuild_length = result.data.releaseapplybuild_list.length;
                 releaseapplybuild_id = result.data.releaseapplybuild_list[releaseapplybuild_length-1].releaseapplybuild_id;
                 for(i=0;i<releaseapplybuild_length;i++){
