@@ -199,7 +199,7 @@ a:hover {
                       <td>包名</td>
                     </tr>
                     <tr>
-                        <td>{{ releaseapply_data.created_at }}</td>
+                        <td>{{ releaseapply_data.updated_at }}</td>
                         <td><a href="/release_apply/download/{{ releaseapply_data.application.file_path }}">{{ new_build_file_name }}</a></td>
                     </tr>
                     {% for build_file in build_files %}
