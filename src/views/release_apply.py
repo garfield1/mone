@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from flask.ext.login import login_required
 import time
 import os.path
+from utils.decorators import check_access
 from views._release_apply import state_transfer
 from models.mone.models import Application, ReleaseApply, User, Role, RA_USER_ACTION_TEAM_LEADER_CREATED, \
     RA_USER_ACTION_DEVELOPER_CREATED, ReleaseApplyState, RA_USER_ACTION_OPERATOR_CLAIMED, \
@@ -33,6 +34,7 @@ release_apply = Blueprint('release_apply', __name__)
 
 @release_apply.route('/add/application/', methods=['GET'])
 @login_required
+@check_access([{"role_id": 1, "role_name": "系统管理员"}])
 def add_application():
     application_id = request.args.get('application_id')
     try:
@@ -42,6 +44,8 @@ def add_application():
     return render_template("release_apply/add_application.html", application_data=application_data)
 
 @release_apply.route('/application/list/')
+@login_required
+@check_access([{"role_id": 1, "role_name": "系统管理员"}])
 def application_list():
     application_datas = Application.objects.all()
     application_list = []
@@ -101,6 +105,7 @@ def add_release_apply():
 
 @release_apply.route('/get/application_list/')
 @login_required
+@check_access([{"role_id": 1, "role_name": "系统管理员"}])
 def get_application_list():
     user_id = session.get('user_data').get('user_id')
     try:

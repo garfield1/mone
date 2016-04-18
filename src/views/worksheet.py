@@ -334,7 +334,6 @@ def add_post():
 	worksheet_id = request.form.get('worksheet_id')
 	file = request.files.get('file')
 	file_location = None
-	print 11111
 	if file:
 		filename = file.filename
 		UPLOAD_FOLDER = upload_path + email.split('@')[0] + '/'
