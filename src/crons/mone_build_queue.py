@@ -90,6 +90,8 @@ def main():
         save_mvn_file(build_queue.release_apply.application_id, build_queue.release_apply.application.file_path, build_queue.release_apply.application.name)
         # g1 = gevent.spawn(build, build_queue.git_url, build_queue.release_apply_id, formal_mvn_command)
         # g1.join()
+        build_queue.start_build = True
+        build_queue.save()
         build(build_queue.git_url, build_queue.release_apply_id, formal_mvn_command)
         ISOTIMEFORMAT = '%Y-%m-%d %X'
         updated_at = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
@@ -97,6 +99,7 @@ def main():
         release_apply_data.updated_at = updated_at
         release_apply_data.save()
         build_queue.is_build = True
+        build_queue.end_build = True
         build_queue.save()
 
 if __name__ == "__main__":
