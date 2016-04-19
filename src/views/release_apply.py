@@ -249,7 +249,7 @@ def detail(release_apply_id):
             releaseapplybuild_list.append(
                 {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
                  'created_at': str(releaseapplybuild_data.created_at)[:19]})
-    bulid_queue_data = BulidQueue.objects.filter(release_apply_id=release_apply_id)
+    bulid_queue_data = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')
     if bulid_queue_data:
         is_build = bulid_queue_data[0].is_build
         start_build = bulid_queue_data[0].start_build
