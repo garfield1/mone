@@ -249,13 +249,36 @@ def detail(release_apply_id):
             releaseapplybuild_list.append(
                 {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
                  'created_at': str(releaseapplybuild_data.created_at)[:19]})
-    is_build = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')[0].is_build if BulidQueue.objects.filter(release_apply_id=release_apply_id) else False
+    bulid_queue_data = BulidQueue.objects.filter(release_apply_id=release_apply_id)
+    if bulid_queue_data:
+        is_build = bulid_queue_data[0].is_build
+        start_build = bulid_queue_data[0].start_build
+        end_build = bulid_queue_data[0].end_build
+    else:
+        is_build = False
+        start_build = False
+        end_build = False
     build_files = build_file.objects.filter(application_id = releaseapply_data.application_id).order_by('-id')
     new_build_file_name = os.path.basename(releaseapply_data.application.file_path)
     return render_template("release_apply/details.html", releaseapply_data=releaseapply_data,
                            releaseapplystate_list=releaseapplystate_list, step=step,
                            release_apply_message=release_apply_message, last_action=last_action,
-                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build, build_files=build_files, new_build_file_name=new_build_file_name)
+                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build, start_build=start_build, end_build=end_build, build_files=build_files, new_build_file_name=new_build_file_name)
+
+@release_apply.route('/get_build_file/', methods=['GET'])
+@login_required
+def get_build_file():
+    release_apply_id = request.args.get('release_apply_id')
+    try:
+        releaseapply_data = ReleaseApply.objects.filter(id=release_apply_id)[0]
+    except Exception, e:
+        return json.dumps({'status': 1001, 'message': '请求失败'})
+    new_build_file_name = os.path.basename(releaseapply_data.application.file_path)
+    build_file_datas = build_file.objects.filter(application_id = releaseapply_data.application_id).order_by('-id')
+    build_file_list = []
+    for build_file_data in build_file_datas:
+        build_file_list.append({'created_at': str(build_file_data.created_at), 'file_path': build_file_data.file_path, 'file_name': build_file_data.file_name})
+    return json.dumps({'status': 200, 'data': {'build_file_list': build_file_list, 'releaseapply_data': {'file_path': releaseapply_data.application.file_path, 'updated_at': str(releaseapply_data.updated_at), 'new_build_file_name': new_build_file_name}}})
 
 @release_apply.route('/update/application/', methods=['POST'])
 @login_required
@@ -555,12 +578,21 @@ def get_build_log():
             result = {'status': 1001, 'message': '数据库异常'}
             return json.dumps(result)
     releaseapplybuild_list = []
-    is_build = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')[0].is_build if BulidQueue.objects.filter(release_apply_id=release_apply_id) else False
+    bulid_queue_data = BulidQueue.objects.filter(release_apply_id=release_apply_id).order_by('-id')
+    if bulid_queue_data:
+        is_build = bulid_queue_data[0].is_build
+        start_build = bulid_queue_data[0].start_build
+        end_build = bulid_queue_data[0].end_build
+    else:
+        is_build = False
+        start_build = False
+        end_build = False
+
     for releaseapplybuild_data in releaseapplybuild_datas:
         releaseapplybuild_list.append(
             {'releaseapplybuild_id': releaseapplybuild_data.id, 'message': releaseapplybuild_data.message,
              'created_at': str(releaseapplybuild_data.created_at)[:19]})
-    return json.dumps({'status': 200, 'message': '请求成功', 'data': {'releaseapplybuild_list': releaseapplybuild_list, 'is_build': is_build}})
+    return json.dumps({'status': 200, 'message': '请求成功', 'data': {'releaseapplybuild_list': releaseapplybuild_list, 'is_build': is_build, 'start_build': start_build, 'end_build': end_build}})
 
 @release_apply.route('/download/<path:path>')
 @login_required

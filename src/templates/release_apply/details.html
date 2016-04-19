@@ -185,7 +185,7 @@ a:hover {
                         <div id="xxx"></div>
                     </div>
                 </div>
-                <div class="col-md-4 {% if not is_build %} hide {% endif %}" id="built_info_package">
+                <div class="col-md-4 {% if not start_build or not is_build %} hide {% endif %}" id="built_info_package">
                     <div class="detail-font">
                         正式包信息
                     </div>
@@ -193,21 +193,21 @@ a:hover {
 {#                        {% for build_file in build_files %}#}
 {#                        <div><a href="/release_apply/download/{{ build_file.file_path }}">{{ build_file.file_name }}</a></div>#}
 {#                        {% endfor %}#}
-                    <table class="table">
+                    <table class="table nohide" id="build_table">
                     <tbody><tr>
                       <td>构建时间</td>
                       <td>包名</td>
                     </tr>
-                    <tr>
-                        <td>{{ releaseapply_data.updated_at }}</td>
-                        <td><a href="/release_apply/download/{{ releaseapply_data.application.file_path }}">{{ new_build_file_name }}</a></td>
-                    </tr>
-                    {% for build_file in build_files %}
-                        <tr>
-                          <td>{{ build_file.created_at }}</td>
-                          <td><a href="/release_apply/download/{{ build_file.file_path }}">{{ build_file.file_name }}</a></td>
-                        </tr>
-                    {% endfor %}
+{#                    <tr>#}
+{#                        <td>{{ releaseapply_data.updated_at }}</td>#}
+{#                        <td><a href="/release_apply/download/{{ releaseapply_data.application.file_path }}">{{ new_build_file_name }}</a></td>#}
+{#                    </tr>#}
+{#                    {% for build_file in build_files %}#}
+{#                        <tr>#}
+{#                          <td>{{ build_file.created_at }}</td>#}
+{#                          <td><a href="/release_apply/download/{{ build_file.file_path }}">{{ build_file.file_name }}</a></td>#}
+{#                        </tr>#}
+{#                    {% endfor %}#}
                   </tbody></table>
                     </div>
 
@@ -317,4 +317,10 @@ a:hover {
         </article>
     </div>
 </div>
+    <table class="hide">
+        <tr class="template">
+            <td class="created_at"></td>
+            <td class="file_name"><a href=""></a></td>
+        </tr>
+    </table>
 {% endblock %}

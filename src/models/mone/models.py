@@ -351,6 +351,8 @@ class BulidQueue(models.Model):
 	git_url = models.CharField(max_length = 400,null = True,blank = True)
 	release_apply = models.ForeignKey(ReleaseApply)
 	is_build = models.BooleanField(default=False)
+	start_build = models.BooleanField(default=False)
+	end_build = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 

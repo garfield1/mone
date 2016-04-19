@@ -55,6 +55,7 @@ $("#toSave").click(function(){
 
 var built_info_div = $("#built_info");
 var releaseapplybuild_id = '';
+var t;
 function show_built_info(){
     $.get("/release_apply/get/build_log/", {
         releaseapplybuild_id: releaseapplybuild_id,
@@ -62,6 +63,35 @@ function show_built_info(){
 
     }, function(result){
         if (result.status == "200") {
+            if (result.data.end_build){
+                $.get("/release_apply/get_build_file/", {
+                    release_apply_id: release_apply_id
+                }, function(result){
+                    result = JSON.parse(result)
+                    if (result.status == 200){
+                        var temp = $("table.hide .template").clone();
+                        //console.log(result.data.releaseapply_data)
+                        temp.find(".created_at").text(result.data.releaseapply_data.updated_at);
+                        temp.find('.file_name a').text(result.data.releaseapply_data.new_build_file_name);
+                        temp.find("a").attr("href", "/release_apply/download/"+result.data.releaseapply_data.file_path);
+                        temp.appendTo($("table.nohide tbody"));
+                        $("table.nohide .template").removeClass("template");
+                        var build_file_list_item = '';
+                        for(i=0; i<result.data.build_file_list.length; i++){
+                            temp = $("table.hide .template").clone();
+                            build_file_list_item =  result.data.build_file_list[i];
+                            temp.find(".created_at").text(build_file_list_item.created_at);
+                            temp.find('.file_name a').text(build_file_list_item.file_name);
+                            temp.find("a").attr("href", "/release_apply/download/"+build_file_list_item.file_path);
+                            temp.appendTo($("table.nohide tbody"));
+                            $("table.nohide .template").removeClass("template");
+                        }
+
+                    }
+                })
+
+                clearInterval(t)
+            }
             if(result.data.releaseapplybuild_list.length > 0 ){
                 $("#built_info_message").addClass("hide");
                 $("#built_info_div").removeClass("hide");
@@ -81,7 +111,7 @@ function show_built_info(){
 
 if($("#step").val() == '5'){
     show_built_info();
-    setInterval(show_built_info,1000);
+    t = setInterval(show_built_info,1000);
 }else{
     show_built_info();
 }
