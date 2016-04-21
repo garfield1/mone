@@ -8,7 +8,7 @@ from models.mone.models import EmailQueue, WS_USER_ACTION_TEAM_LEADER_CREATED, W
 	WS_USER_ACTION_TEAM_LEADER_REJECTED, WS_USER_ACTION_OPERATOR_REJECTED, WS_USER_ACTION_OPERATOR_CLAIMED, \
 	WS_STATE_WAITTING_OPERATOR_EXECUTED, \
 	WS_USER_ACTION_OPERATOR_EXECUTED, WS_STATE_CLOSED, Role, WS_STATE_WAITTING_OPERATOER_COMPLETE, WS_STATE_HAVE_BACK, \
-	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED
+	WS_STATE_WAITTING_DEVELOPER_MODIFIED, WS_STATE_WAITTING_TEAM_LEADER_MODIFIED, WS_USER_ACTION_CLOSED
 
 
 # WS_STATE_WAITTING_DEVELOPER_CLOSED
@@ -91,6 +91,14 @@ def state_transfer(user,action,w,reject_reason=None):
 		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier, worksheet = w, state = _state ,  reject_reason = reject_reason, action = action)
 		# _send_email(w.applier,w,"您的"+w.title+"工单需要您关闭")
 		_send_email("ecomdev@meizu.com",w,"发布成功")
+		return user.id
+
+	if action == WS_USER_ACTION_CLOSED:
+		WorksheetState.objects.create(creator = user, waitting_confirmer = w.applier, worksheet = w, state = WS_STATE_CLOSED ,  reject_reason = reject_reason, action = action)
+		if not w.applier.is_team_leader():
+			if w.applier.organization:
+				_send_email(w.applier.organization.leader.email,w,w.applier.username + " 已关闭"+w.title+"工单")
+		_send_email(w.applier.email,w,"您已关闭您的"+w.title+"工单")
 		return user.id
 
 	# if action == WS_USER_ACTION_TEAM_LEADER_CLOSED or action == WS_USER_ACTION_DEVELOPER_CLOSED:

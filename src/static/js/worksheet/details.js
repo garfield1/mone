@@ -32,6 +32,10 @@ $(".decision").click(function(){
         tips.show().text("确认认领吗？");
         reject_advice.hide();
         action_type = "运维认领";
+    } else if(this_elt.hasClass("ops_close")) {
+        tips.show().text("确认关闭吗？");
+        reject_advice.hide();
+        action_type = "关闭工单";
     } else if(this_elt.hasClass("ops_done")) {
 //        tips.show().text("确认完成了吗？");
         reject_advice.find("label").text("请填写完成意见:");
