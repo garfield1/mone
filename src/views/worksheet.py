@@ -248,7 +248,7 @@ statusid_dict ={u"关闭": 0,
 				u"待运维认领": 3,
 				u"待运维执行": 4,
 				u"已完成": 5,
-				u"已关闭上线工单": -1
+				u"已关闭": -1
 				}
 
 @worksheet.route('/details/<worksheet_id>')
@@ -296,7 +296,6 @@ def worksheet_details(worksheet_id):
 		if user_id == applier_id:
 			is_revise = True
 	is_closed = False
-	print worksheet_data.get('state_id')
 	if 0 < worksheet_data.get('state_id') < 4:
 		applier_id = worksheet.applier_id
 		if user_id == applier_id:
