@@ -2,6 +2,7 @@
 from ConfigParser import ConfigParser
 import json
 import os
+import datetime
 from django.db.models import Q
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from flask.ext.login import login_required
@@ -173,7 +174,9 @@ def search_worksheet():
 		if start_time:
 			kwargs['created_at__gte'] = start_time
 		if end_time:
-			kwargs['created_at__lte'] = end_time
+			end_apply_time_datetime =  datetime.datetime.strptime(end_time, "%Y-%m-%d")
+			end_tomorrow_apply_time = end_apply_time_datetime + datetime.timedelta(days=1)
+			kwargs['created_at__lte'] = end_tomorrow_apply_time
 		if status:
 			kwargs['state'] = status
 		worksheet_list = []

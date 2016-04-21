@@ -2,6 +2,7 @@
 # encoding=utf-8
 from ConfigParser import ConfigParser
 import json
+import datetime
 from flask import Blueprint, render_template, request, session, redirect, url_for, send_file
 from flask.ext.login import login_required
 import time
@@ -465,7 +466,9 @@ def search_release_apply():
         if start_apply_time:
             kwargs['created_at__gte'] = start_apply_time
         if end_apply_time:
-            kwargs['created_at__lte'] = end_apply_time
+            end_apply_time_datetime =  datetime.datetime.strptime(end_apply_time, "%Y-%m-%d")
+            end_tomorrow_apply_time = end_apply_time_datetime + datetime.timedelta(days=1)
+            kwargs['created_at__lte'] = end_tomorrow_apply_time
         if start_formal_at:
             kwargs['formal_at__gte'] = start_formal_at
         if end_formal_at:
