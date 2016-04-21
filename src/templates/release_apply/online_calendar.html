@@ -1,0 +1,58 @@
+{% extends "headfoot.html" %}
+{% block styles %}
+    <link href="/static/zui/lib/calendar/zui.calendar.min.css" rel="stylesheet">
+<style>
+    .card {
+        padding:20px;
+    }
+    a {
+        color: #333;
+    }
+    a:hover {
+        text-decoration: none;
+        color: #333
+    }
+    .state {
+        font-weight:bold
+    }
+    .title {
+        color: black;
+        display:block;/*内联对象需加*/
+        word-break:keep-all;/* 不换行 */
+        white-space:nowrap;/* 不换行 */
+        overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+        text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...),需与overflow:hidden;一起使用。*/
+    }
+</style>
+{% endblock %}
+{% block scripts %}
+    <script src="/static/zui/lib/calendar/zui.calendar.min.js"></script>
+<script charset="utf-8" src="/static/js/release_apply/online_calendar.js"></script>
+{% endblock %}
+{% block content %}
+    {% import "header.html" as header %}
+    {{ header.render()}}
+    <div id="main-content">
+        <div id="breadcrumb">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/"><i class="icon icon-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a id="parent-bread" href="/">发布系统</a>
+                </li>
+                <li id="children-bread">上线日历</li>
+            </ul>
+        </div>
+        <div id="page-content">
+            <div class="page-header">
+                <h1>
+                    上线日历
+                </h1>
+            </div>
+            <div id="calendar" class="calendar">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
