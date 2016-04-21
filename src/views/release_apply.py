@@ -560,6 +560,27 @@ def get_taskpad():
                                       'release_apply_list': release_apply_list}}
     return json.dumps(result)
 
+@release_apply.route('/get/all/taskpad/')
+def get_all_taskpad():
+    all_release_apply = ReleaseApply.objects.all()
+    release_apply_list = []
+    for release_apply in all_release_apply:
+        producter = release_apply.producter.username if release_apply.producter else ''
+        tester = release_apply.tester.username if release_apply.tester else ''
+        operator = release_apply.operator.username if release_apply.operator else ''
+        application = release_apply.application.name if release_apply.application else ''
+        applier = release_apply.applier.username if release_apply.applier else ''
+        release_apply_list.append({'release_apply_id': release_apply.id, 'title': release_apply.title,
+                                   'release_type': release_apply.release_type, 'producter': producter,
+                                   'tester': tester, 'operator': operator, 'state': release_apply.state,
+                                   'planned_at': str(release_apply.planned_at)[:19], 'deploy': release_apply.deploy,
+                                   'application': application, 'created_at': str(release_apply.created_at)[:19],
+                                   'applier': applier})
+    result = {'status': 200, 'data': {'release_apply_list': release_apply_list}}
+    return json.dumps(result)
+
+
+
 @release_apply.route('/get/build_log/', methods=['GET'])
 def get_build_log():
     release_apply_id = request.args.get('release_apply_id')
@@ -604,4 +625,6 @@ def download_file(path):
         file = json.dumps({'status': 1001, 'message': '文件不存在'})
     return file
 
-
+@release_apply.route('/online_calendar/')
+def online_calendar():
+    return render_template("release_apply/online_calendar.html")
