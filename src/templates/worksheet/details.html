@@ -1,267 +1,308 @@
 {% extends "headfoot.html" %}
 {% block styles %}
-<link href="/static/css/worksheet/details.css" rel="stylesheet">
+    <link href="/static/css/worksheet/details.css" rel="stylesheet">
 {% endblock %}
 {% block scripts %}
-<script charset="utf-8" src="/static/js/worksheet/details.js"></script>
+    <script charset="utf-8" src="/static/js/worksheet/details.js"></script>
 {% endblock %}
 {% block content %}
-{% import "header.html" as header %}
-{{ header.render() }}
-<div id="main-content">
-    <div id="breadcrumb">
-        <ul class="breadcrumb">
-            <li>
-                <a href="/"><i class="icon icon-home"></i> 主页</a>
-            </li>
-            <li>
-                <a id="parent-bread" href="/">工单系统</a>
-            </li>
-            <li id="children-bread">工单详情</li>
-        </ul>
-    </div>
-    <div id="page-content">
-        <div class="page-header">
-            <h1>
-                工单详情
-            </h1>
+    {% import "header.html" as header %}
+    {{ header.render() }}
+    <div id="main-content">
+        <div id="breadcrumb">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/"><i class="icon icon-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a id="parent-bread" href="/">工单系统</a>
+                </li>
+                <li id="children-bread">工单详情</li>
+            </ul>
         </div>
-        <article class="article-top article">
-            <header>
-                <dl class="dl-inline">
-                    <dd>{{ worksheet_data.title }}</dd>
-                    <dt>类型：</dt>
-                    <dd>{{ worksheet_data.type_name }}</dd>
-                    <dd><span class="label label-info">{{ worksheet_data.state }}</span></dd>
-                    <dt>期望完成时间：</dt>
-                    <dd>{{ worksheet_data.planned_at }}</dd>
-                </dl>
-            </header>
-            <div class="ant-steps article-top">
-                {% if worksheet_data.is_manager %}
-                <div class="ant-steps-item {% if worksheet_data.state_id > 1 %} ant-steps-status-finish {% elif worksheet_data.state_id == 1 %}ant-steps-status-process {% elif worksheet_data.state_id < 1 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-tail"><i></i></div>
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">1</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">申请</div>
-                        <div class="ant-steps-description">{% if worksheet_data.state_id > 1 %}{{ worksheet_data.apply_name }} {% endif %}</div>
-                    </div>
-                </div>
-                <div class="ant-steps-item {% if worksheet_data.state_id > 3 %} ant-steps-status-finish {% elif worksheet_data.state_id == 3 %}ant-steps-status-process {% elif worksheet_data.state_id < 3 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-tail"><i></i></div>
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">2</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">{% if worksheet_data.state_id < 4 %}待认领{% else %}认领{% endif %}</div>
-                        <div class="ant-steps-description">{% if worksheet_data.state_id > 2  %}{{ worksheet_data.operator_name }}{% endif %}</div>
-                    </div>
-                </div>
-                <div class="ant-steps-item {% if worksheet_data.state_id > 4 %} ant-steps-status-finish {% elif worksheet_data.state_id == 4 %}ant-steps-status-process {% elif worksheet_data.state_id < 4 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-tail"><i></i></div>
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">3</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">{% if worksheet_data.state_id < 5 %}待执行{% else %}执行{% endif %}</div>
-                        <div class="ant-steps-description">{% if worksheet_data.state_id > 3  %}{{ worksheet_data.operator_name }}{% endif %}</div>
-                    </div>
-                </div>
-                <div class="ant-steps-item {% if worksheet_data.state_id >= 5 %} ant-steps-status-process{% elif worksheet_data.state_id < 5 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">4</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">完成</div>
-                        <div class="ant-steps-description"></div>
-                    </div>
-                </div>
-                {% else %}
-             <div class="ant-steps-item {% if worksheet_data.state_id > 1 %} ant-steps-status-finish {% elif worksheet_data.state_id == 1 %}ant-steps-status-process {% elif worksheet_data.state_id < 1 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-tail"><i></i></div>
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">1</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">申请</div>
-                        <div class="ant-steps-description">{% if worksheet_data.state_id > 1 %}{{ worksheet_data.apply_name }} {% endif %}</div>
-                    </div>
-                </div>
-                <div class="ant-steps-item {% if worksheet_data.state_id > 2 %}  ant-steps-status-finish{% elif worksheet_data.state_id == 2 %}ant-steps-status-process {% elif worksheet_data.state_id < 2 %} ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-tail"><i></i></div>
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">2</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">{% if worksheet_data.state_id < 3 %}待审批{% else %}审批{% endif %}</div>
-                        <div class="ant-steps-description">{% if worksheet_data.state_id > 1  %}{{ worksheet_data.approver }} {% endif %}</div>
-                    </div>
-                </div>
-                <div class="ant-steps-item {% if worksheet_data.state_id > 3 %} ant-steps-status-finish {% elif worksheet_data.state_id == 3 %}ant-steps-status-process {% elif worksheet_data.state_id < 3 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-tail"><i></i></div>
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">3</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">{% if worksheet_data.state_id < 4 %}待认领{% else %}认领{% endif %}</div>
-                        <div class="ant-steps-description">{% if worksheet_data.state_id > 2  %}{{ worksheet_data.operator_name }}{% endif %}</div>
-                    </div>
-                </div>
-                <div class="ant-steps-item {% if worksheet_data.state_id > 4 %} ant-steps-status-finish {% elif worksheet_data.state_id == 4 %}ant-steps-status-process {% elif worksheet_data.state_id < 4 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-tail"><i></i></div>
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">4</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">{% if worksheet_data.state_id < 5 %}待执行{% else %}执行{% endif %}</div>
-                        <div class="ant-steps-description">{% if worksheet_data.state_id > 3  %}{{ worksheet_data.operator_name }}{% endif %}</div>
-                    </div>
-                </div>
-                <div class="ant-steps-item {% if worksheet_data.state_id >= 5 %} ant-steps-status-process {% elif worksheet_data.state_id < 5 %}ant-steps-status-wait {% endif %}" style="width: 150px;">
-                    <div class="ant-steps-head">
-                        <div class="ant-steps-head-inner">
-                            <span class="ant-steps-icon">5</span></div>
-                    </div>
-                    <div class="ant-steps-main" style="max-width:100px;">
-                        <div class="ant-steps-title">完成</div>
-                        <div class="ant-steps-description"></div>
-                    </div>
-                </div>
-             {% endif %}
-                <button id="worksheet_id" class="hide">{{ worksheet_data.worksheet_id}}</button>
-                <div class="ant-steps-item ant-steps-status-wait" >
-                    <div class="detail-font"> {% if worksheet_data.state_id == 1  %} 待重新申请 {% elif worksheet_data.state_id == 2  %} 工单已申请，待审核 {% elif worksheet_data.state_id == 3 %} 主管已确认，待认领 {% elif worksheet_data.state_id == 4 %} 运维已认领， 待执行  {% elif worksheet_data.state_id >= 5 %}完成 {% elif worksheet_data.state_id == -1 %} 工单已关闭 {% else %} 未知 {% endif %}</div>
-                    <div class="btn-group" >
-                        {% if is_revise %}
-                            <a href="/worksheet/add/?worksheet_id={{ worksheet_data.worksheet_id}}" >
-                                <button class="btn btn-md" type="button">修改</button>
-                            </a>
-                        {% endif %}
-                        {% if is_leader %}
-                            <button class="btn btn-md decision tl_reject" type="button" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                            <button class="btn btn-md decision tl_pass" data-toggle="modal" data-position="100px" data-target="#myModal">通过</button>
-                        {% endif %}
-                        {% if is_operator %}
-                        <button class="btn btn-md decision ops_reject" type="button" data-toggle="modal" data-position="100px" data-target="#myModal">打回</button>
-                        <button class="btn btn-md decision ops_pass" data-toggle="modal" data-position="100px" data-target="#myModal">认领</button>
-                        {% endif %}
-                        {% if is_operator_execute %}
-                        <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px" data-target="#myModal">完成</button>
-                        {% endif %}
-                        {% if is_closed %}
-                            <button class="btn btn-md decision ops_close" data-toggle="modal" data-position="100px" data-target="#myModal">取消申请</button>
-                        {% endif %}
-                    </div>
-                </div>
+        <div id="page-content">
+            <div class="page-header">
+                <h1>
+                    工单详情
+                </h1>
             </div>
-        </article>
-
-        <div class="modal" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-                        <h4 class="modal-title">标题</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p id="tips"></p>
-                        <div id="reject-advice">
-                            <label></label>
-                            <textarea id="reject-reason" rows="5" class="form-control" autofocus></textarea>
+            <article class="article-top article">
+                <header>
+                    <dl class="dl-inline">
+                        <dd>{{ worksheet_data.title }}</dd>
+                        <dt>类型：</dt>
+                        <dd>{{ worksheet_data.type_name }}</dd>
+                        <dd><span class="label label-info">{{ worksheet_data.state }}</span></dd>
+                        <dt>期望完成时间：</dt>
+                        <dd>{{ worksheet_data.planned_at }}</dd>
+                    </dl>
+                </header>
+                <div class="ant-steps article-top">
+                    {% if worksheet_data.is_manager %}
+                        <div class="ant-steps-item {% if worksheet_data.state_id > 1 %} ant-steps-status-finish {% elif worksheet_data.state_id == 1 %}ant-steps-status-process {% elif worksheet_data.state_id < 1 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-tail"><i></i></div>
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">1</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">申请</div>
+                                <div class="ant-steps-description">{% if worksheet_data.state_id > 1 %}
+                                    {{ worksheet_data.apply_name }} {% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ant-steps-item {% if worksheet_data.state_id > 3 %} ant-steps-status-finish {% elif worksheet_data.state_id == 3 %}ant-steps-status-process {% elif worksheet_data.state_id < 3 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-tail"><i></i></div>
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">2</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">{% if worksheet_data.state_id < 4 %}待认领{% else %}
+                                    认领{% endif %}</div>
+                                <div class="ant-steps-description">{% if worksheet_data.state_id > 2 %}
+                                    {{ worksheet_data.operator_name }}{% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ant-steps-item {% if worksheet_data.state_id > 4 %} ant-steps-status-finish {% elif worksheet_data.state_id == 4 %}ant-steps-status-process {% elif worksheet_data.state_id < 4 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-tail"><i></i></div>
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">3</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">{% if worksheet_data.state_id < 5 %}待执行{% else %}
+                                    执行{% endif %}</div>
+                                <div class="ant-steps-description">{% if worksheet_data.state_id > 3 %}
+                                    {{ worksheet_data.operator_name }}{% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ant-steps-item {% if worksheet_data.state_id >= 5 %} ant-steps-status-process{% elif worksheet_data.state_id < 5 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">4</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">完成</div>
+                                <div class="ant-steps-description"></div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="ant-steps-item {% if worksheet_data.state_id > 1 %} ant-steps-status-finish {% elif worksheet_data.state_id == 1 %}ant-steps-status-process {% elif worksheet_data.state_id < 1 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-tail"><i></i></div>
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">1</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">申请</div>
+                                <div class="ant-steps-description">{% if worksheet_data.state_id > 1 %}
+                                    {{ worksheet_data.apply_name }} {% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ant-steps-item {% if worksheet_data.state_id > 2 %}  ant-steps-status-finish{% elif worksheet_data.state_id == 2 %}ant-steps-status-process {% elif worksheet_data.state_id < 2 %} ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-tail"><i></i></div>
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">2</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">{% if worksheet_data.state_id < 3 %}待审批{% else %}
+                                    审批{% endif %}</div>
+                                <div class="ant-steps-description">
+                                    {% if worksheet_data.state_id > 1 %}{{ worksheet_data.approver }} {% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ant-steps-item {% if worksheet_data.state_id > 3 %} ant-steps-status-finish {% elif worksheet_data.state_id == 3 %}ant-steps-status-process {% elif worksheet_data.state_id < 3 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-tail"><i></i></div>
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">3</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">{% if worksheet_data.state_id < 4 %}待认领{% else %}
+                                    认领{% endif %}</div>
+                                <div class="ant-steps-description">{% if worksheet_data.state_id > 2 %}
+                                    {{ worksheet_data.operator_name }}{% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ant-steps-item {% if worksheet_data.state_id > 4 %} ant-steps-status-finish {% elif worksheet_data.state_id == 4 %}ant-steps-status-process {% elif worksheet_data.state_id < 4 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-tail"><i></i></div>
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">4</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">{% if worksheet_data.state_id < 5 %}待执行{% else %}
+                                    执行{% endif %}</div>
+                                <div class="ant-steps-description">{% if worksheet_data.state_id > 3 %}
+                                    {{ worksheet_data.operator_name }}{% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ant-steps-item {% if worksheet_data.state_id >= 5 %} ant-steps-status-process {% elif worksheet_data.state_id < 5 %}ant-steps-status-wait {% endif %}"
+                             style="width: 150px;">
+                            <div class="ant-steps-head">
+                                <div class="ant-steps-head-inner">
+                                    <span class="ant-steps-icon">5</span></div>
+                            </div>
+                            <div class="ant-steps-main" style="max-width:100px;">
+                                <div class="ant-steps-title">完成</div>
+                                <div class="ant-steps-description"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <button id="worksheet_id" class="hide">{{ worksheet_data.worksheet_id }}</button>
+                    <div class="ant-steps-item ant-steps-status-wait">
+                        <div class="detail-font"> {% if worksheet_data.state_id == 1 %}
+                            待重新申请 {% elif worksheet_data.state_id == 2 %}
+                            工单已申请，待审核 {% elif worksheet_data.state_id == 3 %}
+                            主管已确认，待认领 {% elif worksheet_data.state_id == 4 %} 运维已认领，
+                            待执行  {% elif worksheet_data.state_id >= 5 %}完成 {% elif worksheet_data.state_id == -1 %}
+                            工单已关闭 {% else %} 未知 {% endif %}</div>
+                        <div class="btn-group">
+                            {% if is_revise %}
+                                <a href="/worksheet/add/?worksheet_id={{ worksheet_data.worksheet_id }}">
+                                    <button class="btn btn-md" type="button">修改</button>
+                                </a>
+                            {% endif %}
+                            {% if is_leader %}
+                                <button class="btn btn-md decision tl_reject" type="button" data-toggle="modal"
+                                        data-position="100px" data-target="#myModal">打回
+                                </button>
+                                <button class="btn btn-md decision tl_pass" data-toggle="modal" data-position="100px"
+                                        data-target="#myModal">通过
+                                </button>
+                            {% endif %}
+                            {% if is_operator %}
+                                <button class="btn btn-md decision ops_reject" type="button" data-toggle="modal"
+                                        data-position="100px" data-target="#myModal">打回
+                                </button>
+                                <button class="btn btn-md decision ops_pass" data-toggle="modal" data-position="100px"
+                                        data-target="#myModal">认领
+                                </button>
+                            {% endif %}
+                            {% if is_operator_execute %}
+                                <button class="btn btn-md decision ops_done" data-toggle="modal" data-position="100px"
+                                        data-target="#myModal">完成
+                                </button>
+                            {% endif %}
+                            {% if is_closed %}
+                                <button class="btn btn-md decision ops_close" data-toggle="modal" data-position="100px"
+                                        data-target="#myModal">取消申请
+                                </button>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" id="notSave" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" id="toSave" class="btn btn-primary" data-dismiss="modal">保存</button>
+                </div>
+            </article>
+
+            <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span
+                                    aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                            <h4 class="modal-title">标题</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p id="tips"></p>
+
+                            <div id="reject-advice">
+                                <label></label>
+                                <textarea id="reject-reason" rows="5" class="form-control" autofocus></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="notSave" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" id="toSave" class="btn btn-primary" data-dismiss="modal">保存</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <article class="article-top">
-            <div class="form-group">
-                <div class="col-md-6">
-                    <div class="detail-font">
-                        工单内容
-                    </div>
-                    <table class="table table-hover table-bordered table-striped" >
-                        <thead>
+            <article class="article-top">
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <div class="detail-font">
+                            工单内容
+                        </div>
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
                             <tr>
                                 <th class="col-md-2">条目</th>
                                 <th>内容</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr>
-                                <td >标题</td>
-                                <td >{{ worksheet_data.title }}</td>
+                                <td>标题</td>
+                                <td>{{ worksheet_data.title }}</td>
                             </tr>
                             <tr>
-                                <td >类型</td>
-                                <td >{{ worksheet_data.type_name }}</td>
+                                <td>类型</td>
+                                <td>{{ worksheet_data.type_name }}</td>
                             </tr>
                             <tr>
-                                <td >申请人</td>
-                                <td >{{ worksheet_data.apply_name }}</td>
+                                <td>申请人</td>
+                                <td>{{ worksheet_data.apply_name }}</td>
                             </tr>
                             <tr>
-                                <td >申请时间</td>
-                                <td >{{ worksheet_data.created_at }}</td>
+                                <td>申请时间</td>
+                                <td>{{ worksheet_data.created_at }}</td>
                             </tr>
                             <tr>
-                                <td >期望完成时间</td>
-                                <td >{{ worksheet_data.planned_at }}</td>
+                                <td>期望完成时间</td>
+                                <td>{{ worksheet_data.planned_at }}</td>
                             </tr>
                             <tr>
-                                <td >描述：</td>
+                                <td>描述：</td>
                                 <td id="worksheet_content" content="{{ worksheet_data.content }}"></td>
                             </tr>
                             {% if worksheet_data.attached_file_path %}
-                            <tr>
-                                <td >附件下载：</td>
-                                <td><a href="/download/{{ worksheet_data.attached_file_path }}" class="btn btn-md">查看附件 <i class="icon icon-download-alt"></i></a></td>
-                            </tr>
+                                <tr>
+                                    <td>附件下载：</td>
+                                    <td><a href="/download/{{ worksheet_data.attached_file_path }}" class="btn btn-md">查看附件
+                                        <i class="icon icon-download-alt"></i></a></td>
+                                </tr>
                             {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-6">
-                    <div class="detail-font">
-                        日志
+                            </tbody>
+                        </table>
                     </div>
-                    <table class="table table-hover table-bordered table-striped" >
-                        <thead>
+                    <div class="col-md-6">
+                        <div class="detail-font">
+                            日志
+                        </div>
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
                             <tr>
                                 <th class="col-md-2">姓名</th>
                                 <th class="col-md-3">时间</th>
                                 <th class="col-md-2">状态</th>
-                                <th >备注</th>
+                                <th>备注</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                        {% for data in worksheetstate_list %}
-                            <tr>
-                                <td>{{ data.name }}</td>
-                                <td>{{ data.created_at }}</td>
-                                <td>{{ data.state }}</td>
-                                <td>{{ data.content }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for data in worksheetstate_list %}
+                                <tr>
+                                    <td>{{ data.name }}</td>
+                                    <td>{{ data.created_at }}</td>
+                                    <td>{{ data.state }}</td>
+                                    <td>{{ data.content }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </article>
+            </article>
+        </div>
     </div>
-</div>
 {% endblock %}
