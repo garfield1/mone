@@ -34,14 +34,14 @@ def get_worksheets_by_page(page_num, filter_type='taskpad', **kwargs):
 	start_page = page_size*(page_num-1)
 	end_page = page_size*page_num
 	if filter_type == 'taskpad':
-		worksheets = Worksheet.objects.filter(**kwargs).exclude(state='已完成').order_by('-id')[start_page: end_page]
+		worksheets = Worksheet.objects.filter(**kwargs).exclude(Q(state=u'已完成')| Q(state=u'已关闭')).order_by('-id')[start_page: end_page]
 	else:
 		worksheets = Worksheet.objects.filter(**kwargs).order_by('-id')[start_page: end_page]
 	return worksheets
 
 def get_worksheets_count(filter_type='taskpad', **kwargs):
 	if filter_type=='taskpad':
-		return Worksheet.objects.filter(**kwargs).exclude(state='已完成').count()
+		return Worksheet.objects.filter(**kwargs).exclude(Q(state=u'已完成')| Q(state=u'已关闭')).count()
 	else:
 		return Worksheet.objects.filter(**kwargs).count()
 
