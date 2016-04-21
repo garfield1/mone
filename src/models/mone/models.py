@@ -21,7 +21,7 @@ WS_USER_ACTION_OPERATOR_EXECUTED = u"运维执行成功"
 
 #state代表一种持续的中间状态
 #主管状态3个 开发状态2个 运维状态2个 关闭状态1个
-WS_STATE_CLOSED = u"已关闭上线工单"
+WS_STATE_CLOSED = u"已关闭"
 WS_STATE_WAITTING_TEAM_LEADER_CONFIRMED = u"待主管确认"   #待审核
 WS_STATE_WAITTING_DEVELOPER_MODIFIED= u"待开发修改" #已打回
 WS_STATE_WAITTING_TEAM_LEADER_MODIFIED = u"待主管修改" #已打回

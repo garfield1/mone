@@ -73,16 +73,16 @@ def get_own_taskpad(user_id, page_num, is_operator):
 	start_page = page_size*(page_num-1)
 	end_page = page_size*page_num
 	if is_operator:
-		worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)|Q(state=u'待运维认领')).order_by('-id')[start_page: end_page]
+		worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)|Q(state=u'待运维认领')).exclude(state=u'已关闭').order_by('-id')[start_page: end_page]
 	else:
-		worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).order_by('-id')[start_page: end_page]
+		worksheets = Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).exclude(state=u'已关闭').order_by('-id')[start_page: end_page]
 	return worksheets
 
 def get_own_worksheets_count(user_id, is_operator):
 	if is_operator:
-		return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)|Q(state=u'待运维认领')).count()
+		return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)|Q(state=u'待运维认领')).exclude(state=u'已关闭').count()
 	else:
-		return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).count()
+		return Worksheet.objects.filter(Q(applier_id=user_id)|Q(waitting_confirmer_id=user_id)).exclude(state=u'已关闭').count()
 
 
 @worksheet.route('/get/taskpad/', methods=['POST'])

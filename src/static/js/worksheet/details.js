@@ -33,11 +33,12 @@ $(".decision").click(function(){
         reject_advice.hide();
         action_type = "运维认领";
     } else if(this_elt.hasClass("ops_close")) {
-        tips.show().text("确认关闭吗？");
-        reject_advice.hide();
+        tips.hide();
+        reject_advice.find("label").text("请填写取消原因:");
+        reject_advice.show();
         action_type = "关闭工单";
     } else if(this_elt.hasClass("ops_done")) {
-//        tips.show().text("确认完成了吗？");
+        tips.hide();
         reject_advice.find("label").text("请填写完成意见:");
         reject_advice.show();
         action_type = "运维执行成功";
