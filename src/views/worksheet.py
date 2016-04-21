@@ -291,7 +291,7 @@ def worksheet_details(worksheet_id):
 		if operator_id == user_id:
 			is_operator_execute = True
 	is_revise = False
-	if worksheet_data.get('state_id') < 3:
+	if worksheet_data.get('state_id') < 4:
 		applier_id = worksheet.applier_id
 		if user_id == applier_id:
 			is_revise = True
