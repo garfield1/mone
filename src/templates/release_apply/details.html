@@ -71,7 +71,7 @@ a:hover {
                     <div class="ant-steps-main" style="max-width:100px;">
                         <div class="ant-steps-title">审批</div>
 
-                        <div class="ant-steps-description">{% if step > 2 and releaseapply_data.applier.organization.leader %}{{ releaseapply_data.applier.organization.leader.username }} <br> {{ releaseapply_data.applier.organization.parent.leader.username }}{% endif %}</div>
+                        <div class="ant-steps-description">{% if step > 2 and releaseapply_data.applier.organization %}{{ releaseapply_data.applier.organization.leader.username }} <br> {{ releaseapply_data.applier.organization.parent.leader.username }}{% endif %}</div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 3 %}ant-steps-status-wait{% elif step ==3 %}ant-steps-status-process {% elif step > 3 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
