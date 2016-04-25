@@ -70,7 +70,7 @@ a:hover {
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
                         <div class="ant-steps-title">审批</div>
-                        <div class="ant-steps-description">{% if step >=  2 %}{{ releaseapply_data.applier.get('organization').get('leader').get('username') }} <br> {{ releaseapply_data.applier.get('organization').get('parent').get('leader').get('username') }}{% endif %}</div>
+                        <div class="ant-steps-description">{% if step > 2 %}{{ releaseapply_data.applier.organization.leader.username }} <br> {{ releaseapply_data.applier.organization.parent.leader.username }}{% endif %}</div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 3 %}ant-steps-status-wait{% elif step ==3 %}ant-steps-status-process {% elif step > 3 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
@@ -81,7 +81,7 @@ a:hover {
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
                         <div class="ant-steps-title">测试</div>
-                        <div class="ant-steps-description">{% if step >= 3 %}{{ releaseapply_data.tester.username }}{% endif %}</div>
+                        <div class="ant-steps-description">{% if step > 3 %}{{ releaseapply_data.tester.username }}{% endif %}</div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 4 %}ant-steps-status-wait  {% elif step == 4 %}ant-steps-status-process {% elif step > 4 %} ant-steps-status-finish{% endif %}" style="width: 150px;">
@@ -92,7 +92,7 @@ a:hover {
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
                         <div class="ant-steps-title">构建</div>
-                        <div class="ant-steps-description">{% if step >= 4 %}{{ releaseapply_data.applier.username }}{% endif %}</div>
+                        <div class="ant-steps-description">{% if step >  4 %}{{ releaseapply_data.applier.username }}{% endif %}</div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 5  %}ant-steps-status-wait {% elif step ==5 %}ant-steps-status-process {% elif step > 5 %} ant-steps-status-finish {% endif %}" style="width: 150px;">
@@ -103,7 +103,7 @@ a:hover {
                     </div>
                     <div class="ant-steps-main" style="max-width:100px;">
                         <div class="ant-steps-title">发布</div>
-                        <div class="ant-steps-description">{% if step >= 5 %}{{ releaseapply_data.operator.username }}{% endif %}</div>
+                        <div class="ant-steps-description">{% if step > 5 %}{{ releaseapply_data.operator.username }}{% endif %}</div>
                     </div>
                 </div>
                 <div class="ant-steps-item {% if step < 6 %}ant-steps-status-wait {% elif step ==6 %}ant-steps-status-process {% elif step > 6 %} ant-steps-status-finish  {% endif %}" style="width: 150px;">
