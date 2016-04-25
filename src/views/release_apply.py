@@ -514,7 +514,7 @@ def update_releaseapplystate():
         release_apply_data = None
     ISOTIMEFORMAT = '%Y-%m-%d %X'
     now_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
-    if user_data.id == release_apply_data.applier_id:
+    if user_data:
         if action_type == RA_USER_ACTION_OPERATOR_CLAIMED:
             release_apply_data.operator_id = user_id
             release_apply_data.save()

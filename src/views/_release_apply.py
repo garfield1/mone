@@ -43,13 +43,13 @@ def state_transfer(user,action,ra,reject_reason = None):
 		else:
 			manager = user.organization.parent.leader if user.organization.parent else user
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = manager ,release_apply = ra, state = RA_STATE_WAITTING_MANAGER_CONFIRMED , action = action)
-		_send_email(manager.email,ra,"需要您审批")
+		_send_email(manager.email,ra,ra.title + "需要您审批")
 		return user.id
 
 	if action == RA_USER_ACTION_DEVELOPER_CREATED or action == RA_USER_ACTION_DEVELOPER_RESUBMIT:
 		team_leader = user.organization.leader
 		ReleaseApplyState.objects.create(creator = user, waitting_confirmer = team_leader ,release_apply = ra, state = RA_STATE_WAITTING_TEAM_LEADER_CONFIRMED , action = action)
-		_send_email(team_leader.email,ra,"需要您审批")
+		_send_email(team_leader.email,ra,ra.title + "需要您审批")
 		return user.id
 
 	if action == RA_USER_ACTION_MANAGER_CONFIRMED:

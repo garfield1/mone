@@ -58,12 +58,14 @@
                     <li>
                         <a href="/release_apply/list/"><i class="icon icon-list"></i>上线列表</a>
                     </li>
+                    {% if 1 in session.get('own_roles_list') %}
                     <li>
                         <a href="/release_apply/application/list/"><i class="icon icon-list"></i>应用列表</a>
                     </li>
                     <li>
                         <a href="/release_apply/add/application/"><i class="icon icon-list"></i>新建应用</a>
                     </li>
+                    {% endif %}
                 </ul>
             </li>
 {#            <li class="show"><a href="#"><i class="icon icon-list-alt"></i>数据源</a>#}
@@ -91,6 +93,7 @@
 {#                    </li>#}
 {#                </ul>#}
 {#            </li>#}
+        {% if 1 in session.get('own_roles_list') %}
             <li class="show"><a href="#"><i class="icon icon-list-alt"></i>组别及权限</a>
                 <ul class="nav">
                     <li>
@@ -102,6 +105,7 @@
                     </li>
                 </ul>
             </li>
+        {% endif %}
         </ul>
     </nav>
 </div>
