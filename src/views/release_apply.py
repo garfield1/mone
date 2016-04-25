@@ -261,10 +261,15 @@ def detail(release_apply_id):
         end_build = False
     build_files = build_file.objects.filter(application_id = releaseapply_data.application_id).order_by('-id')
     new_build_file_name = os.path.basename(releaseapply_data.application.file_path)
+    leader_name = ''
+    leader_parent_name = ''
+    if releaseapply_data.applier.organization:
+        leader_name = releaseapply_data.applier.organization.leader.username
+        leader_parent_name = releaseapply_data.applier.organization.parent if releaseapply_data.applier.organization.parent else ''
     return render_template("release_apply/details.html", releaseapply_data=releaseapply_data,
                            releaseapplystate_list=releaseapplystate_list, step=step,
                            release_apply_message=release_apply_message, last_action=last_action,
-                           next_action=next_action, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build, start_build=start_build, end_build=end_build, build_files=build_files, new_build_file_name=new_build_file_name)
+                           next_action=next_action, leader_name=leader_name, leader_parent_name=leader_parent_name, releaseapplybuild_list=releaseapplybuild_list, is_build=is_build, start_build=start_build, end_build=end_build, build_files=build_files, new_build_file_name=new_build_file_name)
 
 @release_apply.route('/get_build_file/', methods=['GET'])
 @login_required
