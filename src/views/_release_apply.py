@@ -19,7 +19,7 @@ def _send_email(email,ra,state):
 	eq = EmailQueue()
 	eq.email = email
 	eq.title = ra.title or '' + state
-	eq.content = "http://localhost/release_apply/"+str(ra.id)
+	eq.content = "/release_apply/details/"+str(ra.id)
 	eq.save()
 
 def get_all_operator():
