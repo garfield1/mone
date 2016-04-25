@@ -77,7 +77,7 @@ $("input#submit").click(function(){
         setTimeout(function(){
             $("#badnews").removeClass("alert alert-warning with-icon").hide();
         },3000);
-    }else if (new Date(release_time).getDay() != 2 && new Date(release_time).getDay() != 4 ){
+    }else if (new Date(release_time).getDay() != 2 && new Date(release_time).getDay() != 4 && release_class=="常规发布"){
         $("#badnews .content").text('上线时间只能为周二 或 周四');
         $("#badnews").addClass("alert alert-warning with-icon").show();
         setTimeout(function(){
