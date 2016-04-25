@@ -78,7 +78,7 @@ $("input#submit").click(function(){
             $("#badnews").removeClass("alert alert-warning with-icon").hide();
         },3000);
     }else if (new Date(release_time).getDay() != 2 && new Date(release_time).getDay() != 4 && release_class=="常规发布"){
-        $("#badnews .content").text('上线时间只能为周二 或 周四');
+        $("#badnews .content").text('计划上线时间只能为周二 或 周四');
         $("#badnews").addClass("alert alert-warning with-icon").show();
         setTimeout(function(){
             $("#badnews").removeClass("alert alert-warning with-icon").hide();
@@ -131,7 +131,7 @@ $("input#submit").click(function(){
                 if (result.status == "200") {
                     $("#goodnews").addClass("alert alert-success with-icon").show();
                     setTimeout(function(){
-                        // location.href = "/release_apply/details/" + result.data.release_apply_id
+                        location.href = "/release_apply/details/" + result.data.release_apply_id
                     },3000);
                 }else{
                     $("#badnews .content").text('抱歉！服务器正忙！请尝试重新提交，或者联系运维！');
