@@ -46,7 +46,7 @@ def add_application():
 
 @release_apply.route('/application/list/')
 @login_required
-@check_access([{"role_id": 1, "role_name": "系统管理员"}])
+@check_access([{"role_id": 1, "role_name": "系统管理员"}, {"role_id": 4, "role_name": "运维工程师"}])
 def application_list():
     application_datas = Application.objects.all()
     application_list = []
@@ -106,7 +106,7 @@ def add_release_apply():
 
 @release_apply.route('/get/application_list/')
 @login_required
-@check_access([{"role_id": 1, "role_name": "系统管理员"}])
+@check_access([{"role_id": 1, "role_name": "系统管理员"}, {"role_id": 4, "role_name": "运维工程师"}])
 def get_application_list():
     user_id = session.get('user_data').get('user_id')
     try:
