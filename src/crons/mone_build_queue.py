@@ -70,16 +70,18 @@ def save_mvn_file(application_id, Application_file_path, application_name):
     suffix = os.path.splitext(Application_file_path)[1]
     file_name = str(now_time) + suffix
     save_file_path = application_name + '/' + file_name
-    try:
-        build_file_data = build_file(application_id=application_id, file_path=save_file_path, file_name=file_name, created_at=now_time)
-        build_file_data.save()
-        if not os.path.exists(application_name):
-            os.mkdir(application_name)
-        shutil.copy(Application_file_path, save_file_path)
-        return True
-    except Exception, e:
-        print e
-        return False
+    #判断文件是否存在
+    if os.path.exists(Application_file_path):
+        try:
+            build_file_data = build_file(application_id=application_id, file_path=save_file_path, file_name=file_name, created_at=now_time)
+            build_file_data.save()
+            if not os.path.exists(application_name):
+                os.mkdir(application_name)
+            shutil.copy(Application_file_path, save_file_path)
+            return True
+        except Exception, e:
+            print e
+            return False
 
 def main():
     for build_queue in BulidQueue.objects.filter(is_build=False):

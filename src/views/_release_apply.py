@@ -19,7 +19,7 @@ def _send_email(email,ra,state):
 	eq = EmailQueue()
 	eq.email = email
 	eq.title = ra.title or '' + state
-	eq.content = "/release_apply/details/"+str(ra.id)
+	eq.content = "<a href='http://mone.hz.meizu.com/release_apply/details/{0}'>http://mone.hz.meizu.com/release_apply/details/{0}</a>".format(str(ra.id))
 	eq.save()
 
 def get_all_operator():
