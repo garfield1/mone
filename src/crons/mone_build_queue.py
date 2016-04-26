@@ -86,7 +86,14 @@ def main():
         releaseapplybuilds = ReleaseapplyBuild.objects.filter(release_apply_id=build_queue.release_apply_id)
         releaseapplybuilds.delete()
         try:
-            formal_mvn_command = build_queue.release_apply.application.formal_mvn if build_queue.release_apply.application.formal_mvn else 'mvn clean package'
+            formal_mvn_command = "mvn "
+            last_mvn_command = build_queue.release_apply.application.formal_mvn
+            if last_mvn_command:
+                mvn_command_list = last_mvn_command.split(' ')
+                for data in mvn_command_list:
+                    formal_mvn_command = formal_mvn_command + "'" + data + "'" + " "
+            else:
+                formal_mvn_command = 'mvn clean package'
         except Exception, e:
             formal_mvn_command = 'mvn clean package'
         save_mvn_file(build_queue.release_apply.application_id, build_queue.release_apply.application.file_path, build_queue.release_apply.application.name)
