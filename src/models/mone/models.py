@@ -408,3 +408,14 @@ class AutoDeployTaskResource(models.Model):
 	created_at= models.DateTimeField(auto_now_add=True)
 	updated_at= models.DateTimeField(auto_now=True)
 
+# class LoadBalancerResource(models.Model):
+# 	aliyun_id = models.CharField(max_length = 400,null = True,blank = True)
+# 	name = models.CharField(max_length = 400,null = True,blank = True)
+# 	wan_ip = models.CharField(max_length = 400,null = True,blank = True)
+# 	created_at = models.DateTimeField(auto_now_add=True)
+# 	network_type = models.CharField(max_length = 400,null = True,blank = True)
+# 	master_zoneid = models.CharField(max_length = 400,null = True,blank = True)
+# 	region_id = models.CharField(max_length = 400,null = True,blank = True)
+
+
+
