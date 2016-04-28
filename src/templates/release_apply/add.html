@@ -54,13 +54,14 @@
 
                     <div class="form-group">
                         <label class="col-md-2 control-label">选择应用</label>
-                        <div class="col-md-5 ">
+                        <div class="col-md-5 " data-toggle="tooltip" data-placement="right" title="" data-original-title="应用不存在, 请提交工单新建应用">
                             <select name='release_app' id='release_app' class='form-control'>
                                  <option value="{{ releaseapply_data.application_id }}">{{ releaseapply_data.application.name }}</option>
                                 {% for application in application_list %}
                                 <option value="{{ application.id }}">{{ application.name }}</option>
                                 {% endfor %}
                             </select>
+
                         </div>
                         <label class="col-md-1 control-label">产品经理</label>
                         <div class="col-md-2">
@@ -99,13 +100,13 @@
                             </div>
                         </div>
                         <label class="col-md-1 control-label">发布级别</label>
-                        <div class="col-md-2 ">
+                        <div class="col-md-2 " data-toggle="tooltip" data-placement="right" title="" data-original-title="常规发布，上线时间需为周二、周四">
                             <select name='release_class' id='release_class' class='form-control'>
                                 <option value="{{ releaseapply_data.deploy }}">{{ releaseapply_data.deploy }}</option>
                                 <option value="常规发布">常规发布</option>
                                 <option value="紧急发布">紧急发布</option>
-                                <option value="临时发布">临时发布</option>
                             </select>
+
                         </div>
                         <label class="col-md-1 control-label">发布方式</label>
                         <div class="col-md-2">

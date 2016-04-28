@@ -12,6 +12,7 @@ if(aQuery.length > 1)
 }
 var release_apply_id = aGET['release_apply_id'];
 
+$('[data-toggle="tooltip"]').tooltip();
 //日期时间选择器
 $(".form-datetime").datetimepicker({
     weekStart: 1,
@@ -145,3 +146,4 @@ $("input#submit").click(function(){
         }, "json");
     }
 });
+
