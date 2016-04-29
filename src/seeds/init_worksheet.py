@@ -28,7 +28,7 @@ worksheet_type_list = [("申请ECS服务器", "<p>项目名称：</p><p>服务�
                  ("域名申请", "<p>项目名称：</p><p>负责人：</p><p>新增域名：</p><p>解析类型(A/CNAME或其他)：</p><p>解析内容：</p><p>域名使用目的：</p>"),
                  ("域名变更", "<p>项目名称：</p><p>负责人：</p><p>原域名：</p><p>变更原域名：</p><p>变更解析类型(A/CNAME或其他)：</p><p>变更解析内容：</p><p>域名变更目的：</p>"),
                  ("CDN加速", "<p>项目名称：</p><p>负责人：</p><p>静态资源域名：例如{app}.res.meizu.com</p><p>备注：附件中提交静态资源服务器nginx配置文件</p>"),
-                 ("新增应用", "<p>新增应用名称：</p><p>负责人：</p><p>申请ECS服务器：</p><p>申请RDS服务器：</p><p>申请SLB负载均衡：</p><p>域名申请：</p><p>CDN加速：</p>"),
+                 ("新增应用", "<p>新增应用名称：</p><p>负责人：</p><p>申请ECS服务器：</p><p>申请RDS服务器：</p><p>申请SLB负载均衡：</p><p>域名申请：</p><p>CDN加速：</p><p>git地址：</p><p>构建地址：</p><p>正式构建环境构建命令：</p>"),
                  ("应用下线", "<p>下线应用名称：</p><p>负责人：</p><p>下线ECS的ip：</p><p>下线RDS的id：</p><p>下线数据库名称：</p><p>下线SLB的ip：</p><p>下线域名(包括静态资源域名)：</p><p>下线原因：</p>"),
                  ("其他", "")]
 worksheet_type_model_list = [WorksheetType.objects.create(name=name,template=template) for name,template in worksheet_type_list]
