@@ -12,7 +12,7 @@ LDAP_developer_BASE_DN = 'OU=系统开发组,OU=线上销售,OU=销售事业二�
 LDAP_producter_BASE_DN = 'OU=产品经理组,OU=线上销售,OU=销售事业二部,OU=营销中心,OU=魅族科技,DC=meizu,DC=com'
 LDAP_HOST = '172.16.1.110'
 MGR_CRED = 'hfsystem'
-MGR_PASSWD = 'hfmeizu123Go2016!'
+MGR_PASSWD = 'BU3V-9G79-1AEY-J0SX'
 
 class LdapMgmt():
     def __init__(self, ldap_host=None, mgr_cred=None,mgr_passwd=None):
